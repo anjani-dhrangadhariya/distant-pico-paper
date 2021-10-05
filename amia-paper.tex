@@ -49,15 +49,15 @@
 \usepackage{sectsty}
 \allsectionsfont{\fontsize{10}{10}\selectfont}
 %\sectionfont{\fontsize{10}{10}\selectfont}
-\subsectionfont{\itshape\bfseries\fontsize{10}{10}\selectfont}
-\subsubsectionfont{\normalfont\itshape}
+\subsectionfont{\bfseries\fontsize{10}{10}\selectfont}
+\subsubsectionfont{\normalfont}
 
 % No new line after subsubsection
 \makeatletter
 \renewcommand\subsubsection{\@startsection{subsubsection}{3}{\z@}%
 	{-3.25ex\@plus -1ex \@minus -.2ex}%
     {-1.5ex \@plus -.2ex}% Formerly 1.5ex \@plus .2ex
-    {\normalfont\itshape}}
+    {\normalfont}}
 \makeatother
 
 \makeatletter % Reference list option change
@@ -118,7 +118,7 @@
 %==============================
 
 % reduce space between title and begining of page
-\title{\vspace{-2em} DISTANT-PICO: A distantly annotated corpus of Patients, Interventions, Outcomes and Study type to Support Language Processing for Medical Literature}
+\title{\vspace{-2em} DISTANT-PICO: A distantly annotated corpus of Patients, Interventions, Outcomes and Study type to Support Language Processing for Clinical Literature}
 \date{\vspace{-5ex}}
 \author[ ] {
     % Authors
@@ -128,7 +128,7 @@
 }
 \affil[1]{Institute of Business Information Systems, University of Applied Sciences Western Switzerland (HES-SO Valais-Wallis), Sierre, Switzerland}
 \affil[2]{Department of Computer Science, University of Geneva (UNIGE), Geneva, Switzerland}
-\affil[*]{Corresponding author: Anjani Dhrangadhariya, Institute of Business Information Systems, University of Applied Sciences Western Switzerland (HES-SO), Sierre, Switzerland; anjani.dhrangadhariya@hevs.ch}
+\affil[*]{Corresponding author: Anjani Dhrangadhariya, Institute of Business Information Systems, University of Applied Sciences Western Switzerland (HES-SO Valais-Wallis), Sierre, Switzerland; anjani.dhrangadhariya@hevs.ch}
 %==============================
 \begin{document}
 \maketitle
@@ -146,83 +146,111 @@
 
 \keywords{Randomized Controlled Trial, Supervised Machine Learning, Systematic Review, Deep Learning}
 %==============================
-\section{Introduction}\label{introduction}
+\section{INTRODUCTION}\label{introduction}
 %==============================
-Use some citation here such as DrugBank\cite{drugbank}, or SIDER\cite{sider}. \lipsum[3-4]
+Use some citation here such as DrugBank\cite{drugbank}, or SIDER\cite{sider}. \lipsum[3]
+%
+%
+%
+%==============================
+\subsection{Background and Significance}\label{background}
+%==============================
+\lipsum[3]
+%
+%
+%
+%==============================
+\section{OBJECTIVES}\label{objectives}
+%==============================
+We develop a weak annotation approach, DISTANT-PICOS to obtain annotate freely-available clinical trial records.
+We review the machine learning models that we use to extract individual elements from trial reports, and we empirically evaluate the accuracy of the system components.
+We make the weakly annotated corpus freely accessible via our prototype website, by bulk data download from the open science platform Zenodo.
+%
+%
+%
+%==============================
+\section{MATERIALS AND METHODS}\label{methods}
+%==============================
+%
+%
+%
+%==============================
+\subsection{Overview}\label{overview}
+%==============================
+Explain what is candidate generation in distant supervision in add an overview figure.
+%
+%
+%
+%==============================
+\subsection{Data}\label{data}
+%==============================
+Explain about clinical trial org and how data is organized in XML/JSON files in this database.
+%
+%
+%
+%==============================
+\subsection{Candidate generation}\label{candgen}
+%==============================
 
+\begin{itemize}
+    \item Explain the candidate generation process.
+    \item The conception of source and targets.
+    \item The retrieval of source and targets.
+    \item The expansion of source and targets.
+    \item The preprocessing of source and targets.
+    \item The direct matching and scoring of source and targets.
+    \item The indirect matching of source and targets for ``Outcome'' mentions.
+    \item Explain the process of combining labeling operators for PICOS entities.
+\end{itemize}
+%
+%
+%
 %==============================
-\section{Objective}\label{background}
+\subsection{Model training}\label{modtrain}
 %==============================
-
+Training models using strong, weak and combination annotations.
+%
+%
+%
+%==============================
+\section{EVALUATION}\label{eval}
+%==============================
+\begin{itemize}
+    \item Classic metrics (Precision, Recall, F1).
+    \item No evaluation for the Study type entity
+    \item Students t-test for significance
+\end{itemize}
+%
+%
+%
+%==============================
+\section{RESULTS}\label{results}
+%==============================
+Table demonstrating the scores mentioned above.
+%
+%
+%
+%==============================
+\section{DISCUSSION}\label{discussion}
+%==============================
 \lipsum[3-4]
-
+%
+%
+%
 %==============================
-\section{Materials and Methods}\label{methods}
+\section{CONCLUSION}\label{conclusion}
 %==============================
-
 \lipsum[3-4]
-
-%==============================
-\subsection{Data sources}\label{data-sources}
-%==============================
-
-\lipsum[3-4]
-
-%==============================
-\subsection{Measures}\label{measures}
-%==============================
-
-%==============================
-\subsubsection{A first metric.}\label{metric-1}
-%==============================
-
-You can use all the cool math power of \LaTeX{} $A$ is defined as follows:
-
-\lipsum[3-4]
-
-%==============================
-\subsubsection{A second metric.}\label{metric-2}
-%==============================
-
-\lipsum[3-4]
-
-
-\begin{exm}
-
-This is an example \lipsum[2]
-
-\end{exm}
-
-
-%==============================
-\subsection{Evaluation}\label{evaluation}
-%==============================
-
-\lipsum[3-4]
-
-%==============================
-\section{Results}\label{results}
-%==============================
-
-\lipsum[3-4]
-
-%==============================
-\section{Discussion}\label{discussion}
-%==============================
-
-\lipsum[3-4]
-
-%==============================
-\section{Conclusion}\label{conclusion}
-%==============================
-
-\lipsum[3-4]
-
+%
+%
+%
 %==============================
 \section{Acknowledgements}\label{acknowledgements}
 %==============================
 Remember to acknowledge your funding institution\ldots
-
+%
+%
+%
 %==============================
 \bibliographystyle{vancouver}
 \bibliography{literature}
