@@ -194,7 +194,14 @@ Each step is elaborated below.
 Explain about clinical trial org and how data is organized in XML/JSON files in this database.
 ClinicalTrials.gov (CTO hereafter) indexes 391,704 clinical trial studies (as of October 10, 2021) and is maintained by the U.S. National Library of Medicine (NLM).
 Information about each study stored on CTO is entered and updated by the principal investigator of the corresponding trial.
+This information includes title and summary of a clinical trial, disease conditions and interventions investigated in the trial, primary and secondary study outcomes, participants' eligibility criteria, \textit{etc.}
 
+This vast amount of information stored in XMLs and also displayed in the CTO GUI is a combination of structured tabular and unstructured free-text (see Figure~\ref{fig:CTO_example}).
+Apart from the graphical search interface, CTO also provides an API to query for an individual study, a list of studies and a method for the complete database crawl.
+This information can be downloaded in XML (Extensible Markup language) or JSON (JavaScript Object Notation) format.
+In this work, we manipulated the JSON format and will keep to discussing the information content on CTO from the JSONs rather than the GUI.
+
+Explain what are the fields for each of the PICOS criteria...
 %
 %
 %
