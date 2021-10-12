@@ -138,24 +138,32 @@
 %==============================
 \section{ABSTRACT}\label{abstract}
 %==============================
-\textbf{Objective:}  \lipsum[2]\\
-\textbf{Materials and Methods:} \lipsum[1]\\
-\textbf{Results:} \lipsum[2]\\
-\textbf{Conclusion:} \lipsum[2]\\
+%
+\textbf{Objective:}  OxO\\
+\textbf{Materials and Methods:} OxO\\
+\textbf{Results:} OxO\\
+\textbf{Conclusion:} OxO\\
+%
+%
+%
 
 
-\keywords{Randomized Controlled Trial, Supervised Machine Learning, Systematic Review, Deep Learning}
+\keywords{Randomized Controlled Trial, Semi-Supervised Machine Learning, Systematic Review, Deep Learning}
+%
+\clearpage
 %==============================
 \section{INTRODUCTION}\label{introduction}
 %==============================
-Use some citation here such as DrugBank\cite{drugbank}, or SIDER\cite{sider}. \lipsum[3]
+%
+OxO
 %
 %
 %
 %==============================
 \subsection{Background and Significance}\label{background}
 %==============================
-\lipsum[3]
+%
+OxO
 %
 %
 %
@@ -196,12 +204,17 @@ ClinicalTrials.gov (CTO hereafter) indexes 391,704 clinical trial studies (as of
 Information about each study stored on CTO is entered and updated by the principal investigator of the corresponding trial.
 This information includes title and summary of a clinical trial, disease conditions and interventions investigated in the trial, primary and secondary study outcomes, participants' eligibility criteria, \textit{etc.}
 
-This vast amount of information stored in XMLs and also displayed in the CTO GUI is a combination of structured tabular and unstructured free-text (see Figure~\ref{fig:CTO_example}).
-Apart from the graphical search interface, CTO also provides an API to query for an individual study, a list of studies and a method for the complete database crawl.
-This information can be downloaded in XML (Extensible Markup language) or JSON (JavaScript Object Notation) format.
+CTO GUI allows querying for clinical trials and displays each individual record as a combination of structured tabular and unstructured free-text (see Figure~\ref{fig:CTO_example}).
+This vast amount of information can be downloaded in XML (Extensible Markup language) or JSON (JavaScript Object Notation) format.
+CTO provides an API to query and retrieve an individual study, a list of studies and also a method for the complete database crawl~\footnote{\url{https://clinicaltrials.gov/api/}}.
 In this work, we manipulated the JSON format and will keep to discussing the information content on CTO from the JSONs rather than the GUI.
 
-Explain what are the fields for each of the PICOS criteria...
+Explain what are the fields for each of the PICOS criteria...\\
+Referring to the study structure of clinical trial record on CTO~\footnote{\url{https://clinicaltrials.gov/api/info/study_structure?fmt=JSON}}.
+Where are the P (condition, age, gender, sample size) information stored.\\
+Where are the I/C information stored\\
+Where is the Outcome information stored\\
+Where is the Study type information store\\ (Why do we care about both randomized and non-randomized clinical trials?)
 %
 %
 %
@@ -211,6 +224,7 @@ Explain what are the fields for each of the PICOS criteria...
 
 \begin{itemize}
     \item Explain the candidate generation process.
+    \item Download or crawl the CTO dump (include the date of crawl)
     \item The conception of source and targets.
     \item The retrieval of source and targets.
     \item The expansion of source and targets.
@@ -232,6 +246,7 @@ Training models using strong, weak and combination annotations.
 %==============================
 \section{EVALUATION}\label{eval}
 %==============================
+%
 \begin{itemize}
     \item Classic metrics (Precision, Recall, F1).
     \item No evaluation for the Study type entity
@@ -242,7 +257,7 @@ Training models using strong, weak and combination annotations.
 %
 %==============================
 \section{RESULTS}\label{results}
-%==============================
+%
 Table demonstrating the scores mentioned above.
 %
 %
@@ -250,21 +265,24 @@ Table demonstrating the scores mentioned above.
 %==============================
 \section{DISCUSSION}\label{discussion}
 %==============================
-\lipsum[3-4]
+%
+OxO
 %
 %
 %
 %==============================
 \section{CONCLUSION}\label{conclusion}
 %==============================
-\lipsum[3-4]
+%
+OxO
 %
 %
 %
 %==============================
 \section{Acknowledgements}\label{acknowledgements}
 %==============================
-Remember to acknowledge your funding institution\ldots
+%
+OxO
 %
 %
 %
