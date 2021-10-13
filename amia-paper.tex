@@ -47,18 +47,19 @@
 
 % To set the sections font size
 \usepackage{sectsty}
-\allsectionsfont{\fontsize{10}{10}\selectfont}
-%\sectionfont{\fontsize{10}{10}\selectfont}
-\subsectionfont{\bfseries\fontsize{10}{10}\selectfont}
-\subsubsectionfont{\normalfont}
+\allsectionsfont{\fontsize{11}{11}\selectfont}
+\sectionfont{\fontsize{14}{14}\selectfont}
+\subsectionfont{\bfseries\fontsize{13}{13}\selectfont}
+\subsubsectionfont{\bfseries\fontsize{11}{11}\selectfont}
+%\subsubsectionfont{\normalfont}
 
 % No new line after subsubsection
 \makeatletter
-\renewcommand\subsubsection{\@startsection{subsubsection}{3}{\z@}%
-	{-3.25ex\@plus -1ex \@minus -.2ex}%
-    {-1.5ex \@plus -.2ex}% Formerly 1.5ex \@plus .2ex
-    {\normalfont}}
-\makeatother
+%\renewcommand\subsubsection{\@startsection{subsubsection}{3}{\z@}%
+%	{-3.25ex\@plus -1ex \@minus -.2ex}%
+%    {-1.5ex \@plus -.2ex}% Formerly 1.5ex \@plus .2ex
+%    {\normalfont}}
+%\makeatother
 
 \makeatletter % Reference list option change
 \renewcommand\@biblabel[1]{#1.} % from [1] to 1
@@ -223,17 +224,51 @@ Study type (randomized, non-randomized) information is stored as a free-text str
 %
 %
 %
+\subsection{Distant Supervision}
+%
+XoX
+%
+%
+%
+\subsection{Gestalt Pattern Matching}
+%
+XoX
+%
+%
+%
+\subsection{Data Programming}
+%
+XoX
+%
+%
+%
 %==============================
 \subsection{Candidate generation}\label{candgen}
 %==============================
-
+%
+\subsubsection{Assumption and Problem Formulation}
+%
+XoX
+%
+%
+\subsubsection{Data Retrieval}
+%
+The entire CTO was crawled on DD.MM.YYYY at X:XX PM and was indexed using local ElasticSearch mass indexing function. 
+%
+%
+\subsubsection{Source Target Conception}
+%
+XoX
+%
+%
+\subsubsection{Labeling Operators}
+%
+XoX
+%
+%
+\subsubsection{Alignment Approach}
+%
 \begin{itemize}
-    \item Explain the candidate generation process.
-    \item Download or crawl the CTO dump (include the date of crawl)
-    \item The conception of source and targets.
-    \item The retrieval of source and targets.
-    \item The expansion of source and targets.
-    \item The preprocessing of source and targets.
     \item The direct matching and scoring of source and targets.
     \item The indirect matching of source and targets for ``Outcome'' mentions.
     \item (Why do we care about both randomized and non-randomized clinical trials?)
