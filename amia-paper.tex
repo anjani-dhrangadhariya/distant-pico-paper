@@ -307,7 +307,10 @@ Table demonstrating the scores mentioned above.
 \section{DISCUSSION}\label{discussion}
 %==============================
 %
-OxO
+Cons of the candidate generation process.
+\begin{itemize}
+    \item difflib sequencematcher cannot match more than one instances of source found in the target. For example, when the source is IMRT and the target candidate is "The investigators performed a planning study to assess the feasibility of IMRT to spare the parotid gland while delivering bilateral neck and TMI. The mean dose to the contralateral parotid gland using IMRT was below the threshold of 24 Gy for unstimulated salivary flow, predicting a fairly low risk of radiation induced xerostomia. The mean dose to the ipsilateral parotid gland was 32 Gy which was below the TD50 dose based on the Roesink data.", then only the first instance of IMRT will be marked as a weak annotation while missing out on the second IMRT instance.
+\end{itemize}
 %
 %
 %
