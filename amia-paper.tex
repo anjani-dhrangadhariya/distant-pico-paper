@@ -119,7 +119,7 @@
 %==============================
 
 % reduce space between title and begining of page
-\title{\vspace{-2em} DISTANT-PICO: A distantly annotated corpus of Patients, Interventions, Outcomes and Study type to Support Language Processing for Clinical Literature}
+\title{\vspace{-2em} DISTANT-PICO: Leveraging weak supervision for Patient, Interventions, and Outcomes extraction for systematic review automation}
 \date{\vspace{-5ex}}
 \author[ ] {
     % Authors
@@ -200,27 +200,7 @@ Each step is elaborated below.
 \subsection{Data}\label{data}
 %==============================
 %
-ClinicalTrials.gov (CTO hereafter) indexes 391,704 clinical trial studies (as of October 10, 2021) and is maintained by the U.S. National Library of Medicine (NLM).
-Information about each study stored on CTO is manually entered and updated by the principal investigator of the corresponding trial.
-This information includes title and summary of a clinical trial, disease conditions and interventions investigated in the trial, primary and secondary study outcomes, participants' eligibility criteria, \textit{etc.}
-
-This vast amount of information could be accessed by querying the CTO GUI (Graphical User Interface) or using the API (Application Programming Interface).
-The GUI displays each individual clinical trial study as a combination of structured tabular, semi-structured and unstructured free-text (see Figure~\ref{fig:CTO_example}).
-The API could be used to query and retrieve an individual study, a list of studies and recently a method for the complete database crawl and dump~\footnote{\url{https://clinicaltrials.gov/api/}}.
-The API allows downloading individual clinical trial studies in XML (Extensible Markup language) or JSON (JavaScript Object Notation) format.
-In this work, we manipulated the JSON format and will keep to discussing the information content on CTO from the JSONs rather than the GUI.
-
-% Anjani Should this be a table?
-% Anjani Explain what is structured, semi-structured and unstructured formats (what is free-text vs. semi-standardized vs. standardized formats?).
-Analogous to the GUI, a JSON file structures clinical trial information as a combination of structured, semi-structured and unstructured text format.
-Information about the diseases or disorders being studied in the trial is stored under a structured free-text `ConditionsModule' which correspond to participant condition entity.
-Participants age and gender are included under the `EligibilityModule' and are structured as a combination free-text structured format and structured standardized format. 
-Sample size of the participants is stored under the `DesignModule' in free-text structured format.
-`ArmsInterventionsModule' stores free-text structured information about the interventions investigated under the `InterventionName' tag. 
-It is structured in a way that each `InterventionName' is preceded by one of the predefined intervention types (drug, device, behavioral, procedural, biological, dietary supplement, diagnostic test, radiation, genetic, combination product, other).
-`InterventionOtherName' tag lists synonyms of different `InterventionName' mentions.
-Study type (randomized, non-randomized) information is stored as a free-text structured format under `DesignAllocation' tag of the `DesignModule'.
-`OutcomesModule' stores information about the primary and secondary study outcomes in free-text semi-structured format. 
+XoX 
 %
 %
 %
@@ -274,6 +254,10 @@ XoX
     \item (Why do we care about both randomized and non-randomized clinical trials?)
     \item Explain the process of combining labeling operators for PICOS entities.
 \end{itemize}
+%
+\subsubsection{Label Resolution}
+%
+Label overlap between p and ic is 2.04\%, between p and o is 16.012\%, between p and s is 0.006\%.
 %
 %
 %
