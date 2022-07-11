@@ -153,27 +153,45 @@
 %
 \clearpage
 %==============================
+\section{QUESTIONS TO ADDRESS}\label{ques}
+%==============================
+%
+
+\begin{enumerate}
+    \item Is it important to have high F1 score for the individual labeling functions?
+    \item Similar question: Will individual LF false negatives impact the performance?
+    \item What would you call low coverage? What should be the ideal coverage of the labeling functions?
+    \item What if higher coverage leads to higher False Positives?
+    \item Labeling function weights for the functions with high F1 score (and not a good coverage necessarily)?
+    \item How is overlap calculated? are only positive classes calculated in the overlap? > Coverage is calculated over 0 and 1 labels excluding the -1 labels.
+    \item Is coverage correlated to F1 score?
+    \item How is abstain treated while calculating F1 score?
+    \item Check out Trove for how "0" labels are calculated?
+    \item What annotation effort or how much annotation effort will be saved using distant-pico?
+    \item Restrict study type to RCT or non-RCT.
+\end{enumerate}
+
+Learning rate for label model train should be lower. LR like 1.0, 0.5, 0.1, 0.05, 0.01 did not work for me.
+
+Problem of high precision and low recall. Could it solved by reducing the abstains?
+
+
+
+%
+%
+%
+%==============================
 \section{INTRODUCTION}\label{introduction}
 %==============================
 %
-OxO
-%
-%
-%
-%==============================
-\subsection{Background and Significance}\label{background}
-%==============================
-%
-OxO
-%
-%
-%
-%==============================
-\section{OBJECTIVES}\label{objectives}
-%==============================
-We develop a weak annotation approach, DISTANT-PICOS to obtain annotate freely-available clinical trial records.
-We review the machine learning models that we use to extract individual elements from trial reports, and we empirically evaluate the accuracy of the system components.
-We make the weakly annotated corpus freely accessible via our prototype website, by bulk data download from the open science platform Zenodo.
+\begin{itemize}
+    \item PICO recognition - define, importance in SRs, challenges, slow process
+    \item Extension - PICOS, PICOTS, PICO+
+    \item Corpora creation and annotation - time consuming
+    \item approach for span recognition but not entity recognition
+    \item entities = semantic units
+    \item weak supervision approaches - democratize
+\end{itemize}
 %
 %
 %
@@ -181,95 +199,26 @@ We make the weakly annotated corpus freely accessible via our prototype website,
 \section{MATERIALS AND METHODS}\label{methods}
 %==============================
 %
-%
-%
-%==============================
-\subsection{Overview}\label{overview}
-%==============================
-%
-DISTANT-PICO is a distant supervision approach that uses several thousand clinical trial studies to generate a weakly annotated corpus of PICOS entities.
-The approach is demonstrated in the Figure XYZ and Table XYZ.
-First...
-Then...
-Lastly...
-Each step is elaborated below.
-%
-%
-%
-%==============================
-\subsection{Data}\label{data}
-%==============================
-%
-XoX 
-%
-%
-%
-\subsection{Distant Supervision}
-%
-XoX
-%
-%
-%
-\subsection{Gestalt Pattern Matching}
-%
-XoX
-%
-%
-%
-\subsection{Data Programming}
-%
-XoX
-%
-%
-%
-%==============================
-\subsection{Candidate generation}\label{candgen}
-%==============================
-%
-\subsubsection{Assumption and Problem Formulation}
-%
-XoX
-%
-%
-\subsubsection{Data Retrieval}
-%
-The entire CTO was crawled on DD.MM.YYYY at X:XX PM and was indexed using local ElasticSearch mass indexing function. 
-%
-%
-\subsubsection{Source Target Conception}
-%
-XoX
-%
-%
-\subsubsection{Labeling Operators}
-%
-XoX
-%
-%
-\subsubsection{Alignment Approach}
-%
 \begin{itemize}
-    \item The direct matching and scoring of source and targets.
-    \item The indirect matching of source and targets for ``Outcome'' mentions.
-    \item (Why do we care about both randomized and non-randomized clinical trials?)
-    \item Explain the process of combining labeling operators for PICOS entities.
+    \item datasets - EBM-PICO training, EBM-PICO test gold, Physio gold
+    \item Labeling function design - Positive LF, Negative LF
+    \item Candidate generation - Experiments
+    \item Model training - Training models using strong, weak and combination annotations. - Experiments
+    \item Evaluation
 \end{itemize}
 %
-\subsubsection{Label Resolution}
 %
-Label overlap between p and ic is 2.04\%, between p and o is 16.012\%, between p and s is 0.006\%.
+%
+%==============================
+\subsection{Datasets}\label{data}
+%==============================
+%
+UMLS concepts as labeling functions. It is difficult to classify different Semantic groups as positive signals for the PICOS classes. For example, the Participant span can include information about different participant characteristics: disease, disorder, ethnicity, language or geographical location, age, gender, sex,... 
 %
 %
 %
 %==============================
-\subsection{Model training}\label{modtrain}
-%==============================
-Training models using strong, weak and combination annotations.
-%
-%
-%
-%==============================
-\section{EVALUATION}\label{eval}
+\subsection{EVALUATION}\label{eval}
 %==============================
 %
 \begin{itemize}
@@ -291,10 +240,7 @@ Table demonstrating the scores mentioned above.
 \section{DISCUSSION}\label{discussion}
 %==============================
 %
-Cons of the candidate generation process.
-\begin{itemize}
-    \item difflib sequencematcher cannot match more than one instances of source found in the target. For example, when the source is IMRT and the target candidate is "The investigators performed a planning study to assess the feasibility of IMRT to spare the parotid gland while delivering bilateral neck and TMI. The mean dose to the contralateral parotid gland using IMRT was below the threshold of 24 Gy for unstimulated salivary flow, predicting a fairly low risk of radiation induced xerostomia. The mean dose to the ipsilateral parotid gland was 32 Gy which was below the TD50 dose based on the Roesink data.", then only the first instance of IMRT will be marked as a weak annotation while missing out on the second IMRT instance.
-\end{itemize}
+OxO
 %
 %
 %
