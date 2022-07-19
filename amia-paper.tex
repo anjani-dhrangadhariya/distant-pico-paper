@@ -119,7 +119,7 @@
 %==============================
 
 % reduce space between title and begining of page
-\title{\vspace{-2em} DISTANT-PICO: Leveraging weak supervision for Patient, Interventions, and Outcomes extraction for systematic review automation}
+\title{\vspace{-2em} Not So Weak-PICO$+$: Leveraging weak supervision for Patient, Interventions, Outcomes and Study type extraction for systematic review automation}
 \date{\vspace{-5ex}}
 \author[ ] {
     % Authors
@@ -140,7 +140,16 @@
 \section{ABSTRACT}\label{abstract}
 %==============================
 %
-\textbf{Objective:}  OxO\\
+\textbf{Objective:}
+PICO recognition is an information extraction task for identifying participant, intervention, comparator, and outcome information from clinical literature.
+Manually identifying PICO information is the most time-consuming step for conducting systematic reviews (SR), which is already labour-intensive.
+A lack of large, diversified, annotated corpora restricts innovation and adoption of automated PICO recognition systems.
+The largest-available PICO entity/span corpus is manually annotated, which is too expensive for the most scientific community.
+A significant challenge for PICO annotation is in terms of the annotation itself and in training the annotation experts for the task.
+Even the well-trained annotators disagree on the exact spans or entities constituting PICO mentions.
+We describe Weak-PICO+, a method for weakly supervised PICO entity recognition using medical ontologies and expert-generated rules.
+Unlike manual annotation, the method does not use any hand-labelled data and is quickly adaptable and extensible to other entities.
+We demonstrate this through extracting an additional Study Type entity making PICO go PICOS without manual annotation effort.\\
 \textbf{Materials and Methods:} OxO\\
 \textbf{Results:} OxO\\
 \textbf{Conclusion:} OxO\\
@@ -168,7 +177,6 @@
     \item How is abstain treated while calculating F1 score?
     \item Check out Trove for how "0" labels are calculated?
     \item What annotation effort or how much annotation effort will be saved using distant-pico?
-    \item Restrict study type to RCT or non-RCT.
 \end{enumerate}
 
 Learning rate for label model train should be lower. LR like 1.0, 0.5, 0.1, 0.05, 0.01 did not work for me.
@@ -189,7 +197,7 @@ Problem of high precision and low recall. Could it solved by reducing the abstai
     \item Extension - PICOS, PICOTS, PICO+
     \item Corpora creation and annotation - time consuming
     \item approach for span recognition but not entity recognition
-    \item entities = semantic units
+    \item entities = semantic units vs. span = maximum information/description
     \item weak supervision approaches - democratize
 \end{itemize}
 %
@@ -211,6 +219,55 @@ Problem of high precision and low recall. Could it solved by reducing the abstai
 %
 %==============================
 \subsection{Datasets}\label{data}
+%==============================
+%
+\textbf{EBM-PICO.} The EBM-PICO dataset developed by Nye \textit{et al.} consists of 5000 PICO entity/span annotated documents.~\footnote{A single document consists of a title and an abstract.}
+It comes pre-divided into a training set (n=4,933) annotated through crowd-sourcing and an expert annotated test set (n=191) for evaluation purposes.
+The dataset has annotations at two levels.
+Span level PICO annotation encompasses the maximum amount of PICO descriptions that often span an entire sentence.
+Entity-level PICO annotation cover fine-grained PICO information at the entity level with PICO classes further divided into fine-grained subclasses.
+
+
+\textbf{EBM-PICO corrected.} The fine-grained PICO annotations in EBM-PICO test set (n=191), however, have several errors that lead to faulty evaluation of machine learning methods.
+These errors emanate from the annotation process of EBM-PICO corpus that follows the sequence of fist annotating only the span-level PICO information and then restrict the entity-level PICO annotation to these larger spans.
+This leads to specifically missing out on the the repeated mentions of the fine-grained PICO information that is not covered in the longer spans. 
+We conducted an error-focused corpus re-annotation for the EBM-PICO gold corpus.
+
+
+\textbf{EBM-PICO corrected + Study Type.} We annotated an additional entity for study type only for this corpus to measure the effectiveness of weak supervision approaches.
+Our study type entity is restricted to whether a study is a ``Randomized Controlled Trial'' or not.
+This annotation exercise was to demonstrate the application of weak supervision for entities beyond PICO.
+
+\textbf{Physio set.} A test set comprising 153 PICO entity/span annotated documents from Physiotherapy and Rehabilitation RCTs (Randomized Controlled Trials) was used as an additional benchmark to evaluate the generalization power of our approach for this sub-domain
+
+
+\begin{table}[h!]
+\begin{center}
+\begin{tabular}{| c | c | c | c |} 
+\hline
+ & P & I/C & O \\ 
+\hline
+0 & No label & No label & No label \\ 
+1 & Age & Surgical & Physical \\ 
+2 & Sex & Physical & Pain \\
+3 & Sample size & Drug & Mortality \\
+4 & Condition & Educational & Side effect \\
+5 &  & Psychological & Mental \\
+6 &  & Other & Other \\
+7 &  & Control &  \\
+\hline
+\end{tabular}
+\caption{P (Participant), I (Intervention) and O (Outcome) represent the coarse-grained labels which are further divided into respective fine-grained labels.}
+\label{table:coarsefineconcept}
+\end{center}
+\end{table}
+
+
+%
+%
+%
+%==============================
+\subsection{Labeling functions}\label{data}
 %==============================
 %
 UMLS concepts as labeling functions. It is difficult to classify different Semantic groups as positive signals for the PICOS classes. For example, the Participant span can include information about different participant characteristics: disease, disorder, ethnicity, language or geographical location, age, gender, sex,... 
@@ -240,7 +297,10 @@ Table demonstrating the scores mentioned above.
 \section{DISCUSSION}\label{discussion}
 %==============================
 %
-OxO
+\paragraph{Error correction: } Errors and the error correction to the EBM-PICO gold set explained here. 
+Why were errors corrected?
+Errors like this can cause faulty evaluation of the machine learning issues when one mention is annotated but another is not annotated.
+We suggest the annotators to be medical students with knowledge about informatics like Bioinformaticians given that the ultimate application of such corpora is to develop machine learning algorithms that are in accordance to .
 %
 %
 %
