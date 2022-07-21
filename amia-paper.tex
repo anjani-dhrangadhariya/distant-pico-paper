@@ -148,15 +148,15 @@
 %
 \textbf{Objective:}
 PICO entity extraction is a vital but time-consuming task for conducting systematic reviews. 
-Supervised machine learning methods can help fully automate PICO entity extraction, but a lack of large, diversified annotated corpora restricts innovation and adoption of automated PICO recognition systems.
+Supervised machine learning methods can help fully automate PICO entity extraction, but a lack of large annotated corpora restricts innovation and adoption of automated PICO recognition systems.
 The largest-available PICO entity corpus is manually annotated, which is too expensive for the most scientific community.
 Moreover, even the well-trained annotators disagree on the exact spans or entities constituting PICO mentions, often requiring resource-intensive post-annotation corrections.
-Our objective is to investigate a weak supervision approach devising freely-available ontologies and expert-generated rules for PICO entity extraction that does not rely on hand-labelled data.\\
+Our objective is to investigate a weak supervision approach devising ontologies and expert-generated rules for PICO entity extraction without relying on hand-labelled data.\\
 \textbf{Materials and Methods:}
 Ontologies - UMLS + more, dictionaries and expert-generated rules for designed for PICO recognition along with weakly supervised models.\\
 \textbf{Results:}
-Weak-PICO+, a method for weakly supervised PICO entity recognition using medical and non-medical ontologies and expert-generated rules.
-Unlike manual annotation, the method does not use any hand-labelled data and is quickly adaptable and extensible to other entities.
+We present Weak-PICO+, a method for weakly supervised PICO entity recognition using medical and non-medical ontologies and expert-generated rules.
+Unlike manual annotation, Weak-PICO+ does not use any hand-labelled data and is quickly adaptable and extensible to other entities.
 We demonstrate this through extracting an additional Study Type entity making PICO go PICOS without manual annotation effort.\\
 \textbf{Conclusion:}
 Weak supervision using weak-PICO+ for PICO entity recognition is not only feasible but also outperforms full supervision.\\
@@ -228,20 +228,23 @@ Problem of high precision and low recall. Could it solved by reducing the abstai
 \subsection{Datasets}\label{data}
 %==============================
 %
-\textbf{EBM-PICO.} The EBM-PICO dataset developed by Nye \textit{et al.} consists of 5000 PICO entity/span annotated documents.~\footnote{A single document consists of a title and an abstract.}
-It comes pre-divided into a training set (n=4,933) annotated through crowd-sourcing and an expert annotated test set (n=191) for evaluation purposes.
+\textbf{EBM-PICO.}
+The EBM-PICO dataset developed by Nye \textit{et al.} consists of 5000 PICO entity/span annotated documents.~\footnote{A single document consists of a title and an abstract.}
+It comes pre-divided into a training set (n=4,933) annotated through crowd-sourcing and an expert annotated gold test set (n=191) for evaluation purposes.
 The dataset has annotations at two levels.
 Span level PICO annotation encompasses the maximum amount of PICO descriptions that often span an entire sentence.
 Entity-level PICO annotation cover fine-grained PICO information at the entity level with PICO classes further divided into fine-grained subclasses.
 
 
-\textbf{EBM-PICO corrected.} The fine-grained PICO annotations in EBM-PICO test set (n=191), however, have several errors that lead to faulty evaluation of machine learning methods.
-These errors emanate from the annotation process of EBM-PICO corpus that follows the sequence of fist annotating only the span-level PICO information and then restrict the entity-level PICO annotation to these larger spans.
+
+\textbf{EBM-PICO corrected + Study Type.}
+The EBM-PICO annotation guidelines warn about variable annotation quality of the annotations~\footnote{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6174533/bin/NIHMS988059-supplement-Appendix.pdf}.
+Variable annotation quality in the training dataset is pardonable, but the possible errors in the gold standard test sets will impact the development of downstream PICO extraction models.
+The fine-grained PICO annotations in EBM-PICO gold test set (n=191), however, have several errors that lead to faulty evaluation of machine learning methods.
+These errors emanate from the annotation process of EBM-PICO corpus that follows the sequence of first annotating only the span-level PICO information and then restrict the entity-level PICO annotation to these larger spans.
 This leads to specifically missing out on the the repeated mentions of the fine-grained PICO information that is not covered in the longer spans. 
-We conducted an error-focused corpus re-annotation for the EBM-PICO gold corpus.
-
-
-\textbf{EBM-PICO corrected + Study Type.} We annotated an additional entity for study type only for this corpus to measure the effectiveness of weak supervision approaches.
+We conducted an error-focused corpus re-annotation for the EBM-PICO gold corpus (n = 191) for PICO entities.
+We annotated an additional entity for study type only for this corpus to measure the effectiveness of weak supervision approaches.
 Our study type entity is restricted to whether a study is a ``Randomized Controlled Trial'' or not.
 This annotation exercise was to demonstrate the application of weak supervision for entities beyond PICO.
 
@@ -295,8 +298,42 @@ UMLS concepts as labeling functions. It is difficult to classify different Seman
 %
 %==============================
 \section{RESULTS}\label{results}
+%==============================
 %
 Table demonstrating the scores mentioned above.
+%
+%
+%
+%==============================
+\subsection{Error Analysis}\label{subsec:err}
+%==============================
+%
+The EBM-PICO gold test set was evaluated for errors and the results are shown in Table.
+5.4\% of all the tokens were errors in the gold standard corpus.
+For intervention class the major chunk falling under ``junk information'' category. In the intervention class, the annotation guidelines clearly mentioned not to annotate any part of text that did not mention intervention name but a lot of the times, extraneous information like intervention dosage, frequency, route of administration and the information about intervention administrator were marked. 
+The most common error across all the entities was the annotators missing out on repeated mention of an entity. 
+This again stemmed from the annotation guidelines where the ``entity level'' annotation was supposed to be done only within the longer span level annotation.
+Many span level annotations did not capture the repeated, co-referred or generic mentions of the entities. 
+
+\begin{table}[!ht]
+    \centering
+    \begin{tabular}{|l|r|}
+    \hline
+    \multicolumn{2}{|c|}{Intervention} \\
+    \hline
+    Error type & Count \\
+    \hline
+        Description inconsistency & 18 \\
+        Period/article & 23 \\ 
+        Unmarked control & 59 \\ 
+        Junk information & 225 \\ 
+        Generic name & 120 \\ 
+        Conjunction connector & 36 \\ 
+        Repeated mention & 220 \\ 
+        Total & 701 \\ 
+        Total tokens evaluated & 12960 \\ \hline
+    \end{tabular}
+\end{table}
 %
 %
 %
