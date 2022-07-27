@@ -308,14 +308,22 @@ Table demonstrating the scores mentioned above.
 \subsection{Error Analysis}\label{subsec:err}
 %==============================
 %
-The EBM-PICO gold test set was evaluated for errors and the results are shown in Table.
-5.4\% of all the tokens were errors in the gold standard corpus.
-For intervention class the major chunk falling under ``junk information'' category. In the intervention class, the annotation guidelines clearly mentioned not to annotate any part of text that did not mention intervention name but a lot of the times, extraneous information like intervention dosage, frequency, route of administration and the information about intervention administrator were marked. 
-The most common error across all the entities was the annotators missing out on repeated mention of an entity. 
+%The EBM-PICO gold test set was evaluated for errors individually for PICO entities and the results are shown in Table.
+The EBM-PICO training set was evaluated for errors individually for PICO classes.
+A total of 5.4\% of all the 12,960 tokens were errors in the part of the EBM-PICO training corpus for the ``Intervention'' class.
+The error categories are shown in the Table~\ref{tab:errordist}.
+A major chunk fell under ``junk information'' category.
+In the intervention class, the annotation guidelines clearly mentioned not to annotate any part of text that did not mention intervention name but a lot of the times, extraneous information like intervention dosage, frequency, route of administration and the information about intervention administrator were marked. 
+The most common error across all the entities was the annotators missing out on repeated mention of an entity especially for the non-pharmaceutical interventions. 
 This again stemmed from the annotation guidelines where the ``entity level'' annotation was supposed to be done only within the longer span level annotation.
-Many span level annotations did not capture the repeated, co-referred or generic mentions of the entities. 
-Sometimes intervention description marking the compoenents of intervention was marked and sometimes it was not marked.
+Many span level annotations did not capture the repeated, co-referred or generic mentions of the entities.
+For instance, for a RCT with \textit{breast cancer risk counselling} as an intervention referred to it as \textit{risk counselling}, the former was marked but the later was missed.
+Sometimes intervention description marking the components of intervention was marked and sometimes it was not marked.
 For example, if the exercise intervention involved aerobic exercise along with stretching, this information was marked in some studies while not in the other studies.
+The description of control group entities was inconsistently marked as well.
+
+
+Some of the common errors stemmed by annotating either the punctuation following the entity or the articles/prepositions before the entity even though they were not the part of that entity.
 
 \begin{table}[!ht]
     \centering
@@ -335,6 +343,7 @@ For example, if the exercise intervention involved aerobic exercise along with s
         Total & 701 \\ 
         Total tokens evaluated & 12960 \\ \hline
     \end{tabular}
+    \caption{\label{tab:errordist} Your caption.}
 \end{table}
 %
 %
