@@ -311,37 +311,27 @@ Table demonstrating the scores mentioned above.
 %The EBM-PICO gold test set was evaluated for errors individually for PICO entities and the results are shown in Table.
 The EBM-PICO training set was evaluated for errors individually for PICO classes.
 A total of 5.4\% of all the 12,960 tokens were errors in the part of the EBM-PICO training corpus for the ``Intervention'' class.
+A total of 4.2\% of all the 12,960 tokens were errors in the part of the EBM-PICO training corpus for the ``Participant'' class.
 The error categories are shown in the Table~\ref{tab:errordist}.
-A major chunk fell under ``junk information'' category.
-In the intervention class, the annotation guidelines clearly mentioned not to annotate any part of text that did not mention intervention name but a lot of the times, extraneous information like intervention dosage, frequency, route of administration and the information about intervention administrator were marked. 
-The most common error across all the entities was the annotators missing out on repeated mention of an entity especially for the non-pharmaceutical interventions. 
-This again stemmed from the annotation guidelines where the ``entity level'' annotation was supposed to be done only within the longer span level annotation.
-Many span level annotations did not capture the repeated, co-referred or generic mentions of the entities.
-For instance, for a RCT with \textit{breast cancer risk counselling} as an intervention referred to it as \textit{risk counselling}, the former was marked but the later was missed.
-Sometimes intervention description marking the components of intervention was marked and sometimes it was not marked.
-For example, if the exercise intervention involved aerobic exercise along with stretching, this information was marked in some studies while not in the other studies.
-The description of control group entities was inconsistently marked as well.
 
-
-Some of the common errors stemmed by annotating either the punctuation following the entity or the articles/prepositions before the entity even though they were not the part of that entity.
 
 \begin{table}[!ht]
     \centering
-    \begin{tabular}{|l|r|}
+    \begin{tabular}{|l|r|l|r|}
     \hline
-    \multicolumn{2}{|c|}{Intervention} \\
+    \multicolumn{2}{|c|}{Intervention} & \multicolumn{2}{|c|}{Participant} \\
     \hline
-    Error type & Count \\
+    Error type & Count & Error type & Count\\
     \hline
-        Description inconsistency & 18 \\
-        Period/article & 23 \\ 
-        Unmarked control & 59 \\ 
-        Junk information & 225 \\ 
-        Generic name & 120 \\ 
-        Conjunction connector & 36 \\ 
-        Repeated mention & 220 \\ 
-        Total & 701 \\ 
-        Total tokens evaluated & 12960 \\ \hline
+        Description inconsistency & 18 & Should have been annotated & 93 \\
+        Period/article & 23 & Period/article & 15 \\ 
+        Unmarked control & 59 & - & - \\ 
+        Junk information & 225 & Junk information & 113 \\ 
+        Generic name & 120 & Generic name & 90 \\ 
+        Conjunction connector & 36 & Conjunction connector & 30 \\ 
+        Repeated mention & 220 & Repeated mention & 213 \\ 
+        Total & 701 & Total & 554 \\ 
+        Total tokens evaluated & 12960 & Total tokens evaluated & 12960 \\ \hline
     \end{tabular}
     \caption{\label{tab:errordist} Your caption.}
 \end{table}
@@ -352,7 +342,37 @@ Some of the common errors stemmed by annotating either the punctuation following
 \section{DISCUSSION}\label{discussion}
 %==============================
 %
-\paragraph{Error correction: } Errors and the error correction to the EBM-PICO gold set explained here. 
+\paragraph{Error Analysis and correction: } 
+
+Errors and the error correction to the EBM-PICO gold set explained here. 
+
+A major chunk fell under ``junk information'' category.
+In the intervention class, the annotation guidelines clearly mentioned not to annotate any part of text that did not mention intervention name but a lot of the times, extraneous information like intervention dosage, frequency, route of administration and the information about intervention administrator were marked. 
+The most common error across all the entities was the annotators missing out on repeated mention of an entity especially for the non-pharmaceutical interventions. 
+This again stemmed from the annotation guidelines where the ``entity level'' annotation was supposed to be done only within the longer span level annotation.
+Many span level annotations did not capture the repeated, co-referred or generic mentions of the entities.
+For instance, for a RCT with \textit{breast cancer risk counselling} as an intervention referred to it as \textit{risk counselling}, the former was marked but the later was missed.
+Sometimes intervention description marking the components of intervention was marked and sometimes it was not marked.
+For example, if the exercise intervention involved aerobic exercise along with stretching, this information was marked in some studies while not in the other studies.
+The description of control group entities was inconsistently marked as well.
+
+for the ``Participants'' class, the errors stemmed from two main categories.
+Repeated mention was not marked including the repeated mention of an disease abbreviation.
+Generic mention of the entity was not marked for example Primary breast cancer mention as just breast cancer was not marked. 
+Demographic information was not annotated.
+Other information about the patients like smoker, pregnant was not annotated.
+Patient subgroup information was not annotated as well.
+Bracket around the abbreviations were marked.
+A lot of junk information was marked as well. Mention examples of junk information here.
+Some generic information was inconsistently marked. For example, for the sample size sub-entity, sometimes ``59 healthy patients'' was marked whilst sometimes only ``59'' was marked.
+
+
+
+
+Some of the common errors stemmed by annotating either the punctuation following the entity or the articles/prepositions before the entity even though they were not the part of that entity.
+Even the conjunctions between subsequent entities were marked even though they occurred between two separate semantic entities.
+
+
 Why were errors corrected?
 Errors like this can cause faulty evaluation of the machine learning issues when one mention is annotated but another is not annotated.
 We suggest the annotators to be medical students with knowledge about informatics like Bioinformaticians given that the ultimate application of such corpora is to develop machine learning algorithms that are in accordance to .
