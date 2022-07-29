@@ -168,30 +168,6 @@ Weak supervision using weak-PICO+ for PICO entity recognition is not only feasib
 \keywords{Randomized Controlled Trials, Weakly-Supervised Machine Learning, Information Extraction, Evidence-based Medicine}
 %
 \clearpage
-%==============================
-\section{QUESTIONS TO ADDRESS}\label{ques}
-%==============================
-%
-
-\begin{enumerate}
-    \item Is it important to have high F1 score for the individual labeling functions?
-    \item Similar question: Will individual LF false negatives impact the performance?
-    \item What would you call low coverage? What should be the ideal coverage of the labeling functions?
-    \item What if higher coverage leads to higher False Positives?
-    \item Labeling function weights for the functions with high F1 score (and not a good coverage necessarily)?
-    \item How is overlap calculated? are only positive classes calculated in the overlap? > Coverage is calculated over 0 and 1 labels excluding the -1 labels.
-    \item Is coverage correlated to F1 score?
-    \item How is abstain treated while calculating F1 score?
-    \item Check out Trove for how "0" labels are calculated?
-    \item What annotation effort or how much annotation effort will be saved using distant-pico?
-\end{enumerate}
-
-Learning rate for label model train should be lower. LR like 1.0, 0.5, 0.1, 0.05, 0.01 did not work for me.
-
-Problem of high precision and low recall. Could it solved by reducing the abstains?
-
-
-
 %
 %
 %
@@ -200,12 +176,19 @@ Problem of high precision and low recall. Could it solved by reducing the abstai
 %==============================
 %
 \begin{itemize}
-    \item PICO recognition - define, importance in SRs, challenges, slow process
-    \item Extension - PICOS, PICOTS, PICO+
-    \item Corpora creation and annotation - time consuming
-    \item approach for span recognition but not entity recognition
+    \item PICO recognition - define, importance in SRs, inclusion/exclusion criteria
+    \item Parts of PICO form a part of inclusion/exclusion criteria
+    \item Extension - PICOS, PICOTS, PICO+, Extension of the part of PICOS
+    \item Corpus annotation challenges, slow process
+    \item Lack of large corpora, not easy extension = Bottleneck to innovation
+    \item Data-centric AI, weak supervision, distant supervision = solution
+    \item Current approaches to PICO = limited to spans not entities
     \item entities = semantic units vs. span = maximum information/description
-    \item weak supervision approaches - democratize
+    \item This limits full supervision because once the spans are identified, they still require digging deeper to identify semantic entity corresponding to semantic entities
+    \item Approaches going beyond span recognition to address entity recognition are required
+    \item Entity recognition approach to PICO is not as easy as entity recognition approach to disease or chemical names which are more or less standardised. PICO terms are not standard and even the experts do not agree on the exact span constituting PICO.
+    \item We present a data-centric, weakly-supervised approach to PICO entity recognition using medical ontologies, hand-crafted dictionaries and expert-generated rules. 
+    \item We extend it to an additional entity to show the utility of weakly-supervision entity recognition for PICOS (S = Study type) entities.
 \end{itemize}
 %
 %
@@ -392,6 +375,30 @@ OxO
 %==============================
 %
 OxO
+%
+%
+%
+%==============================
+\section{QUESTIONS TO ADDRESS}\label{ques}
+%==============================
+%
+
+\begin{enumerate}
+    \item Is it important to have high F1 score for the individual labeling functions?
+    \item Similar question: Will individual LF false negatives impact the performance?
+    \item What would you call low coverage? What should be the ideal coverage of the labeling functions?
+    \item What if higher coverage leads to higher False Positives?
+    \item Labeling function weights for the functions with high F1 score (and not a good coverage necessarily)?
+    \item How is overlap calculated? are only positive classes calculated in the overlap? > Coverage is calculated over 0 and 1 labels excluding the -1 labels.
+    \item Is coverage correlated to F1 score?
+    \item How is abstain treated while calculating F1 score?
+    \item Check out Trove for how "0" labels are calculated?
+    \item What annotation effort or how much annotation effort will be saved using distant-pico?
+\end{enumerate}
+
+Learning rate for label model train should be lower. LR like 1.0, 0.5, 0.1, 0.05, 0.01 did not work for me.
+
+Problem of high precision and low recall. Could it solved by reducing the abstains?
 %
 %
 %
