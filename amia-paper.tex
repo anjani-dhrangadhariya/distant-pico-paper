@@ -197,13 +197,7 @@ Weak supervision using weak-PICO+ for PICO entity recognition is not only feasib
 \section{METHODOLOGY}\label{methods}
 %==============================
 %
-\begin{itemize}
-    \item datasets - EBM-PICO training, EBM-PICO test gold, Physio gold
-    \item Labeling function design - Positive LF, Negative LF
-    \item Candidate generation - Experiments
-    \item Model training - Training models using strong, weak and combination annotations. - Experiments
-    \item Evaluation
-\end{itemize}
+The birds-eye view of our approach is shown in the Figure.
 %
 %
 %
@@ -233,6 +227,16 @@ Our study type entity is restricted to whether a study is a ``Randomized (Placeb
 This annotation exercise was to demonstrate the application of weak supervision for entities beyond PICO~\cite{menard2019turning}.
 
 \textbf{Physio set.} A test set comprising 153 PICO entity/span annotated documents from Physiotherapy and Rehabilitation RCTs (Randomized Controlled Trials) was used as an additional benchmark to evaluate the generalization power of our approach for this sub-domain~\cite{dhrangadhariya2021end}.
+
+None of these datasets underwent any preprocessing except tagging them with the POS tags using spaCy.
+
+Our ontology labelling sources are UMLS, comparative toxicogenomics database (CTD) disease, disease ontology DO, HPO, OAE, ChEBI,  comparative toxicogenomics database (CTD) Chem.
+We used the 2021AB-full release of UMLS Metathesaurus English subset dump removing non-English and zoonotic source terminologies as well as sources containing fewer than 500 terms remaining with 131 vocabularies.
+Our distant supervision dictionaries were created from the structure fields of clinicaltrials.gov.
+Our hand-coded dictionaries were for gender, disease abbreviation dictionary, intervention comparator terms, and outcome endpoints from the sources like XX, XX, XX, respectively.
+
+Preprocessing of UMLS ontologies: Remove stopwords (NLTK, Gensim, scikit learn, spaCy), numbers and punctuation's.
+
 
 
 \begin{table}[h!]
@@ -264,6 +268,7 @@ This annotation exercise was to demonstrate the application of weak supervision 
 %
 PICO entity corpus creation is a token labeling problem where each token in a sequence X is classified or labeled into one of the three PICO classes (Y).
 Y is not observable so our challenge was to devise data-centric techniques to get token labels corresponding to PICO classes and sub-classes and create a labeled dataset.
+Since Y is not observable, our primary technical challenge is estimating Y from multiple, potentially conflicting label sources of unknown quality to construct a probabilistically labeled dataset.
 This dataset can then be used for training classification models such as deep neural networks.
 Such a labeling regimen is typically low-cost, but less accurate than the hand-curated labels used in traditional supervised learning; hence, this paradigm is referred to as weakly supervised learning.
 %
@@ -278,12 +283,27 @@ UMLS concepts as labeling functions. It is difficult to classify different Seman
 %
 %
 %==============================
+\subsection{Label Model}\label{lfs}
+%==============================
+%
+Combine multiple labeling function results into probablistic model.
+%
+%
+%
+%==============================
+\subsection{Transformer}\label{lfs}
+%==============================
+%
+Training end-models for supervised learning: PubMedBERT, SciBERT, BioBERT
+%
+%
+%
+%==============================
 \subsection{EVALUATION}\label{eval}
 %==============================
 %
 \begin{itemize}
     \item Classic metrics (Precision, Recall, F1).
-    \item No evaluation for the Study type entity
     \item Students t-test for significance
 \end{itemize}
 %
@@ -298,7 +318,7 @@ Table demonstrating the scores mentioned above.
 %
 %
 %==============================
-\subsection{Error Analysis for reannotation}\label{subsec:err}
+\subsection{Error Analysis for re-annotation}\label{subsec:err}
 %==============================
 %
 %The EBM-PICO gold test set was evaluated for errors individually for PICO entities and the results are shown in Table.
