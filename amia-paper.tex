@@ -194,7 +194,7 @@ Weak supervision using weak-PICO+ for PICO entity recognition is not only feasib
 %
 %
 %==============================
-\section{MATERIALS AND METHODS}\label{methods}
+\section{METHODOLOGY}\label{methods}
 %==============================
 %
 \begin{itemize}
@@ -208,30 +208,31 @@ Weak supervision using weak-PICO+ for PICO entity recognition is not only feasib
 %
 %
 %==============================
-\subsection{Datasets}\label{data}
+\subsection{Datasets and tasks}\label{data}
 %==============================
 %
 \textbf{EBM-PICO.}
 The EBM-PICO dataset developed by Nye \textit{et al.} consists of 5000 PICO entity/span annotated documents.~\footnote{A single document consists of a title and an abstract.}
 It comes pre-divided into a training set (n=4,933) annotated through crowd-sourcing and an expert annotated gold test set (n=191) for evaluation purposes.
-The dataset has annotations at two levels.
+The dataset has annotations at two levels: span-level coarse-grained PICO and entity-level fine-grained PICO.
 Span level PICO annotation encompasses the maximum amount of PICO descriptions that often span an entire sentence.
-Entity-level PICO annotation cover fine-grained PICO information at the entity level with PICO classes further divided into fine-grained subclasses.
+Entity-level PICO annotation covers fine-grained PICO information at the entity level, with PICO classes further divided into fine-grained subclasses.
 
 
 
 \textbf{EBM-PICO corrected + Study Type.}
-The EBM-PICO annotation guidelines warn about variable annotation quality of the annotations~\footnote{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6174533/bin/NIHMS988059-supplement-Appendix.pdf}.
+The EBM-PICO annotation guidelines caution about variable annotation quality~\footnote{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6174533/bin/NIHMS988059-supplement-Appendix.pdf}.
 Variable annotation quality in the training dataset is pardonable, but the possible errors in the gold standard test sets will impact the development of downstream PICO extraction models.
-The fine-grained PICO annotations in EBM-PICO gold test set (n=191), however, have several errors that lead to faulty evaluation of machine learning methods.
-These errors emanate from the annotation process of EBM-PICO corpus that follows the sequence of first annotating only the span-level PICO information and then restrict the entity-level PICO annotation to these larger spans.
-This leads to specifically missing out on the the repeated mentions of the fine-grained PICO information that is not covered in the longer spans. 
-We conducted an error-focused corpus re-annotation for the EBM-PICO gold corpus (n = 191) for PICO entities.
+The entity-level PICO annotations in the EBM-PICO gold test set (n=191) have several errors that could lead to faulty evaluation of machine learning methods.
+We evaluate 1\% of the EBM-PICO training set tokens to gauge the possible reasons for the errors.
+We use this evaluation exercise to conduct an error-focused corpus re-annotation for the EBM-PICO gold corpus (n = 191) for PICO entities.
+%These errors emanate from the annotation process of EBM-PICO corpus that follows the sequence of first annotating only the span-level PICO information and then restrict the entity-level PICO annotation to these larger spans.
+%This leads to specifically missing out on the the repeated mentions of the fine-grained PICO information that is not covered in the longer spans. 
 We annotated an additional entity for study type only for this corpus to measure the effectiveness of weak supervision approaches.
-Our study type entity is restricted to whether a study is a ``Randomized Controlled Trial'' or not.
-This annotation exercise was to demonstrate the application of weak supervision for entities beyond PICO.
+Our study type entity is restricted to whether a study is a ``Randomized (Placebo) Controlled Trial'' or not.
+This annotation exercise was to demonstrate the application of weak supervision for entities beyond PICO~\cite{menard2019turning}.
 
-\textbf{Physio set.} A test set comprising 153 PICO entity/span annotated documents from Physiotherapy and Rehabilitation RCTs (Randomized Controlled Trials) was used as an additional benchmark to evaluate the generalization power of our approach for this sub-domain
+\textbf{Physio set.} A test set comprising 153 PICO entity/span annotated documents from Physiotherapy and Rehabilitation RCTs (Randomized Controlled Trials) was used as an additional benchmark to evaluate the generalization power of our approach for this sub-domain~\cite{dhrangadhariya2021end}.
 
 
 \begin{table}[h!]
@@ -254,8 +255,17 @@ This annotation exercise was to demonstrate the application of weak supervision 
 \label{table:coarsefineconcept}
 \end{center}
 \end{table}
-
-
+%
+%
+%
+%==============================
+\subsection{Sequence labeling}\label{data}
+%==============================
+%
+PICO entity corpus creation is a token labeling problem where each token in a sequence X is classified or labeled into one of the three PICO classes (Y).
+Y is not observable so our challenge was to devise data-centric techniques to get token labels corresponding to PICO classes and sub-classes and create a labeled dataset.
+This dataset can then be used for training classification models such as deep neural networks.
+Such a labeling regimen is typically low-cost, but less accurate than the hand-curated labels used in traditional supervised learning; hence, this paradigm is referred to as weakly supervised learning.
 %
 %
 %
@@ -288,7 +298,7 @@ Table demonstrating the scores mentioned above.
 %
 %
 %==============================
-\subsection{Error Analysis}\label{subsec:err}
+\subsection{Error Analysis for reannotation}\label{subsec:err}
 %==============================
 %
 %The EBM-PICO gold test set was evaluated for errors individually for PICO entities and the results are shown in Table.
