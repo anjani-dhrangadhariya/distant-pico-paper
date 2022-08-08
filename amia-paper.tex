@@ -223,7 +223,8 @@ We use this evaluation exercise to conduct an error-focused corpus re-annotation
 %These errors emanate from the annotation process of EBM-PICO corpus that follows the sequence of first annotating only the span-level PICO information and then restrict the entity-level PICO annotation to these larger spans.
 %This leads to specifically missing out on the the repeated mentions of the fine-grained PICO information that is not covered in the longer spans. 
 We annotated an additional entity for study type only for this corpus to measure the effectiveness of weak supervision approaches.
-Our study type entity is restricted to whether a study is a ``Randomized (Placebo) Controlled Trial'' or not.
+Our study type entity is restricted to whether a study is a ``Randomized Controlled Trial'' (RCT) or not.
+An RCT can be classified based on trial design as parallel group, cross-over, cluster or factorial trial, on outcome of interest as pragmatic or exploratory trial and on hypothesis as superiority vs. noninferiority vs. equivalence trials.
 This annotation exercise was to demonstrate the application of weak supervision for entities beyond PICO~\cite{menard2019turning}.
 
 \textbf{Physio set.} A test set comprising 153 PICO entity/span annotated documents from Physiotherapy and Rehabilitation RCTs (Randomized Controlled Trials) was used as an additional benchmark to evaluate the generalization power of our approach for this sub-domain~\cite{dhrangadhariya2021end}.
@@ -330,21 +331,22 @@ The error categories are shown in the Table~\ref{tab:errordist}.
 
 \begin{table}[!ht]
     \centering
-    \begin{tabular}{|l|r|l|r|}
+    \begin{tabular}{|l|r|l|r|l|r|}
     \hline
-    \multicolumn{2}{|c|}{Intervention} & \multicolumn{2}{|c|}{Participant} \\
+    \multicolumn{2}{|c|}{Intervention} & \multicolumn{2}{|c|}{Participant} & \multicolumn{2}{|c|}{Outcome} \\
     \hline
-    Error type & Count & Error type & Count\\
+    Error type & Count & Error type & Count & Error type & Count \\
     \hline
-        Description inconsistency & 18 & Should have been annotated & 93 \\
-        Period/article & 23 & Period/article & 15 \\ 
-        Unmarked control & 59 & - & - \\ 
-        Junk information & 225 & Junk information & 113 \\ 
-        Generic name & 120 & Generic name & 90 \\ 
-        Conjunction connector & 36 & Conjunction connector & 30 \\ 
-        Repeated mention & 220 & Repeated mention & 213 \\ 
-        Total & 701 & Total & 554 \\ 
-        Total tokens evaluated & 12960 & Total tokens evaluated & 12960 \\ \hline
+        Description inconsistency & 18 & Remain unannotated & 93 & Scale inconsistency & 85 \\
+        Period/article & 23 & Period/article & 15 & Period/article & 48 \\ 
+        Unmarked control & 59 & - & - & Extra info marked & 58 \\ 
+        Junk information & 225 & Junk information & 113 & Junk information & 30 \\ 
+        Generic name & 120 & Generic name & 90 & Generic name & 85 \\ 
+        Conjunction connector & 36 & Conjunction connector & 30 & Conjunction connector & 57 \\ 
+        Repeated mention & 220 & Repeated mention & 213 & Repeated mention & 207 \\
+        - & - & - & - & Outcomes not marked & 71 \\ 
+        Total & 701 & Total & 554 & Total & 641 \\ 
+        Total tokens evaluated & 12960 & Total tokens evaluated & 12960 & Total tokens evaluated & 12960 \\ \hline
     \end{tabular}
     \caption{\label{tab:errordist} Your caption.}
 \end{table}
