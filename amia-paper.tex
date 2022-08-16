@@ -123,7 +123,7 @@
 %==============================
 
 % reduce space between title and begining of page
-\title{\vspace{-2em} Not So Weak-PICO$+$: Leveraging weak supervision for Patient, Interventions, Outcomes and Study type extraction for systematic review automation}
+\title{\vspace{-2em} Not So Weak-PICO: Leveraging weak supervision for Participants, Interventions, and Outcomes extraction for systematic review automation}
 \date{\vspace{-5ex}}
 \author[ ] {
     % Authors
@@ -187,8 +187,8 @@ Weak supervision using weak-PICO+ for PICO entity recognition is not only feasib
     \item This limits full supervision because once the spans are identified, they still require digging deeper to identify semantic entity corresponding to semantic entities
     \item Approaches going beyond span recognition to address entity recognition are required
     \item Entity recognition approach to PICO is not as easy as entity recognition approach to disease or chemical names which are more or less standardised. PICO terms are not standard and even the experts do not agree on the exact span constituting PICO.
-    \item We present a data-centric, weakly-supervised approach to PICO entity recognition using medical ontologies, hand-crafted dictionaries and expert-generated rules. 
-    \item We extend it to an additional entity to show the utility of weakly-supervision entity recognition for PICOS (S = Study type) entities.
+    \item We present a data-centric, weakly-supervised approach to PICO entity recognition using medical ontologies, hand-crafted dictionaries, distant supervision and expert-generated rules. 
+    %\item We extend it to an additional entity to show the utility of weakly-supervision entity recognition for PICOS (S = Study type) entities.
 \end{itemize}
 %
 %
@@ -206,7 +206,7 @@ The birds-eye view of our approach is shown in the Figure.
 %==============================
 %
 \textbf{EBM-PICO.}
-The EBM-PICO dataset developed by Nye \textit{et al.} consists of 5000 PICO entity/span annotated documents.~\footnote{A single document consists of a title and an abstract.}
+The EBM-PICO dataset developed by Nye \textit{et al.} consists of about 5000 PICO entity/span annotated documents.~\footnote{A single document consists of a title and an abstract.}
 It comes pre-divided into a training set (n=4,933) annotated through crowd-sourcing and an expert annotated gold test set (n=191) for evaluation purposes.
 The dataset has annotations at two levels: span-level coarse-grained PICO and entity-level fine-grained PICO.
 Span level PICO annotation encompasses the maximum amount of PICO descriptions that often span an entire sentence.
@@ -214,26 +214,26 @@ Entity-level PICO annotation covers fine-grained PICO information at the entity 
 
 
 
-\textbf{EBM-PICO corrected + Study Type.}
+\textbf{EBM-PICO corrected}
 The EBM-PICO annotation guidelines caution about variable annotation quality~\footnote{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6174533/bin/NIHMS988059-supplement-Appendix.pdf}.
-Variable annotation quality in the training dataset is pardonable, but the possible errors in the gold standard test sets will impact the development of downstream PICO extraction models.
+Variable annotation quality in the training dataset is pardonable, but the possible errors in the gold standard test set will impact the development of downstream PICO extraction models.
 The entity-level PICO annotations in the EBM-PICO gold test set (n=191) have several errors that could lead to faulty evaluation of machine learning methods.
 We evaluate 1\% of the EBM-PICO training set tokens to gauge the possible reasons for the errors.
-We use this evaluation exercise to conduct an error-focused corpus re-annotation for the EBM-PICO gold corpus (n = 191) for PICO entities.
+We use this error evaluation exercise to conduct an error-focused corpus re-annotation for the EBM-PICO gold corpus (n = 191) for PICO entities.
 %These errors emanate from the annotation process of EBM-PICO corpus that follows the sequence of first annotating only the span-level PICO information and then restrict the entity-level PICO annotation to these larger spans.
 %This leads to specifically missing out on the the repeated mentions of the fine-grained PICO information that is not covered in the longer spans. 
-We annotated an additional entity for study type only for this corpus to measure the effectiveness of weak supervision approaches.
-Our study type entity is restricted to whether a study is a ``Randomized Controlled Trial'' (RCT) or not.
-An RCT can be classified based on trial design as parallel group, cross-over, cluster or factorial trial, on outcome of interest as pragmatic or exploratory trial and on hypothesis as superiority vs. noninferiority vs. equivalence trials.
-This annotation exercise was to demonstrate the application of weak supervision for entities beyond PICO~\cite{menard2019turning}.
+%We annotated an additional entity for study type only for this corpus to measure the effectiveness of weak supervision approaches.
+%Our study type entity is restricted to whether a study is a ``Randomized Controlled Trial'' (RCT) or not.
+%An RCT can be classified based on trial design as parallel group, cross-over, cluster or factorial trial, on outcome of interest as pragmatic or exploratory trial and on hypothesis as superiority vs. noninferiority vs. equivalence trials.
+%This annotation exercise was to demonstrate the application of weak supervision for entities beyond PICO~\cite{menard2019turning}.
 
 \textbf{Physio set.} A test set comprising 153 PICO entity/span annotated documents from Physiotherapy and Rehabilitation RCTs (Randomized Controlled Trials) was used as an additional benchmark to evaluate the generalization power of our approach for this sub-domain~\cite{dhrangadhariya2021end}.
 
 None of these datasets underwent any preprocessing except tagging them with the POS tags using spaCy.
 
-Our ontology labelling sources are UMLS, comparative toxicogenomics database (CTD) disease, disease ontology DO, HPO, OAE, ChEBI,  comparative toxicogenomics database (CTD) Chem.
+Our ontology labelling sources are UMLS, comparative toxicogenomics database (CTD) disease, disease ontology DO, Human Phenotype Ontology (HPO), Ontology of adverse events (OAE), Chemical entities of biological interest (ChEBI),  comparative toxicogenomics database (CTD) Chemical and Disease subclasses.
 We used the 2021AB-full release of UMLS Metathesaurus English subset dump removing non-English and zoonotic source terminologies as well as sources containing fewer than 500 terms remaining with 131 vocabularies.
-Our distant supervision dictionaries were created from the structure fields of clinicaltrials.gov.
+Our distant supervision dictionaries were created from the structure fields of clinicaltrials.gov .
 Our hand-coded dictionaries were for gender, disease abbreviation dictionary, intervention comparator terms, and outcome endpoints from the sources like XX, XX, XX, respectively.
 
 Preprocessing of UMLS ontologies: Remove stopwords (NLTK, Gensim, scikit learn, spaCy), numbers and punctuation's.
@@ -295,7 +295,7 @@ Combine multiple labeling function results into probablistic model.
 \subsection{Transformer}\label{lfs}
 %==============================
 %
-Training end-models for supervised learning: PubMedBERT, SciBERT, BioBERT
+Training end-models for weakly supervised and fully supervised learning: PubMedBERT, SciBERT, BioBERT
 %
 %
 %
@@ -303,10 +303,10 @@ Training end-models for supervised learning: PubMedBERT, SciBERT, BioBERT
 \subsection{EVALUATION}\label{eval}
 %==============================
 %
-\begin{itemize}
-    \item Classic metrics (Precision, Recall, F1).
-    \item Students t-test for significance
-\end{itemize}
+We report the classical macro-averaged F1-scores for the label models, weakly supervised transformer models and the fully supervised transformer models.
+Mean macro-averaged F1-scores are reported over three runs of each of these models with the top three random seeds (0, 1, and 42) used in Python.
+These models were separately trained for each of the PIO entity recognition tasks using the raw (IO) tagging scheme.
+We used students t-test with a alpha threshold of 0.05 to measure the statistical significance.
 %
 %
 %
@@ -322,13 +322,32 @@ Table demonstrating the scores mentioned above.
 \subsection{Error Analysis for re-annotation}\label{subsec:err}
 %==============================
 %
-%The EBM-PICO gold test set was evaluated for errors individually for PICO entities and the results are shown in Table.
-The EBM-PICO training set was evaluated for errors individually for PICO classes.
-A total of 5.4\% of all the 12,960 tokens were errors in the part of the EBM-PICO training corpus for the ``Intervention'' class.
-A total of 4.2\% of all the 12,960 tokens were errors in the part of the EBM-PICO training corpus for the ``Participant'' class.
-The error categories are shown in the Table~\ref{tab:errordist}.
+We used 1\% of the EBM-PICO training set tokens and evaluated for errors individually for PIO classes.
+of 12, 960 tokens evaluated, 4.4\% of the Intervention class tokens, 5.4\% of the Participant class tokens and 4.9\% of the Outcome class tokens were errors.
+These errors are categorized for each of the PIO classes and are shown in the Table~\ref{tab:errordist}.
+%
 
+\begin{table}[!ht]
+    \centering
+    \begin{tabular}{|l|r|r|r|}
+    \hline
+        Error category & Participant & Intervention & Outcome \\ \hline
+        Repeat mention unmarked & 213 & 220 & 207 \\ 
+        Remain unannotated & 47 & 59 & 71 \\ 
+        Inconsistency & 46 & 18 & 85 \\ 
+        Period/article & 15 & 23 & 48 \\ 
+        Conjunction connector & 30 & 36 & 57 \\ 
+        Junk & 53 & 79 & 30 \\ 
+        Extra information & 80 & 146 & 58 \\ 
+        Generic mention & 90 & 120 & 85 \\ \hline
+        Total errors & 574 & 701 & 641 \\ \hline
+    \end{tabular}
+    \caption{tab:errordist}
+    \label{Error distribution in the analysed tokens of EBM-PICO corpus.}
+\end{table}
 
+%
+\iffalse
 \begin{table}[!ht]
     \centering
     \begin{tabular}{|l|r|l|r|l|r|}
@@ -339,17 +358,22 @@ The error categories are shown in the Table~\ref{tab:errordist}.
     \hline
         Description inconsistency & 18 & Remain unannotated & 93 & Scale inconsistency & 85 \\
         Period/article & 23 & Period/article & 15 & Period/article & 48 \\ 
-        Unmarked control & 59 & - & - & Extra info marked & 58 \\ 
-        Junk information & 225 & Junk information & 113 & Junk information & 30 \\ 
+        Unmarked control & 59 & Extra info marked & 80 & Extra info marked & 58 \\ 
+        Junk information & 225 & Junk information & 53 & Junk information & 30 \\ 
         Generic name & 120 & Generic name & 90 & Generic name & 85 \\ 
         Conjunction connector & 36 & Conjunction connector & 30 & Conjunction connector & 57 \\ 
         Repeated mention & 220 & Repeated mention & 213 & Repeated mention & 207 \\
         - & - & - & - & Outcomes not marked & 71 \\ 
-        Total & 701 & Total & 554 & Total & 641 \\ 
-        Total tokens evaluated & 12960 & Total tokens evaluated & 12960 & Total tokens evaluated & 12960 \\ \hline
+        Total errors & 701 & Total errors & 574 & Total errors & 641 \\ 
+        %Total tokens evaluated & 12960 & Total tokens evaluated & 12960 & Total tokens evaluated & 12960 \\
+        \hline
+        \multicolumn{3}{|l|}{Total tokens evaluated} & \multicolumn{3}{|c|}{12960}\\
+        \hline
     \end{tabular}
-    \caption{\label{tab:errordist} Your caption.}
+    \caption{\label{tab:errordist} Error distribution in the analysed tokens of EBM-PICO corpus.}
 \end{table}
+\fi
+
 %
 %
 %
@@ -357,40 +381,60 @@ The error categories are shown in the Table~\ref{tab:errordist}.
 \section{DISCUSSION}\label{discussion}
 %==============================
 %
-\paragraph{Error Analysis and correction: } 
+%==============================
+\subsection{Error Analysis and correction}\label{err_ana}
+%==============================
+%
+We expound on the error categories and provide examples.
+The error categories Repeated mention, conjunction connector, generic reference, extra info marked and period/article are the shared error categories across the classes, while the rest are class specific.
 
-Errors and the error correction to the EBM-PICO gold set explained here. 
+An error falls under repeated mentions if one instance of an entity in the text is annotated under one of the PIO classes, but another instance of this same entity is not marked.
+For the ``Participants'' class, the repeated mentions were not marked including the repeated mention of a disease abbreviation.
+Conjunction connector errors are the conjunctions occurring between two semantically separately entities but are falsely marked as an entity.
+For example, ``Nausea and vomiting'' are two separate outcome entities marked as one by annotating conjunction between them.
+Sometimes an extra period succeeding the entity or an article or a preposition preceding the entity was falsely marked as an entity. These fall under period/article errors.
 
-A major chunk fell under ``junk information'' category.
-In the intervention class, the annotation guidelines clearly mentioned not to annotate any part of text that did not mention intervention name but a lot of the times, extraneous information like intervention dosage, frequency, route of administration and the information about intervention administrator were marked. 
-The most common error across all the entities was the annotators missing out on repeated mention of an entity especially for the non-pharmaceutical interventions. 
-This again stemmed from the annotation guidelines where the ``entity level'' annotation was supposed to be done only within the longer span level annotation.
-Many span level annotations did not capture the repeated, co-referred or generic mentions of the entities.
-For instance, for a RCT with \textit{breast cancer risk counselling} as an intervention referred to it as \textit{risk counselling}, the former was marked but the later was missed.
+A generic reference of an entity in the same text was several times left unmarked by the annotators.
+A generic reference is defined as co-reference of an entity mentioned using different words.
+For example, if the outcome endpoint \textit{smoking cessation} was referred in the same text elsewhere as \textit{quitting smoking}, it was not marked even though it is a reference to the outcome phrase \textit{smoking cessation}.
+If ``aerobic exercise'' mentioned as ``exercise intervention'' was not marked, this constitutes generic reference error as well.
+For instance, for an RCT with \textit{breast cancer risk counselling} as an intervention referred to it as \textit{risk counselling}, the former was marked but the later was missed.
+This was the other common errors across all the PIO category especially for the non-pharmaceutical interventions and outcomes.
+
+
+
+Under all the PIO classes, sometimes extraneous information was also marked along with the entity information. 
+Such errors fell under extra information error category.
+For example, in the phrase ``This trial demonstrated short-term efficacy of smokeless tobacco in combination with...'', the annotators had marked ``short-term efficacy of smokeless tobacco'' as an outcome entity, but only ``short-term efficacy'' is an outcome entity, while ``smokeless tobacco'' is an intervention entity. 
+In the intervention class, the annotation guidelines clearly mentioned not to annotate any part of text that did not mention intervention name but a lot of the times, extraneous information like intervention dosage, frequency, route of administration and the information about intervention administrator were marked.
+
+In the Participant class, patient ethnicity information and other information like smoking status, pregnancy status which were marked in the coarse-grained span were missed out in the fine-grained entity because there was no fine-grained class to categorize it to. 
+Participant sample size subgroup information was missed several times.
+these two errors were categorized under ``Remain unannotated'' category.
+
 Sometimes intervention description marking the components of intervention was marked and sometimes it was not marked.
 For example, if the exercise intervention involved aerobic exercise along with stretching, this information was marked in some studies while not in the other studies.
 The description of control group entities was inconsistently marked as well.
 
-for the ``Participants'' class, the errors stemmed from two main categories.
-Repeated mention was not marked including the repeated mention of an disease abbreviation.
-Generic mention of the entity was not marked for example Primary breast cancer mention as just breast cancer was not marked. 
-Demographic information was not annotated.
-Other information about the patients like smoker, pregnant was not annotated.
-Patient subgroup information was not annotated as well.
-Bracket around the abbreviations were marked.
+
+
 A lot of junk information was marked as well. Mention examples of junk information here.
 Some generic information was inconsistently marked. For example, for the sample size sub-entity, sometimes ``59 healthy patients'' was marked whilst sometimes only ``59'' was marked.
 
 
+This again stemmed from the annotation guidelines where the ``entity level'' annotation was supposed to be done only within the longer span level annotation.
 
 
-Some of the common errors stemmed by annotating either the punctuation following the entity or the articles/prepositions before the entity even though they were not the part of that entity.
-Even the conjunctions between subsequent entities were marked even though they occurred between two separate semantic entities.
+Generic mention of the entity was not marked for example Primary breast cancer mention as just breast cancer was not marked. 
+Demographic information was not annotated.
 
 
-Why were errors corrected?
-Errors like this can cause faulty evaluation of the machine learning issues when one mention is annotated but another is not annotated.
-We suggest the annotators to be medical students with knowledge about informatics like Bioinformaticians given that the ultimate application of such corpora is to develop machine learning algorithms that are in accordance to .
+%Why were errors corrected?
+These errors and inconsistencies in the EBM-PICO gold test (and training) set can cause faulty evaluation of the machine learning approaches defying the purpose of the corpus.
+The reason behind these inconsistencies in the EBM-PICO corpus could stem from the fact the the annotators had clinical background but lacked an informatics background.
+This could lead to undermining the importance of semantic consistency required for annotating such corpora.
+A solution for correct manual annotation for clinical entities could be to hire annotators with the knowledge of both clinical and informatics, for example, bioinformaticians.
+These errors were corrected separately for PIO categories and the corrected dataset is available on Zenodo.
 %
 %
 %
