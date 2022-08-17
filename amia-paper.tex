@@ -168,6 +168,7 @@ Weak supervision using weak-PICO+ for PICO entity recognition is not only feasib
 \keywords{Randomized Controlled Trials, Weakly-Supervised Machine Learning, Information Extraction, Evidence-based Medicine}
 %
 \clearpage
+% Full paper is limited to 4000 words (approx. 14.6 pages)
 %
 %
 %
@@ -182,13 +183,43 @@ Manually analysing PICO information from many publications for a single SR takes
 The process can be automated using machine learning based information extraction strategies by directly pointing the human reviewers to the correct PICO descriptions.
 Information extraction strategies like machine learning classifiers rely on hand-labelled training corpora.
 Manually labelling corpora with PICO information for a downstream IE application requires people with combined medical and informatics skills, is expensive and is time-consuming in terms of the annotators' actual annotation process and training.
+
+In general, extracting PICO entities/spans is somewhat tricky because of high disagreement between human annotators on the exact spans constituting the mentions.
+This leads to human errors in hand-labeled corpora.
 Moreover, depending upon the systematic review question, PICO criteria are extended to PICOS (S-Study design), PICOC (C-Context), and PICOT (T-timeframe).
+Hand-labeled datasets are static and prohibit quick manual re-labeling in case of human errors or when a downstream task requires new entities.
 Hand-labelled datasets are static and expensive to adapt to a fast-changing real-world scenario. 
 
 
 Annotation bottleneck has shifted gears in favour of weakly-supervised learning that relies on programmatic labelling sources to obtain training data.
-Not only is programmatic labelling quick and is efficiently modified as per the downstream application changes.
-Medical ontology compendium like UMLS is an excellent resource for building 
+Programmatic labelling is quick and efficiently modified as per the downstream application changes.
+Medical ontology compendium like UMLS with its 224 terminologies, other external vocabularies and open access knowledgebases are an excellent resource for building entity labelled training data. 
+Legacy clinical applications both in NLP and image analysis are often automated using a combination of rule based approaches (refer to document and image classification methods that are rule based).
+Combining multiple labeling sources of variable accuracy is one of challenges.
+Weakly-supervised learning has demonstrated its prowess for clinical document classification and relation extraction in NLP, but clinical entity extraction tasks have relied on fully-supervised approaches.
+
+
+Combining multiple weak labeling sources and clinical entity recognition have been explored by Fries et al. in their paper Trove.
+Trove uses Snorkel which is a generative model implemented in python and is domain agnostic methodology to combine multiple labelling sources of variable accuracy.
+However, Trove only explores the very defined entities like chemical, disease, disorder and drug classes. 
+By definition, PICO information are spans by definition that encompass multiple sub-class entities.
+A shortcoming of span extraction is that even after a machine points a human reviewer to the correct PICO span, the reviewer requires to manually read and understand its finer aspects to screen the study for relevance.
+Span extraction hence leads to semi-automation but hinders full-automation.
+Weakly-supervised PICO entity extraction has not garnered enough attention.
+As far as our knowledge goes, only two studies exist for weakly-supervised PICO extraction.
+One of these approaches only explores weak supervision for intervention extraction using a single labelling source, and the other approach relies on a single source of programmatic labelling and focuses on PICO spans and sentences rather than entities.
+Entity recognition approach to PICO is not as easy as entity recognition approach to disease or chemical names which are more or less standardised.
+PICO terms are not standard and even the experts do not agree on the exact span constituting PICO.
+
+A Trove-like weak-supervision for PICO entities has several challenges.
+Consideration 1: Defining the sub-classes or entities encompassed within PICO spans
+Consideration 2: Mapping the several ontologies, vocabularies and terminologies to the PICO target sub-classes.
+Consideration 3: Developing weakly-supervised classifiers optimally combining several ontologies and evaluate its performance in comparison to fully-supervised approach.
+Consideration 4: Extending the ontology-based classifiers using expert-generated rules and evaluate performance in comparison to fully-supervised approach.
+
+In this work, we demonstrate the feasibility of weakly-supervised PICO entity extraction using three benchmark test sets.
+We show how using only ontology dependent classifiers vs combining them with more expensive expert-generated rules compares to fully-supervised PICO entity extraction.
+
 
 
 
