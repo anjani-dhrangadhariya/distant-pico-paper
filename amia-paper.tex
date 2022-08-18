@@ -9,7 +9,7 @@
 \usepackage{graphicx,grffile}
 \usepackage[labelfont=bf,labelsep=period]{caption}
 \usepackage{ifxetex,ifluatex}
-\usepackage{fixltx2e} % provides \textsubscript
+%\usepackage{fixltx2e} % provides \textsubscript
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
@@ -56,6 +56,7 @@
 % Spacing
 \usepackage{setspace}
 
+\usepackage{xcolor}
 
 % No new line after subsubsection
 \makeatletter
@@ -176,71 +177,58 @@ Weak supervision using weak-PICO+ for PICO entity recognition is not only feasib
 \section{INTRODUCTION}\label{introduction}
 %==============================
 %
-Systematic Review (SR) is an evidence-based practice of answering clinical questions using a transparent and quantitative approach whereby the reviewers must collect as many research publications as possible, identifying the relevant ones from these and integrating their results via statistical analysis.
+Systematic Review (SR) is an evidence-based practice of answering clinical questions using a transparent and quantitative approach whereby the reviewers must collect as many research publications as possible, identifying the relevant publications from these and integrating their results via statistical analysis.
 Filtering relevant publications from the bulk collected ones often uses PICO (Participants, Interventions, Comparators, Outcomes) criteria. 
-A clinical trial or a publication is relevant only if studies question relevant PICO information. 
-Manually analysing PICO information from many publications for a single SR takes about 12 months of two medical experts' time.
-The process can be automated using machine learning based information extraction strategies by directly pointing the human reviewers to the correct PICO descriptions.
-Information extraction strategies like machine learning classifiers rely on hand-labelled training corpora.
-Manually labelling corpora with PICO information for a downstream IE application requires people with combined medical and informatics skills, is expensive and is time-consuming in terms of the annotators' actual annotation process and training.
+A clinical trial or a publication is relevant only for answering a question only if it studies question relevant participants, interventions (and their comparators) and outcomes. 
+Manually analysing PICO information from thousands of publications for a single SR takes about 12 months of two medical experts' time.
+The process can be automated using machine learning based information extraction strategies by directly pointing the human reviewers to the correct text chunks describing PICO.
+Machine learning classifiers rely on hand-labelled training corpora.
+Hand labelling corpora with PICO information for a downstream IE application requires people with combined medical and informatics skills, is expensive and time-consuming in terms of the actual annotation process and annotator training.
 
-In general, extracting PICO entities/spans is somewhat tricky because of high disagreement between human annotators on the exact spans constituting the mentions.
+
+Extracting PICO information is somewhat tricky because of high disagreement between human annotators on the exact spans constituting PICO.
 This leads to human errors in hand-labeled corpora.
-Moreover, depending upon the systematic review question, PICO criteria are extended to PICOS (S-Study design), PICOC (C-Context), and PICOT (T-timeframe).
+Additionally, depending upon the systematic review question, PICO criteria are extended to PICOS (S-Study design), PICOC (C-Context), and PICOT (T-timeframe).
 Hand-labeled datasets are static and prohibit quick manual re-labeling in case of human errors or when a downstream task requires new entities.
-Hand-labelled datasets are static and expensive to adapt to a fast-changing real-world scenario. 
+Additionally, in SRs, the step after PICO information analysis is to identify risk of bias from the studies which is another information extraction lacking a manually labelled corpora. 
+This annotation bottleneck across domains has shifted gears in favour of weakly-supervised learning that relies on programmatic labelling sources to obtain training data.
+Programmatic labelling is quick and allows efficient modifications to the training data labels as per the downstream application changes.
 
 
-Annotation bottleneck has shifted gears in favour of weakly-supervised learning that relies on programmatic labelling sources to obtain training data.
-Programmatic labelling is quick and efficiently modified as per the downstream application changes.
 Medical ontology compendium like UMLS with its 224 terminologies, other external vocabularies and open access knowledgebases are an excellent resource for building entity labelled training data. 
-Legacy clinical applications both in NLP and image analysis are often automated using a combination of rule based approaches (refer to document and image classification methods that are rule based).
+Legacy clinical applications both in NLP and image analysis are often automated using a multiple \textit{if-else} rules relying on keyword and phrase cues (refer to document and image classification methods that are rule based).
+The bottleneck here is how to combine these labelling sources of varying accuracy and strength.
 Combining multiple labeling sources of variable accuracy is one of challenges.
+\textcolor{blue}{Give some paper examples where they utilize non-generative models to combine multiple labelling sources.}
+
+
 Weakly-supervised learning has demonstrated its prowess for clinical document classification and relation extraction in NLP, but clinical entity extraction tasks have relied on fully-supervised approaches.
-
-
-Combining multiple weak labeling sources and clinical entity recognition have been explored by Fries et al. in their paper Trove.
-Trove uses Snorkel which is a generative model implemented in python and is domain agnostic methodology to combine multiple labelling sources of variable accuracy.
+\textcolor{blue}{Give examples of weakly supervised learning approaches for document classification and relation extraction.}
+Combining multiple weak labeling sources for clinical entity extraction have been explored by Fries et al. in their paper Trove.
+Trove uses Snorkel which is a generative model implemented in python and is a domain agnostic methodology to combine multiple labelling sources of variable accuracy.
 However, Trove only explores the very defined entities like chemical, disease, disorder and drug classes. 
-By definition, PICO information are spans by definition that encompass multiple sub-class entities.
+By definition, PICO information are spans that encompass multiple sub-class entities.
 A shortcoming of span extraction is that even after a machine points a human reviewer to the correct PICO span, the reviewer requires to manually read and understand its finer aspects to screen the study for relevance.
 Span extraction hence leads to semi-automation but hinders full-automation.
-Weakly-supervised PICO entity extraction has not garnered enough attention.
+Weakly-supervised PICO entity extraction has not garnered enough attention as much as supervised PICO span extraction.
 As far as our knowledge goes, only two studies exist for weakly-supervised PICO extraction.
 One of these approaches only explores weak supervision for intervention extraction using a single labelling source, and the other approach relies on a single source of programmatic labelling and focuses on PICO spans and sentences rather than entities.
 Entity recognition approach to PICO is not as easy as entity recognition approach to disease or chemical names which are more or less standardised.
-PICO terms are not standard and even the experts do not agree on the exact span constituting PICO.
+PICO terms are not standard and even the experts do not agree on the exact tokens constituting PICO.
 
 A Trove-like weak-supervision for PICO entities has several challenges.
 Consideration 1: Defining the sub-classes or entities encompassed within PICO spans
-Consideration 2: Mapping the several ontologies, vocabularies and terminologies to the PICO target sub-classes.
+Consideration 2: Mapping the several ontologies, vocabularies and terminologies to the target sub-classes of PICO.
 Consideration 3: Developing weakly-supervised classifiers optimally combining several ontologies and evaluate its performance in comparison to fully-supervised approach.
-Consideration 4: Extending the ontology-based classifiers using expert-generated rules and evaluate performance in comparison to fully-supervised approach.
+Consideration 4: Extending the ontology-based classifiers using expert-generated rules and evaluate performance in comparison to fully-supervised approach. This serves as an ablation study whereby the importance of low cost ontology labellers could be compared to addition of high cost expert generated rules.
+Consideration 5: Identifying lags in the currently available PICO training dataset and correcting it.
 
 In this work, we demonstrate the feasibility of weakly-supervised PICO entity extraction using three benchmark test sets.
 We show how using only ontology dependent classifiers vs combining them with more expensive expert-generated rules compares to fully-supervised PICO entity extraction.
 
 
+\textcolor{blue}{Expound on weakly-supervised learning and generative modelling using Snorkel, AutoNER, Swellshark.}
 
-
-
-
-
-\begin{itemize}
-    \item PICO recognition - define, importance in SRs, inclusion/exclusion criteria
-    \item Parts of PICO form a part of inclusion/exclusion criteria
-    \item Extension - PICOS, PICOTS, PICO+, Extension of the part of PICOS
-    \item Corpus annotation challenges, slow process
-    \item Lack of large corpora, not easy extension = Bottleneck to innovation
-    \item Data-centric AI, weak supervision, distant supervision = solution
-    \item Current approaches to PICO = limited to spans not entities
-    \item entities = semantic units vs. span = maximum information/description
-    \item This limits full supervision because once the spans are identified, they still require digging deeper to identify semantic entity corresponding to semantic entities
-    \item Approaches going beyond span recognition to address entity recognition are required
-    \item Entity recognition approach to PICO is not as easy as entity recognition approach to disease or chemical names which are more or less standardised. PICO terms are not standard and even the experts do not agree on the exact span constituting PICO.
-    \item We present a data-centric, weakly-supervised approach to PICO entity recognition using medical ontologies, hand-crafted dictionaries, distant supervision and expert-generated rules. 
-    %\item We extend it to an additional entity to show the utility of weakly-supervision entity recognition for PICOS (S = Study type) entities.
-\end{itemize}
 %
 %
 %
@@ -315,7 +303,7 @@ Preprocessing of UMLS ontologies: Remove stopwords (NLTK, Gensim, scikit learn, 
 %
 %
 %==============================
-\subsection{Sequence labeling}\label{data}
+\subsection{Sequence labeling}\label{seq_lab}
 %==============================
 %
 PICO entity corpus creation is a token labeling problem where each token in a sequence X is classified or labeled into one of the three PICO classes (Y).
@@ -335,7 +323,7 @@ UMLS concepts as labeling functions. It is difficult to classify different Seman
 %
 %
 %==============================
-\subsection{Label Model}\label{lfs}
+\subsection{Label Model}\label{lms}
 %==============================
 %
 Combine multiple labeling function results into probablistic model.
@@ -343,7 +331,7 @@ Combine multiple labeling function results into probablistic model.
 %
 %
 %==============================
-\subsection{Transformer}\label{lfs}
+\subsection{Transformer}\label{transformers}
 %==============================
 %
 Training end-models for weakly supervised and fully supervised learning: PubMedBERT, SciBERT, BioBERT
@@ -393,8 +381,7 @@ These errors are categorized for each of the PIO classes and are shown in the Ta
         Generic mention & 90 & 120 & 85 \\ \hline
         Total errors & 574 & 701 & 641 \\ \hline
     \end{tabular}
-    \caption{tab:errordist}
-    \label{Error distribution in the analysed tokens of EBM-PICO corpus.}
+    \caption{\label{tab:errordist} Error distribution in the analysed tokens of EBM-PICO corpus.}
 \end{table}
 
 %
