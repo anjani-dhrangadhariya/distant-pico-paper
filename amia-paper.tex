@@ -179,7 +179,7 @@ Weak supervision using weak-PICO+ for PICO entity recognition is not only feasib
 %
 Systematic Review (SR) is an evidence-based practice of answering clinical questions using a transparent and quantitative approach whereby the reviewers must collect as many research publications as possible, identifying the relevant publications from these and integrating their results via statistical analysis.
 Filtering relevant publications from the bulk collected ones often uses PICO (Participants, Interventions, Comparators, Outcomes) criteria. 
-A clinical trial or a publication is relevant only for answering a question only if it studies question relevant participants, interventions (and their comparators) and outcomes. 
+A clinical study or a publication is relevant only for answering a question only if it studies question relevant participants, interventions (and their comparators) and outcomes. 
 Manually analysing PICO information from thousands of publications for a single SR takes about 12 months of two medical experts' time.
 The process can be automated using machine learning based information extraction strategies by directly pointing the human reviewers to the correct text chunks describing PICO.
 Machine learning classifiers rely on hand-labelled training corpora.
@@ -195,14 +195,22 @@ This annotation bottleneck across domains has shifted gears in favour of weakly-
 Programmatic labelling is quick and allows efficient modifications to the training data labels as per the downstream application changes.
 
 
-Medical ontology compendium like UMLS with its 224 terminologies, other external vocabularies and open access knowledgebases are an excellent resource for building entity labelled training data. 
-Legacy clinical applications both in NLP and image analysis are often automated using a multiple \textit{if-else} rules relying on keyword and phrase cues (refer to document and image classification methods that are rule based).
+Medical ontology compendium like UMLS with several vocabularies, other external vocabularies and open access knowledgebases are an excellent resource for building clinical entity labelled training data. 
+Legacy clinical applications both in NLP and image analysis are often automated using a multiple \textit{if-else} rules relying on key-phrases and visual cues (refer to document and image classification methods that are rule based).
 The bottleneck here is how to combine these labelling sources of varying accuracy and strength.
 Combining multiple labeling sources of variable accuracy is one of challenges.
-\textcolor{blue}{Give some paper examples where they utilize non-generative models to combine multiple labelling sources.}
+%\textcolor{blue}{Give some paper examples where they utilize non-generative models to combine multiple labelling sources.}
+There have been some fundamental works investigating how to combine multiple labelling sources of variable accuracy by ranking their importance based on their probability of error and efficiently assembling them.
+The problem of aggregating several weak labellers have now transitioned to training a generative model that estimates the accuracy of each labelling source~\cite{ratner2016data,safranchik2020weakly,lison2021skweak}.
+\textcolor{blue}{Expound on weakly-supervised learning and generative modelling using Snorkel, AutoNER, Swellshark.}
 
 
-Weakly-supervised learning has demonstrated its prowess for clinical document classification and relation extraction in NLP, but clinical entity extraction tasks have relied on fully-supervised approaches.
+
+Weakly-supervised learning has demonstrated its prowess for clinical document classification and relation extraction, but clinical entity extraction tasks have relied on fully-supervised approaches.
+relation extraction (Distant supervision for relation extraction without labeled data, Distant supervision for relation extraction without labeled data)
+document classification (Weakly-Supervised Neural Text Classification
+, Leveraging Large Amounts of Weakly Supervised Data for
+Multi-Language Sentiment Classification)
 \textcolor{blue}{Give examples of weakly supervised learning approaches for document classification and relation extraction.}
 Combining multiple weak labeling sources for clinical entity extraction have been explored by Fries et al. in their paper Trove.
 Trove uses Snorkel which is a generative model implemented in python and is a domain agnostic methodology to combine multiple labelling sources of variable accuracy.
@@ -212,9 +220,9 @@ A shortcoming of span extraction is that even after a machine points a human rev
 Span extraction hence leads to semi-automation but hinders full-automation.
 Weakly-supervised PICO entity extraction has not garnered enough attention as much as supervised PICO span extraction.
 As far as our knowledge goes, only two studies exist for weakly-supervised PICO extraction.
-One of these approaches only explores weak supervision for intervention extraction using a single labelling source, and the other approach relies on a single source of programmatic labelling and focuses on PICO spans and sentences rather than entities.
+One of these approaches only explores weak supervision for intervention extraction using a single labelling source~\cite{dhrangadhariya2022distant}, and the other approach relies on a single source of programmatic labelling and focuses on PICO spans and sentences rather than entities.
 Entity recognition approach to PICO is not as easy as entity recognition approach to disease or chemical names which are more or less standardised.
-PICO terms are not standard and even the experts do not agree on the exact tokens constituting PICO.
+PICO terms are not standard and even the experts do not agree on the exact tokens constituting PICO~\cite{brockmeier2019improving}.
 
 A Trove-like weak-supervision for PICO entities has several challenges.
 Consideration 1: Defining the sub-classes or entities encompassed within PICO spans
@@ -223,12 +231,8 @@ Consideration 3: Developing weakly-supervised classifiers optimally combining se
 Consideration 4: Extending the ontology-based classifiers using expert-generated rules and evaluate performance in comparison to fully-supervised approach. This serves as an ablation study whereby the importance of low cost ontology labellers could be compared to addition of high cost expert generated rules.
 Consideration 5: Identifying lags in the currently available PICO training dataset and correcting it.
 
-In this work, we demonstrate the feasibility of weakly-supervised PICO entity extraction using three benchmark test sets.
+In this work, we demonstrate the feasibility of weakly-supervised PICO entity extraction using two benchmark test sets.
 We show how using only ontology dependent classifiers vs combining them with more expensive expert-generated rules compares to fully-supervised PICO entity extraction.
-
-
-\textcolor{blue}{Expound on weakly-supervised learning and generative modelling using Snorkel, AutoNER, Swellshark.}
-
 %
 %
 %
@@ -268,17 +272,10 @@ We use this error evaluation exercise to conduct an error-focused corpus re-anno
 
 \textbf{Physio set.} A test set comprising 153 PICO entity/span annotated documents from Physiotherapy and Rehabilitation RCTs (Randomized Controlled Trials) was used as an additional benchmark to evaluate the generalization power of our approach for this sub-domain~\cite{dhrangadhariya2021end}.
 
-None of these datasets underwent any preprocessing except tagging them with the POS tags using spaCy.
-
-Our ontology labelling sources are UMLS, comparative toxicogenomics database (CTD) disease, disease ontology DO, Human Phenotype Ontology (HPO), Ontology of adverse events (OAE), Chemical entities of biological interest (ChEBI),  comparative toxicogenomics database (CTD) Chemical and Disease subclasses.
-We used the 2021AB-full release of UMLS Metathesaurus English subset dump removing non-English and zoonotic source terminologies as well as sources containing fewer than 500 terms remaining with 131 vocabularies.
-Our distant supervision dictionaries were created from the structure fields of clinicaltrials.gov .
-Our hand-coded dictionaries were for gender, disease abbreviation dictionary, intervention comparator terms, and outcome endpoints from the sources like XX, XX, XX, respectively.
-
-Preprocessing of UMLS ontologies: Remove stopwords (NLTK, Gensim, scikit learn, spaCy), numbers and punctuation's.
-
-
-
+None of these datasets underwent any preprocessing except tagging them with the POS tags and fetching the token lemmas using spaCy.
+%
+%
+%
 \begin{table}[h!]
 \begin{center}
 \begin{tabular}{| c | c | c | c |} 
@@ -306,11 +303,32 @@ Preprocessing of UMLS ontologies: Remove stopwords (NLTK, Gensim, scikit learn, 
 \subsection{Sequence labeling}\label{seq_lab}
 %==============================
 %
-PICO entity corpus creation is a token labeling problem where each token in a sequence X is classified or labeled into one of the three PICO classes (Y).
-Y is not observable so our challenge was to devise data-centric techniques to get token labels corresponding to PICO classes and sub-classes and create a labeled dataset.
+PICO labelled training set development is a token labeling problem where each token in a sequence X is classified or labeled into one of the three PICO classes (Y).
+Y is not a manifest variable so our challenge was to devise data-centric techniques to get token labels corresponding to PICO classes and sub-classes to create a labeled dataset.
 Since Y is not observable, our primary technical challenge is estimating Y from multiple, potentially conflicting label sources of unknown quality to construct a probabilistically labeled dataset.
 This dataset can then be used for training classification models such as deep neural networks.
 Such a labeling regimen is typically low-cost, but less accurate than the hand-curated labels used in traditional supervised learning; hence, this paradigm is referred to as weakly supervised learning.
+
+
+Task) Explain the PICO subclasses here. 
+Explain it is a task related to fine-grained PICO detection.
+Map the reason to fine-grained annotations from the EBM-PICO corpus.
+%
+%
+%
+%==============================
+\subsection{Labelling sources}\label{lss}
+%==============================
+%
+We divided our PICO labelling sources into UMLS vocabularies, non-UMLS ontologies and a combination of rules.
+We used the 2021AB-full release of UMLS Metathesaurus English subset dump with 223 vocabularies.
+We removed non-English and zoonotic source terminologies as well as sources containing fewer than 500 terms remaining with 131 vocabularies.
+Preprocessing of UMLS ontologies: Remove stopwords (NLTK, Gensim, scikit learn, spaCy), numbers and punctuation's.
+The non-UMLS vocabularies included disease ontology DO, Human Phenotype Ontology (HPO), Ontology of adverse events (OAE), Chemical entities of biological interest (ChEBI),  comparative toxicogenomics database (CTD) Chemical and Disease subclasses.
+Our rule-based approach included a combination of hand-crafted dictionaries, regular expressions (ReGeX), reGeX combined with heuristics and knowledge-base distant supervision. 
+Our hand-coded dictionaries were for gender, disease abbreviation dictionary, intervention comparator terms, and outcome endpoints from the sources like XX, XX, XX, respectively.
+Our distant supervision dictionaries were created from the structured fields of clinicaltrials.gov as described by~\cite{dhrangadhariya2022distant}.
+
 %
 %
 %
@@ -318,7 +336,15 @@ Such a labeling regimen is typically low-cost, but less accurate than the hand-c
 \subsection{Labeling functions}\label{lfs}
 %==============================
 %
+Task 1) Mapping UMLS semantic types to PICO subclasses UMLS is a compendium of controlled medical vocabularies, concepts in which are mapped to a broader semantic ontology of 128 semantic types.
+The task to map each of these semantic types with PICO targets.
 UMLS concepts as labeling functions. It is difficult to classify different Semantic groups as positive signals for the PICOS classes. For example, the Participant span can include information about different participant characteristics: disease, disorder, ethnicity, language or geographical location, age, gender, sex,... 
+
+Non-UMLS vocabularies that did not provide semantic-type assignments and hence were mapped to a single class label.
+
+The distant supervision dictionaries were created from the structured fields of clinicaltrials.gov. 
+The structured field ``Condition or Disease'' was mapped to Participants, ``Intervention/Treatment'' field was mapped to Intervention. The semi-structured ``Primary Outcome Measures'' and ``Secondary Outcome Measures'' fields were mapped to Outcomes class.
+Hand-crafted dictionaries were separately designed for participant gender, intervention comparator terms and outcomes.
 %
 %
 %
@@ -326,7 +352,7 @@ UMLS concepts as labeling functions. It is difficult to classify different Seman
 \subsection{Label Model}\label{lms}
 %==============================
 %
-Combine multiple labeling function results into probablistic model.
+Combine multiple labeling function results into probabilistic model.
 %
 %
 %
@@ -334,7 +360,7 @@ Combine multiple labeling function results into probablistic model.
 \subsection{Transformer}\label{transformers}
 %==============================
 %
-Training end-models for weakly supervised and fully supervised learning: PubMedBERT, SciBERT, BioBERT
+Training end-models for weakly supervised and fully supervised learning: PubMedBERT.
 %
 %
 %
