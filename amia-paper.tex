@@ -338,33 +338,32 @@ Our distant supervision dictionaries were created from the structured fields of 
 \subsection{Labeling functions}\label{lfs}
 %==============================
 %
-This labeling function is a weak classifier that uses a labelling sources to label (Y) the unlabeled sequence of input tokens (X).
-A labelling function should output +1 for the positive class tokens, -1 for the negative class tokens, and abstain (0) on the text tokens where decision-making is confusing.
+A labeling function is a weak classifier that uses a labelling source(s) to label the unlabeled sequence of input tokens.
+A labelling function designed for a particular target class (in here; either P, I/C, O or S) should output +1 for the positive token, -1 for the negative class token, and abstain (0) on the tokens where decision-making is confusing.
 We designed four types of labelling functions depending on the types of labelling sources.
-The ontology or dictionary labelling functions that takes a class specific dictionary of terms mapped to one of the Y labels.
-To account for fuzzy span matching from the ontology concepts, bigram word co-occurrence graphs were used.
-A ReGeX labelling function that takes class specific regex patterns for -1, +1 classes and abstains on the rest for that class.
-A labelling function combined with heuristics is personalized for each of the PICOS classes and takes a generic regex pattern along with POS tag filters.
-These heuristics labelling functions are used to take into account the generic patterns not captured by the structured terminologies.
+The ontology or dictionary labelling functions for a target class takes a dictionary of terminologies mapped to one of the Y labels.
+To account for fuzzy span matching from the terminologies, bigram word co-occurrences were used.
+A ReGeX labelling function for a target class takes regex patterns for -1, +1 classes and abstains on the rest.
+A heuristic labelling function is personalized for each of the PICOS classes and takes a generic regex pattern along with specific POS tag filters.
+These heuristics labelling functions are used to take into account the class-specific patterns not captured by the structured terminologies.
 Clinical studies have several abbreviations which were taken into account using heuristic to identify abbreviations from the training text and assigning these to either of the target classes. 
-The abbreviations with these classes are then used by ontology labellers.
+The abbreviations with these target classes are then used by ontology labellers.
 %
 %
 %
 %==============================
-\subsection{Domain insights}\label{lfs}
+\subsection{Sources to Targets}\label{lfs}
 %==============================
 %
-The concepts in UMLS vocabularies are organized under a semantic type ontology with 127 semantic types.
-Mapping UMLS semantic types to PICO subclasses UMLS is a compendium of controlled medical vocabularies, concepts in which are mapped to a broader semantic ontology of 128 semantic types.
+Mapping UMLS semantic types to PICO subclasses is an expert-led activity.
+The concepts in UMLS vocabularies are organized under a broad semantic type ontology with 127 semantic types.
 The task to map each of these semantic types with PICO targets.
 UMLS concepts as labeling functions. It is difficult to classify different Semantic groups as positive signals for the PICOS classes. For example, the Participant span can include information about different participant characteristics: disease, disorder, ethnicity, language or geographical location, age, gender, sex,...
 For ontology-based labeling functions, we used the UMLS Semantic Network and the corresponding Semantic Groups as our entity categories and defined a mapping of semantic types (STYs) to target class labels $y \subset {-1,0,1}$.
-
-Non-UMLS vocabularies that did not provide semantic-type assignments and hence were mapped to a single class label.
-
+Non-UMLS vocabularies that did not provide semantic-type assignments and hence were mapped to a single target.
 The distant supervision dictionaries were created from the structured fields of clinicaltrials.gov. 
-The structured field ``Condition or Disease'' was mapped to Participants, ``Intervention/Treatment'' field was mapped to Intervention. The semi-structured ``Primary Outcome Measures'' and ``Secondary Outcome Measures'' fields were mapped to Outcomes class.
+The structured field ``Condition or Disease'' was mapped to Participants, ``Intervention/Treatment'' field was mapped to Intervention.
+The semi-structured ``Primary Outcome Measures'' and ``Secondary Outcome Measures'' fields were mapped to Outcomes class.
 Hand-crafted dictionaries were separately designed for participant gender, intervention comparator terms and outcomes.
 %
 %
