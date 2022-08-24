@@ -200,7 +200,7 @@ Legacy clinical applications both in NLP and image analysis are often automated 
 The bottleneck here is how to combine these labelling sources of varying accuracy and strength.
 Combining multiple labeling sources of variable accuracy is one of challenges.
 %\textcolor{blue}{Give some paper examples where they utilize non-generative models to combine multiple labelling sources.}
-There have been some fundamental works investigating how to combine multiple labelling sources of variable accuracy by ranking their importance based on their probability of error and efficiently assembling them.
+There have been some fundamental works investigating how to combine multiple label sources of variable accuracy by ranking their importance based on their probability of error and efficiently assembling them.
 The problem of aggregating several weak labellers have now transitioned to training a generative model that estimates the accuracy of each labelling source~\cite{ratner2016data,safranchik2020weakly,lison2021skweak}.
 \textcolor{blue}{Expound on weakly-supervised learning and generative modelling using Snorkel, AutoNER, Swellshark.}
 
@@ -250,7 +250,7 @@ The birds-eye view of our approach is shown in the Figure.
 %
 \textbf{EBM-PICO.}
 The EBM-PICO dataset developed by Nye \textit{et al.} consists of about 5000 PICO annotated documents.~\footnote{A single document consists of a title and an abstract.}
-The dataset has annotations at two levels: span-level or coarse-grained PICO and entity-level or fine-grained PICO.
+The dataset has annotations at two levels: span-level or coarse-grained PICO and entity-level or fine-grained PICO~\ref{table:coarsefineconcept}.
 Span level PICO annotation encompasses the maximum information about each PICO class.
 Entity-level PICO annotation covers fine-grained PICO information at the entity level, with PICO classes further divided into fine-grained subclasses.
 The dataset comes pre-divided into a training set (n=4,933) annotated through crowd-sourcing and an expert annotated gold test set (n=191) for evaluation purposes.
@@ -258,7 +258,7 @@ The dataset comes pre-divided into a training set (n=4,933) annotated through cr
 
 
 
-\textbf{EBM-PICO corrected}
+\textbf{EBM-PICO corrected + Study type}
 The EBM-PICO annotation guidelines caution about variable annotation quality~\footnote{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6174533/bin/NIHMS988059-supplement-Appendix.pdf}.
 Variable annotation quality in the training dataset is pardonable, but the possible errors in the gold standard test set will impact the development of downstream extraction models.
 The entity-level PICO annotations in the EBM-PICO gold test set (n=191) have several errors that could lead to faulty evaluation of machine learning methods.
@@ -266,15 +266,13 @@ We evaluate 1\% of the EBM-PICO training set tokens to gauge the possible reason
 We use this error evaluation exercise to conduct an error-focused corpus re-annotation for the EBM-PICO gold corpus (n = 191) for PICO entities.
 %These errors emanate from the annotation process of EBM-PICO corpus that follows the sequence of first annotating only the span-level PICO information and then restrict the entity-level PICO annotation to these larger spans.
 %This leads to specifically missing out on the the repeated mentions of the fine-grained PICO information that is not covered in the longer spans. 
-%We annotated an additional entity for study type only for this corpus to measure the effectiveness of weak supervision approaches.
-%Our study type entity is restricted to whether a study is a ``Randomized Controlled Trial'' (RCT) or not.
-%An RCT can be classified based on trial design as parallel group, cross-over, cluster or factorial trial, on outcome of interest as pragmatic or exploratory trial and on hypothesis as superiority vs. noninferiority vs. equivalence trials.
-%This annotation exercise was to demonstrate the application of weak supervision for entities beyond PICO~\cite{menard2019turning}.
+We annotated an additional entity for study type only for this corpus to measure the effectiveness of weak supervision approaches.
+Our study type entity is restricted to type and design (placebo-controlled, allocation, masking, intervention model) of a clinical study.
+This annotation exercise was to demonstrate the application of weak supervision for entities beyond PICO~\cite{menard2019turning}.
 
-\textbf{Physio set.} A test set comprising 153 PICO entity/span annotated documents from Physiotherapy and Rehabilitation RCTs (Randomized Controlled Trials) was used as an additional benchmark to evaluate the generalization power of our approach for this sub-domain~\cite{dhrangadhariya2021end}.
+\textbf{Physio set.} A test set comprising 153 PICO annotated documents from Physiotherapy and Rehabilitation RCTs (Randomized Controlled Trials) was used as an additional benchmark to evaluate the generalization power of our approach for this sub-domain~\cite{dhrangadhariya2021end}.
 
-As EBM-PICO dataset comes pretokenized and we did not do additional preprocessing.
-Complementary token information like POS tags and token lemmas were obtained using spaCy.
+These datasets come tokenized, and we did not do additional preprocessing except adding complementary token information like POS tags, and token lemmas were obtained using spaCy.
 %
 %
 %
@@ -294,8 +292,7 @@ Complementary token information like POS tags and token lemmas were obtained usi
 7 &  & Control &  \\
 \hline
 \end{tabular}
-\caption{P (Participant), I (Intervention) and O (Outcome) represent the coarse-grained labels which are further divided into respective fine-grained labels.}
-\label{table:coarsefineconcept}
+\caption{\label{table:coarsefineconcept} P (Participant), I (Intervention) and O (Outcome) represent the coarse-grained labels which are further divided into respective fine-grained labels.}
 \end{center}
 \end{table}
 %
@@ -305,16 +302,20 @@ Complementary token information like POS tags and token lemmas were obtained usi
 \subsection{Sequence labeling}\label{seq_lab}
 %==============================
 %
-PICO labelled training set development is a token labeling problem where each token in a sequence X is classified or labeled into one of the three PICO classes (Y).
-Y is not a manifest variable so our challenge was to devise data-centric techniques to get token labels corresponding to PICO classes and sub-classes to create a labeled dataset.
-Since Y is not observable, our primary technical challenge is estimating Y from multiple, potentially conflicting label sources of unknown quality to construct a probabilistically labeled dataset.
+Programmatic PICO training set development is a token labeling problem where each token in a sequence X is classified into one of the four PICOS classes (Y).
+As ``Intervention'' and ``Comparator'' entities represent interventions in two different roles in clinical studies and semantically the same classes, they are clubbed into a single ``Intervention'' entity class.
+Here the Y is not observable, hence the primary challenge was to devise several weak labellers to obtain entity labels.
+As Y is not actually observable, a primary technical challenge is estimating Y from multiple, potentially conflicting label sources of unknown quality to construct a probabilistically labeled dataset.
 This dataset can then be used for training classification models such as deep neural networks.
 Such a labeling regimen is typically low-cost, but less accurate than the hand-curated labels used in traditional supervised learning; hence, this paradigm is referred to as weakly supervised learning.
 
-
-Task) Explain the PICO subclasses here. 
-Explain it is a task related to fine-grained PICO detection.
-Map the reason to fine-grained annotations from the EBM-PICO corpus.
+It has to be noticed that PICO labels in EBM-PICO are spans composed of multiple fine-grained PICO subclasses.
+The participant span can include information about different participant characteristics: disease, disorder, symptoms, age, gender, the sample size in clinical studies, ethnicity, language or geographical location.
+The intervention span can include information about pharmaceutical drugs, chemicals, physical therapies, surgery, behavioural or educational therapies, and placebo-based comparators.
+Additional intervention information that could be marked is dosage, frequency and mode of administration of intervention.
+The outcomes can be subjective, objective, economic outcomes like cost or hard outcomes like mortality.
+The spans can also include how these outcomes were measured by having information about the scales, techniques and instruments used to measure them.
+Our task was to devise weak labellers corresponding to this fine-grained information, aggregate the labellers, correct the errors in fine-grained PICO EBM-PICO test set and evaluate the approach on both the EBM-PICO and it's corrected version.
 %
 %
 %
@@ -324,13 +325,12 @@ Map the reason to fine-grained annotations from the EBM-PICO corpus.
 %
 We divided our PICO labelling sources into UMLS vocabularies, non-UMLS ontologies and a combination of rules.
 We used the 2021AB-full release of UMLS Metathesaurus English subset dump with 223 vocabularies.
-We removed non-English and zoonotic source terminologies as well as sources containing fewer than 500 terms remaining with 131 vocabularies.
-Preprocessing of UMLS ontologies: Remove stopwords (NLTK, Gensim, scikit learn, spaCy), numbers and punctuation's.
-The non-UMLS vocabularies included disease ontology DO, Human Phenotype Ontology (HPO), Ontology of adverse events (OAE), Chemical entities of biological interest (ChEBI),  comparative toxicogenomics database (CTD) Chemical and Disease subclasses.
-Our rule-based approach included a combination of hand-crafted dictionaries, regular expressions (ReGeX), reGeX combined with heuristics and knowledge-base distant supervision. 
-Our hand-coded dictionaries were for gender, disease abbreviation dictionary, intervention comparator terms, and outcome endpoints from the sources like XX, XX, XX, respectively.
+After removing non-English and zoonotic source terminologies as well as sources containing fewer than 500 terms, we remained with 131 vocabularies.
+Preprocessing of UMLS ontologies: Remove stopwords (NLTK, Gensim, scikit learn, spaCy), numbers and punctuation's and Smart lower casing that does not alter abbreviations in the terminologies.
+The non-UMLS vocabularies included disease ontology DO, Human Phenotype Ontology (HPO), Ontology of adverse events (OAE), Chemical entities of biological interest (ChEBI),  comparative toxicogenomics database (CTD) Chemical and Disease subclasses, Clinical Trials Ontology (CTO).
+Our rule-based approach included a combination of hand-crafted dictionaries, regular expressions (ReGeX), ReGeX combined with heuristics and semi-structured terminologies obtained using distant supervision. 
+Our hand-coded dictionaries were for participant gender, participant disease abbreviation, generic intervention comparator terms, and outcome endpoints~\footnote{https://www.thoracic.org/members/assemblies/assemblies/bshsr/patient-outcome/}~\footnote{https://www.safetyandquality.gov.au/our-work/indicators-measurement-and-reporting/patient-reported-outcomes/proms-lists}.
 Our distant supervision dictionaries were created from the structured fields of clinicaltrials.gov as described by~\cite{dhrangadhariya2022distant}.
-
 %
 %
 %
@@ -338,7 +338,25 @@ Our distant supervision dictionaries were created from the structured fields of 
 \subsection{Labeling functions}\label{lfs}
 %==============================
 %
-Task 1) Mapping UMLS semantic types to PICO subclasses UMLS is a compendium of controlled medical vocabularies, concepts in which are mapped to a broader semantic ontology of 128 semantic types.
+This labeling function is a weak classifier that uses a labelling sources to label (Y) the unlabeled sequence of input tokens (X).
+A labelling function should output +1 for the positive class tokens, -1 for the negative class tokens, and abstain (0) on the text tokens where decision-making is confusing.
+We designed four types of labelling functions depending on the types of labelling sources.
+The ontology or dictionary labelling functions that takes a class specific dictionary of terms mapped to one of the Y labels.
+To account for fuzzy span matching from the ontology concepts, bigram word co-occurrence graphs were used.
+A ReGeX labelling function that takes class specific regex patterns for -1, +1 classes and abstains on the rest for that class.
+A labelling function combined with heuristics is personalized for each of the PICOS classes and takes a generic regex pattern along with POS tag filters.
+These heuristics labelling functions are used to take into account the generic patterns not captured by the structured terminologies.
+Clinical studies have several abbreviations which were taken into account using heuristic to identify abbreviations from the training text and assigning these to either of the target classes. 
+The abbreviations with these classes are then used by ontology labellers.
+%
+%
+%
+%==============================
+\subsection{Domain insights}\label{lfs}
+%==============================
+%
+The concepts in UMLS vocabularies are organized under a semantic type ontology with 127 semantic types.
+Mapping UMLS semantic types to PICO subclasses UMLS is a compendium of controlled medical vocabularies, concepts in which are mapped to a broader semantic ontology of 128 semantic types.
 The task to map each of these semantic types with PICO targets.
 UMLS concepts as labeling functions. It is difficult to classify different Semantic groups as positive signals for the PICOS classes. For example, the Participant span can include information about different participant characteristics: disease, disorder, ethnicity, language or geographical location, age, gender, sex,...
 For ontology-based labeling functions, we used the UMLS Semantic Network and the corresponding Semantic Groups as our entity categories and defined a mapping of semantic types (STYs) to target class labels $y \subset {-1,0,1}$.
@@ -374,7 +392,7 @@ Training end-models for weakly supervised and fully supervised learning: PubMedB
 %
 We report the classical macro-averaged F1-scores for the label models, weakly supervised transformer models and the fully supervised transformer models.
 Mean macro-averaged F1-scores are reported over three runs of each of these models with the top three random seeds (0, 1, and 42) used in Python.
-These models were separately trained for each of the PIO entity recognition tasks using the raw (IO) tagging scheme.
+These models were separately trained for each of the PICOS entity recognition tasks using the raw (IO) tagging scheme.
 We used students t-test with a alpha threshold of 0.05 to measure the statistical significance.
 %
 %
