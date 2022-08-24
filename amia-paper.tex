@@ -160,7 +160,7 @@ We present Weak-PICO+, a method for weakly supervised PICO entity recognition us
 Unlike manual annotation, Weak-PICO+ does not use any hand-labelled data and is quickly adaptable and extensible to other entities.
 We demonstrate this through extracting an additional Study Type entity making PICO go PICOS without manual annotation effort.\\
 \textbf{Conclusion:}
-Weak supervision using weak-PICO+ for PICO entity recognition is not only feasible but also outperforms full supervision.\\
+Weak supervision using weak-PICO+ for PICO entity recognition has good results and extends to more clinical entities without hand-labelled data.\\
 %
 %
 %
@@ -249,17 +249,18 @@ The birds-eye view of our approach is shown in the Figure.
 %==============================
 %
 \textbf{EBM-PICO.}
-The EBM-PICO dataset developed by Nye \textit{et al.} consists of about 5000 PICO entity/span annotated documents.~\footnote{A single document consists of a title and an abstract.}
-It comes pre-divided into a training set (n=4,933) annotated through crowd-sourcing and an expert annotated gold test set (n=191) for evaluation purposes.
-The dataset has annotations at two levels: span-level coarse-grained PICO and entity-level fine-grained PICO.
-Span level PICO annotation encompasses the maximum amount of PICO descriptions that often span an entire sentence.
+The EBM-PICO dataset developed by Nye \textit{et al.} consists of about 5000 PICO annotated documents.~\footnote{A single document consists of a title and an abstract.}
+The dataset has annotations at two levels: span-level or coarse-grained PICO and entity-level or fine-grained PICO.
+Span level PICO annotation encompasses the maximum information about each PICO class.
 Entity-level PICO annotation covers fine-grained PICO information at the entity level, with PICO classes further divided into fine-grained subclasses.
+The dataset comes pre-divided into a training set (n=4,933) annotated through crowd-sourcing and an expert annotated gold test set (n=191) for evaluation purposes.
+
 
 
 
 \textbf{EBM-PICO corrected}
 The EBM-PICO annotation guidelines caution about variable annotation quality~\footnote{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6174533/bin/NIHMS988059-supplement-Appendix.pdf}.
-Variable annotation quality in the training dataset is pardonable, but the possible errors in the gold standard test set will impact the development of downstream PICO extraction models.
+Variable annotation quality in the training dataset is pardonable, but the possible errors in the gold standard test set will impact the development of downstream extraction models.
 The entity-level PICO annotations in the EBM-PICO gold test set (n=191) have several errors that could lead to faulty evaluation of machine learning methods.
 We evaluate 1\% of the EBM-PICO training set tokens to gauge the possible reasons for the errors.
 We use this error evaluation exercise to conduct an error-focused corpus re-annotation for the EBM-PICO gold corpus (n = 191) for PICO entities.
@@ -272,7 +273,8 @@ We use this error evaluation exercise to conduct an error-focused corpus re-anno
 
 \textbf{Physio set.} A test set comprising 153 PICO entity/span annotated documents from Physiotherapy and Rehabilitation RCTs (Randomized Controlled Trials) was used as an additional benchmark to evaluate the generalization power of our approach for this sub-domain~\cite{dhrangadhariya2021end}.
 
-None of these datasets underwent any preprocessing except tagging them with the POS tags and fetching the token lemmas using spaCy.
+As EBM-PICO dataset comes pretokenized and we did not do additional preprocessing.
+Complementary token information like POS tags and token lemmas were obtained using spaCy.
 %
 %
 %
@@ -338,7 +340,8 @@ Our distant supervision dictionaries were created from the structured fields of 
 %
 Task 1) Mapping UMLS semantic types to PICO subclasses UMLS is a compendium of controlled medical vocabularies, concepts in which are mapped to a broader semantic ontology of 128 semantic types.
 The task to map each of these semantic types with PICO targets.
-UMLS concepts as labeling functions. It is difficult to classify different Semantic groups as positive signals for the PICOS classes. For example, the Participant span can include information about different participant characteristics: disease, disorder, ethnicity, language or geographical location, age, gender, sex,... 
+UMLS concepts as labeling functions. It is difficult to classify different Semantic groups as positive signals for the PICOS classes. For example, the Participant span can include information about different participant characteristics: disease, disorder, ethnicity, language or geographical location, age, gender, sex,...
+For ontology-based labeling functions, we used the UMLS Semantic Network and the corresponding Semantic Groups as our entity categories and defined a mapping of semantic types (STYs) to target class labels $y \subset {-1,0,1}$.
 
 Non-UMLS vocabularies that did not provide semantic-type assignments and hence were mapped to a single class label.
 
@@ -352,7 +355,8 @@ Hand-crafted dictionaries were separately designed for participant gender, inter
 \subsection{Label Model}\label{lms}
 %==============================
 %
-Combine multiple labeling function results into probabilistic model.
+In this work, we use the recently proposed data programming9 method, a generalization of distant supervision that uses a factor graph-based model to learn both the unobserved accuracies of labeling sources and statistical dependencies between those sources.
+In this approach, source accuracy and dependencies are estimated without requiring labeled data, enabling the use of weaker forms of supervision to generate training data, such as using noisy heuristics from clinical experts.
 %
 %
 %
@@ -365,7 +369,7 @@ Training end-models for weakly supervised and fully supervised learning: PubMedB
 %
 %
 %==============================
-\subsection{EVALUATION}\label{eval}
+\subsection{Evaluation}\label{eval}
 %==============================
 %
 We report the classical macro-averaged F1-scores for the label models, weakly supervised transformer models and the fully supervised transformer models.
@@ -380,6 +384,25 @@ We used students t-test with a alpha threshold of 0.05 to measure the statistica
 %==============================
 %
 Table demonstrating the scores mentioned above.
+
+\begin{table}[!ht]
+    \centering
+    \begin{tabular}{|l|l|l|l|l|l|l|l|}
+    \hline
+        Model & ~ & LM & ~ & WS & ~ & FS & ~ \\ \hline
+        Entity & ~ & F1 - Fine & F1 - Fine corr & F1 - Fine & F1 - Fine corr & F1 - Fine & F1 - Fine corr \\ \hline
+        P & UMLS & 0.64 & 0.72 & 65.37 & 73.51 & 73 & 74 \\ \hline
+        ~ & +Ontology & 0.64 & 0.72 & 64.62 & 72.17 & ~ & ~ \\ \hline
+        ~ & +Rules & 0.66 & 0.75 & 67.62 & 76.73 & ~ & ~ \\ \hline
+        I/C & UMLS & 0.6 & 0.65 & 57.9 & 59.49 & 83.49 & 81.09 \\ \hline
+        ~ & +Ontology & 0.63 & 0.67 & 68.06 & 70.72 & ~ & ~ \\ \hline
+        ~ & +Rules & 0.64 & 0.68 & 71.32 & 73.63 & ~ & ~ \\ \hline
+        O & UMLS & running & running & running & running & 81.02 & 80.12 \\ \hline
+        ~ & +Ontology & running & running & running & running & ~ & ~ \\ \hline
+        ~ & +Rules & 61.02 & 63.11 & 60.36 & 61.93 & ~ & ~ \\ \hline
+    \end{tabular}
+\end{table}
+
 %
 %
 %
