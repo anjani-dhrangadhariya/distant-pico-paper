@@ -337,15 +337,14 @@ Data in CTO is manually entered by principal investigators of the clinical study
 \subsection{Labeling functions}\label{lfs}
 %==============================
 %
-A labeling function is a weak classifier that uses a labelling source(s) to label the unlabeled sequence of input tokens.
-A labelling function designed for a particular target class (in here; either P, I/C, O or S) should output +1 for the positive token, -1 for the negative class token, and abstain (0) on the tokens where decision-making is confusing.
+A labelling function is a weak classifier $\lambda$ that use domain-specific labelling sources and heuristics to emit a non-zero $\{-1, 0, +1\}$ label for a subset of input tokens.
+A labelling function designed for a particular target class (in here; either P, I/C, O or S) should output  +1 for the positive token, -1 for the negative class token, and abstain (0) on the tokens where decision-making is confusing $\lambda \mapsto \{-1, 0, +1\}$.
 We designed four types of labelling functions depending on the types of labelling sources.
-The ontology or dictionary labelling functions for a target class takes a dictionary of terminologies mapped to one of the Y labels.
-To account for fuzzy span matching from the terminologies, bigram word co-occurrences were used.
-A ReGeX labelling function for a target class takes regex patterns for -1, +1 classes and abstains on the rest.
+The ontology or dictionary labelling functions for a target class takes a dictionary of terminologies mapped to one of $y \subset \{-1, +1\} $ labels.
+To account for fuzzy span matching from the terminologies, relevant bigram word co-occurrences were used.
+A ReGeX labelling function for a target class takes regex patterns for $\{-1, +1\}$ classes and abstains on the rest.
 A heuristic labelling function is personalized for each of the PICOS classes and takes a generic regex pattern along with specific POS tag filters.
-These heuristics labelling functions are used to take into account the class-specific patterns not captured by the structured terminologies.
-Clinical studies have several abbreviations which were taken into account using heuristic to identify abbreviations from the training text and assigning these to either of the target classes. 
+Clinical studies have several abbreviations which were taken into account using heuristics to identify abbreviations from the training text and assigning these to either of the target classes. 
 The abbreviations with these target classes are then used by ontology labellers.
 %
 %
