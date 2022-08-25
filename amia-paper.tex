@@ -353,14 +353,13 @@ Ontology labellers then use the abbreviations with these target classes.
 \subsection{Sources to Targets}\label{lfs}
 %==============================
 %
-Concepts in UMLS vocabularies are organized under a broad semantic type network with 127 semantic types.
 Mapping these semantic type categories to PICO target classes is a challenging expert-led activity.
 A semantic category was either marked $\{-1, 0, +1\}$ depending upon its relevance to the target class.
-Non-UMLS vocabularies were chosen to be PICO target specific and hence were assigned to a single label.
-The distant supervision dictionaries were created from target specific structured fields of clinicaltrials.gov. 
-The structured field ``Condition or Disease'' was mapped to Participants, ``Intervention/Treatment'' field was mapped to Intervention.
-The semi-structured ``Primary Outcome Measures'' and ``Secondary Outcome Measures'' fields were mapped to Outcomes class.
-Hand-crafted dictionaries were separately designed for participant gender, intervention comparator terms and outcomes.
+Non-UMLS vocabularies were chosen to be PICO target specific and were assigned to a single label.
+Target-specific distant supervision dictionaries are created from the structured fields of clinicaltrials.gov (CTO). 
+The structured field ``Condition or Disease'' was mapped to the Participant target class, and the ``Intervention/Treatment'' field is mapped to the Intervention target.
+The semi-structured ``Primary Outcome Measures'' and ``Secondary Outcome Measures'' fields are mapped to the Outcomes class.
+Hand-crafted dictionaries are separately designed for participant gender, intervention comparator terms and outcomes.
 %
 %
 %
@@ -370,14 +369,27 @@ Hand-crafted dictionaries were separately designed for participant gender, inter
 %
 In this work, we use the recently proposed data programming9 method, a generalization of distant supervision that uses a factor graph-based model to learn both the unobserved accuracies of labeling sources and statistical dependencies between those sources.
 In this approach, source accuracy and dependencies are estimated without requiring labeled data, enabling the use of weaker forms of supervision to generate training data, such as using noisy heuristics from clinical experts.
+
+Explain a bit about the noise-aware loss function as well.
 %
 %
 %
 %==============================
-\subsection{Transformer}\label{transformers}
+\subsection{Experiments}\label{transformers}
 %==============================
 %
-Training end-models for weakly supervised and fully supervised learning: PubMedBERT.
+We sought to test the feasibility of using weak supervision for PICO extraction and its extension to an additional study type entity.
+At this point, we aimed to test whether using UMLS vocabularies as sources for weak classifiers could lead to sufficient performance and if addition of non-UMLS classifiers could aid performance as well.
+To further check the performance contribution from the high-cost expert-generated rules, we added a third arm with all the ReGeX, heuristics and distant supervision classifiers.
+As it is difficult to directly build the UMLS based classifiers for the study type entity, we built seven ReGeX and hand-crafted dictionaries for the study type entity. 
+
+The labelling functions were used to label the EBM-PICO training set. 
+Snorkel's label model was used to aggregate several weak labellers and obtain probabilistic labels.
+GridSearch was used to fine tune the parameters of the label model using the hand-labelled validation set from the EBM-PICO. %Anjani ( TODO: list the parameters) 
+We did not have a validation set for the study type entity hence we did not optimize on it.
+
+The probabilistic labels obtained from the trained label model were used as noisy labels for the downstream deep neural networks.
+We used a PubMedBERT with a linear layer and the noise-aware loss function as the downstream model for PICOS recognition.
 %
 %
 %
