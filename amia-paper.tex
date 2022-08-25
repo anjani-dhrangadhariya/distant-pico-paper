@@ -337,15 +337,15 @@ Data in CTO is manually entered by principal investigators of the clinical study
 \subsection{Labeling functions}\label{lfs}
 %==============================
 %
-A labelling function is a weak classifier $\lambda$ that use domain-specific labelling sources and heuristics to emit a non-zero $\{-1, 0, +1\}$ label for a subset of input tokens.
+A labelling function is a weak classifier $\lambda$ that uses domain-specific labelling sources and heuristics to emit a non-zero $\{-1, 0, +1\}$ label for a subset of input tokens.
 A labelling function designed for a particular target class (in here; either P, I/C, O or S) should output  +1 for the positive token, -1 for the negative class token, and abstain (0) on the tokens where decision-making is confusing $\lambda \mapsto \{-1, 0, +1\}$.
-We designed four types of labelling functions depending on the types of labelling sources.
-The ontology or dictionary labelling functions for a target class takes a dictionary of terminologies mapped to one of $y \subset \{-1, +1\} $ labels.
-To account for fuzzy span matching from the terminologies, relevant bigram word co-occurrences were used.
+We designed four labelling functions depending on the types of labelling sources.
+The ontology or dictionary labelling functions for a target class take a dictionary of terminologies mapped to one of $y \subset \{-1, +1\} $ labels.
+Relevant bigram word co-occurrences were used to account for fuzzy span matching from the terminologies.
 A ReGeX labelling function for a target class takes regex patterns for $\{-1, +1\}$ classes and abstains on the rest.
-A heuristic labelling function is personalized for each of the PICOS classes and takes a generic regex pattern along with specific POS tag filters.
-Clinical studies have several abbreviations which were taken into account using heuristics to identify abbreviations from the training text and assigning these to either of the target classes. 
-The abbreviations with these target classes are then used by ontology labellers.
+A heuristic labelling function is personalized for each PICOS class and takes a generic regex pattern and specific POS tag filters.
+Clinical studies have several abbreviations that were taken into account using heuristics to identify abbreviations from the training text and assign these to either of the target classes. 
+Ontology labellers then use the abbreviations with these target classes.
 %
 %
 %
@@ -353,13 +353,11 @@ The abbreviations with these target classes are then used by ontology labellers.
 \subsection{Sources to Targets}\label{lfs}
 %==============================
 %
-Mapping UMLS semantic types to PICO subclasses is an expert-led activity.
-The concepts in UMLS vocabularies are organized under a broad semantic type ontology with 127 semantic types.
-The task to map each of these semantic types with PICO targets.
-UMLS concepts as labeling functions. It is difficult to classify different Semantic groups as positive signals for the PICOS classes. For example, the Participant span can include information about different participant characteristics: disease, disorder, ethnicity, language or geographical location, age, gender, sex,...
-For ontology-based labeling functions, we used the UMLS Semantic Network and the corresponding Semantic Groups as our entity categories and defined a mapping of semantic types (STYs) to target class labels $y \subset {-1,0,1}$.
-Non-UMLS vocabularies that did not provide semantic-type assignments and hence were mapped to a single target.
-The distant supervision dictionaries were created from the structured fields of clinicaltrials.gov. 
+Concepts in UMLS vocabularies are organized under a broad semantic type network with 127 semantic types.
+Mapping these semantic type categories to PICO target classes is a challenging expert-led activity.
+A semantic category was either marked $\{-1, 0, +1\}$ depending upon its relevance to the target class.
+Non-UMLS vocabularies were chosen to be PICO target specific and hence were assigned to a single label.
+The distant supervision dictionaries were created from target specific structured fields of clinicaltrials.gov. 
 The structured field ``Condition or Disease'' was mapped to Participants, ``Intervention/Treatment'' field was mapped to Intervention.
 The semi-structured ``Primary Outcome Measures'' and ``Secondary Outcome Measures'' fields were mapped to Outcomes class.
 Hand-crafted dictionaries were separately designed for participant gender, intervention comparator terms and outcomes.
