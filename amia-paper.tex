@@ -195,7 +195,7 @@ This annotation bottleneck across domains has shifted gears in favour of weakly-
 Programmatic labelling is quick and allows efficient modifications to the training data labels as per the downstream application changes.
 
 
-Medical ontology compendium like UMLS with several vocabularies, other external vocabularies and open access knowledgebases are an excellent resource for building clinical entity labelled training data. 
+Medical ontology compendium like UMLS with several vocabularies, other external vocabularies and open access knowledgebases are an excellent resource for building clinical entity labelled training data~\cite{humphreys1998unified}. 
 Legacy clinical applications both in NLP and image analysis are often automated using a multiple \textit{if-else} rules relying on key-phrases and visual cues (refer to document and image classification methods that are rule based).
 The bottleneck here is how to combine these labelling sources of varying accuracy and strength.
 Combining multiple labeling sources of variable accuracy is one of challenges.
@@ -321,14 +321,15 @@ Our task was to design weak labellers $\lambda^{m}$ corresponding to this fine-g
 \subsection{Labelling sources}\label{lss}
 %==============================
 %
-We divided our PICO labelling sources into UMLS vocabularies, non-UMLS ontologies and a combination of rules.
-We used the 2021AB-full release of UMLS Metathesaurus English subset dump with 223 vocabularies.
-After removing non-English and zoonotic source terminologies as well as sources containing fewer than 500 terms, we remained with 131 vocabularies.
-Preprocessing of UMLS ontologies: Remove stopwords (NLTK, Gensim, scikit learn, spaCy), numbers and punctuation's and Smart lower casing that does not alter abbreviations in the terminologies.
-The non-UMLS vocabularies included disease ontology DO, Human Phenotype Ontology (HPO), Ontology of adverse events (OAE), Chemical entities of biological interest (ChEBI),  comparative toxicogenomics database (CTD) Chemical and Disease subclasses, Clinical Trials Ontology (CTO).
-Our rule-based approach included a combination of hand-crafted dictionaries, regular expressions (ReGeX), ReGeX combined with heuristics and semi-structured terminologies obtained using distant supervision. 
+We used the 2021AB-full release of UMLS Metathesaurus English subset dump with 223 vocabularies. % Anjani: Give an overview of labelling sources in the introduction section.
+After removing non-English and zoonotic source vocabularies as well as sources containing fewer than 500 terms, we remained with 131 vocabularies~\cite{humphreys1998unified}.
+Terms in the selected vocabularies were preprocessed by removing stopwords, numbers, punctuation's and were lower-cased using Smart lower casing to preserve abbreviations.
+Additional vocabularies included disease ontology (DO), Human Phenotype Ontology (HPO), Ontology of adverse events (OAE), Chemical entities of biological interest (ChEBI),  comparative toxicogenomics database (CTD) Chemical and Disease subclasses, Clinical Trials Ontology (NDD-CTO)~\cite{schriml2012disease,robinson2008human,he2014oae,de2010chemical,lin2021cto}.
+Regular expressions (ReGeX) and heuristics like POS tag cues were used capture recurring class-specific patterns otherwise not captured by standardized terminologies. 
 Our hand-coded dictionaries were for participant gender, participant disease abbreviation, generic intervention comparator terms, and outcome endpoints~\footnote{https://www.thoracic.org/members/assemblies/assemblies/bshsr/patient-outcome/}~\footnote{https://www.safetyandquality.gov.au/our-work/indicators-measurement-and-reporting/patient-reported-outcomes/proms-lists}.
-Our distant supervision dictionaries were created from the structured fields of clinicaltrials.gov as described by~\cite{dhrangadhariya2022distant}.
+Vocabularies are structured, standardized data sources that do not capture various writing variations from clinical literature and custom-built ReGeX are restricted by either task or worse even by entity type~\cite{ratner2017snorkel,safranchik2020weakly}.
+Therefore, we additionally used distant supervision dictionaries created from the structured fields of clinicaltrials.gov (CTO) as described by~\cite{dhrangadhariya2022distant}.
+Data in CTO is manually entered by principal investigators of the clinical study thereby incorporating large-scale writing variations. 
 %
 %
 %
