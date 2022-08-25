@@ -302,20 +302,18 @@ These datasets come tokenized, and we did not do additional preprocessing except
 \subsection{Sequence labeling}\label{seq_lab}
 %==============================
 %
-Programmatic PICO training set development is a token labeling problem where each token in a sequence X is classified into one of the four PICOS classes (Y).
-As ``Intervention'' and ``Comparator'' entities represent interventions in two different roles in clinical studies and semantically the same classes, they are clubbed into a single ``Intervention'' entity class.
-Here the Y is not observable, hence the primary challenge was to devise several weak labellers to obtain entity labels.
-As Y is not actually observable, a primary technical challenge is estimating Y from multiple, potentially conflicting label sources of unknown quality to construct a probabilistically labeled dataset.
-This dataset can then be used for training classification models such as deep neural networks.
-Such a labeling regimen is typically low-cost, but less accurate than the hand-curated labels used in traditional supervised learning; hence, this paradigm is referred to as weakly supervised learning.
+Labelling a training set with PICO entities is a classical binary sequence labelling problem aiming to map input sequence of n text tokens, $ \mathbb{X} = (x_{1}, x_{2}, \dotso , x_{n} )$ to output sequence $\mathbb{Y} = (y_{1}, y_{2}, \dotso , y_{n} )$, where each $y_{i} \subset y$ is the label for token $x_{i}$.
+In weak supervision, $\mathbb{Y}$ is unobserved, and the challenge is to devise and aggregate several conflicting low-accuracy labellers $\lambda^{m}$ labelling $\mathbb{X}$ and estimate $\mathbb{Y}$.
+The estimates $\mathbb{\hat{Y}}$ of $\mathbb{Y}$ are assigned as probabilistic token labels of $\mathbb{X}$ leading to a weakly labelled dataset that can be used to train downstream ML models.
 
-It has to be noticed that PICO labels in EBM-PICO are spans composed of multiple fine-grained PICO subclasses.
-The participant span can include information about different participant characteristics: disease, disorder, symptoms, age, gender, the sample size in clinical studies, ethnicity, language or geographical location.
-The intervention span can include information about pharmaceutical drugs, chemicals, physical therapies, surgery, behavioural or educational therapies, and placebo-based comparators.
-Additional intervention information that could be marked is dosage, frequency and mode of administration of intervention.
-The outcomes can be subjective, objective, economic outcomes like cost or hard outcomes like mortality.
-The spans can also include how these outcomes were measured by having information about the scales, techniques and instruments used to measure them.
-Our task was to devise weak labellers corresponding to this fine-grained information, aggregate the labellers, correct the errors in fine-grained PICO EBM-PICO test set and evaluate the approach on both the EBM-PICO and it's corrected version.
+
+Coarse-grained PICO annotations in EBM-PICO are spans composed of multiple fine-grained subclasses.
+For instance, the participant span can include information about different participant characteristics: disease, disorder, symptoms, age, gender, the sample size in clinical studies, ethnicity, language or geographical location.
+The intervention span can include information about pharmaceutical drugs, chemicals, physical therapies, surgery, behavioural or educational therapies, and a placebo or active comparator.
+Additional intervention information that could be marked is dosage, frequency and mode of administration.
+The outcome spans can include the outcome names and how these outcomes were measured by having information about the scales, techniques and instruments used to measure them.
+Our task was to design weak labellers $\lambda^{m}$ corresponding to this fine-grained information, efficiently aggregate them to get probabilistic class labels, use the weakly-labelled dataset for downstream PICO recognition tasks, correct the fine-grained PICO annotations errors in the EBM-PICO test set and evaluate the approach on both the EBM-PICO and its updated version.
+
 %
 %
 %
