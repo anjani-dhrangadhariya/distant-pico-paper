@@ -379,6 +379,7 @@ Explain a bit about the noise-aware loss function as well.
 %==============================
 %
 We sought to test the feasibility of using weak supervision for PICO extraction and its extension to an additional study type entity.
+Explain about the UMLS ranking and partition as inspired from Trove. 
 At this point, we aimed to test whether using UMLS vocabularies as sources for weak classifiers could lead to sufficient performance and if addition of non-UMLS classifiers could aid performance as well.
 To further check the performance contribution from the high-cost expert-generated rules, we added a third arm with all the ReGeX, heuristics and distant supervision classifiers.
 As it is difficult to directly build the UMLS based classifiers for the study type entity, we built seven ReGeX and hand-crafted dictionaries for the study type entity. 
@@ -569,23 +570,10 @@ OxO
 \section{QUESTIONS TO ADDRESS}\label{ques}
 %==============================
 %
-
 \begin{enumerate}
-    \item Is it important to have high F1 score for the individual labeling functions?
-    \item Similar question: Will individual LF false negatives impact the performance?
-    \item What would you call low coverage? What should be the ideal coverage of the labeling functions?
-    \item What if higher coverage leads to higher False Positives?
-    \item Labeling function weights for the functions with high F1 score (and not a good coverage necessarily)?
-    \item How is overlap calculated? are only positive classes calculated in the overlap? > Coverage is calculated over 0 and 1 labels excluding the -1 labels.
-    \item Is coverage correlated to F1 score?
-    \item How is abstain treated while calculating F1 score?
-    \item Check out Trove for how "0" labels are calculated?
     \item What annotation effort or how much annotation effort will be saved using distant-pico?
+    \item Problem of high precision and low recall. Could it solved by reducing the abstains?
 \end{enumerate}
-
-Learning rate for label model train should be lower. LR like 1.0, 0.5, 0.1, 0.05, 0.01 did not work for me.
-
-Problem of high precision and low recall. Could it solved by reducing the abstains?
 %
 %
 %
