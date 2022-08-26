@@ -9,6 +9,7 @@
 \usepackage{graphicx,grffile}
 \usepackage[labelfont=bf,labelsep=period]{caption}
 \usepackage{ifxetex,ifluatex}
+\usepackage{bm}
 %\usepackage{fixltx2e} % provides \textsubscript
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[T1]{fontenc}
@@ -249,9 +250,9 @@ The birds-eye view of our approach is shown in the Figure.
 %==============================
 %
 \textbf{EBM-PICO.}
-The EBM-PICO dataset developed by Nye \textit{et al.} consists of about 5000 PICO annotated documents.~\footnote{A single document consists of a title and an abstract.}
-The dataset has annotations at two levels: span-level or coarse-grained PICO and entity-level or fine-grained PICO~\ref{table:coarsefineconcept}.
-Span level PICO annotation encompasses the maximum information about each PICO class.
+The EBM-PICO dataset is a widely used NLP benchmark with 5000 PICO annotated documents.~\footnote{A single document consists of a title and an abstract.}
+The dataset has annotations at two levels: span-level or coarse-grained and entity-level or fine-grained (see Table~\ref{table:coarsefineconcept}).
+Span level annotation encompasses the maximum information about each PICO class.
 Entity-level PICO annotation covers fine-grained PICO information at the entity level, with PICO classes further divided into fine-grained subclasses.
 The dataset comes pre-divided into a training set (n=4,933) annotated through crowd-sourcing and an expert annotated gold test set (n=191) for evaluation purposes.
 
@@ -261,7 +262,7 @@ The dataset comes pre-divided into a training set (n=4,933) annotated through cr
 \textbf{EBM-PICO corrected + Study type}
 The EBM-PICO annotation guidelines caution about variable annotation quality~\footnote{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6174533/bin/NIHMS988059-supplement-Appendix.pdf}.
 Variable annotation quality in the training dataset is pardonable, but the possible errors in the gold standard test set will impact the development of downstream extraction models.
-The entity-level PICO annotations in the EBM-PICO gold test set (n=191) have several errors that could lead to faulty evaluation of machine learning methods.
+The entity-level annotations in the EBM-PICO gold test set (n=191) have several errors that could lead to faulty evaluation of machine learning methods.
 We evaluate 1\% of the EBM-PICO training set tokens to gauge the possible reasons for the errors.
 We use this error evaluation exercise to conduct an error-focused corpus re-annotation for the EBM-PICO gold corpus (n = 191) for PICO entities.
 %These errors emanate from the annotation process of EBM-PICO corpus that follows the sequence of first annotating only the span-level PICO information and then restrict the entity-level PICO annotation to these larger spans.
@@ -302,9 +303,9 @@ These datasets come tokenized, and we did not do additional preprocessing except
 \subsection{Sequence labeling}\label{seq_lab}
 %==============================
 %
-Labelling a training set with PICO entities is a classical binary sequence labelling problem aiming to map input sequence of n text tokens, $ \mathbb{X} = (x_{1}, x_{2}, \dotso , x_{n} )$ to output sequence $\mathbb{Y} = (y_{1}, y_{2}, \dotso , y_{n} )$, where each $y_{i} \subset y$ is the label for token $x_{i}$.
-In weak supervision, $\mathbb{Y}$ is unobserved, and the challenge is to devise and aggregate several conflicting low-accuracy labellers $\lambda^{m}$ labelling $\mathbb{X}$ and estimate $\mathbb{Y}$.
-The estimates $\mathbb{\hat{Y}}$ of $\mathbb{Y}$ are assigned as probabilistic token labels of $\mathbb{X}$ leading to a weakly labelled dataset that can be used to train downstream ML models.
+Labelling a training set with PICO entities is a classical binary sequence labelling problem aiming to map input sequence of n text tokens, $ \bm{X} = (x_{1}, x_{2}, \dotso , x_{n} )$ to output sequence $\bm{Y} = (y_{1}, y_{2}, \dotso , y_{n} )$, where each $y_{i} \subset y$ is the label for token $x_{i}$.
+In weak supervision, $\bm{Y}$ is unobserved, and the challenge is to devise and aggregate several conflicting low-accuracy labellers $\lambda^{m}$ labelling $\bm{X}$ and estimate $\bm{Y}$.
+The estimates $\bm{\hat{Y}}$ of $\bm{Y}$ are assigned as probabilistic token labels of $\bm{X}$ leading to a weakly labelled dataset that can be used to train downstream ML models.
 
 
 Coarse-grained PICO annotations in EBM-PICO are spans composed of multiple fine-grained subclasses.
@@ -338,12 +339,12 @@ Data in CTO is manually entered by principal investigators of the clinical study
 %==============================
 %
 A labelling function is a weak classifier $\lambda$ that uses domain-specific labelling sources and heuristics to emit a non-zero $\{-1, 0, +1\}$ label for a subset of input tokens.
-A labelling function designed for a particular target class (in here; either P, I/C, O or S) should output  +1 for the positive token, -1 for the negative class token, and abstain (0) on the tokens where decision-making is confusing $\lambda \mapsto \{-1, 0, +1\}$.
+A labelling function designed for a particular target class $t \in \bm{T}$ (in here; $\bm{T} \subset \{ Participant, Intervention, Outcome \} $) should output  +1 for the positive token label, -1 for the negative token label, and abstain on the tokens where decision-making is confusing $\lambda \mapsto \{-1, 0, +1\}$.
 We designed four labelling functions depending on the types of labelling sources.
-The ontology or dictionary labelling functions for a target class take a dictionary of terminologies mapped to one of $y \subset \{-1, +1\} $ labels.
+The ontology or dictionary labelling functions for a target class take a dictionary of terminologies mapped to one of $y \subset \{-1, +1\} $ token labels.
 Relevant bigram word co-occurrences were used to account for fuzzy span matching from the terminologies.
-A ReGeX labelling function for a target class takes regex patterns for $\{-1, +1\}$ classes and abstains on the rest.
-A heuristic labelling function is personalized for each PICOS class and takes a generic regex pattern and specific POS tag filters.
+A ReGeX labelling function for a target class takes regex patterns for $\{-1, +1\}$ labels and abstains on the rest.
+A heuristic labelling function is personalized for each target class and takes a generic regex pattern and specific POS tag filters.
 Clinical studies have several abbreviations that were taken into account using heuristics to identify abbreviations from the training text and assign these to either of the target classes. 
 Ontology labellers then use the abbreviations with these target classes.
 %
@@ -353,7 +354,7 @@ Ontology labellers then use the abbreviations with these target classes.
 \subsection{Sources to Targets}\label{lfs}
 %==============================
 %
-Mapping these semantic type categories to PICO target classes is a challenging expert-led activity.
+Mapping the UMLS semantic type categories to PICO target classes is a challenging expert-led activity.
 A semantic category was either marked $\{-1, 0, +1\}$ depending upon its relevance to the target class.
 Non-UMLS vocabularies were chosen to be PICO target specific and were assigned to a single label.
 Target-specific distant supervision dictionaries are created from the structured fields of clinicaltrials.gov (CTO). 
