@@ -11,6 +11,7 @@
 \usepackage{ifxetex,ifluatex}
 \usepackage{bm}
 \usepackage{array, boldline, makecell, booktabs}
+\usepackage{multirow}
 
 
 %\usepackage{fixltx2e} % provides \textsubscript
@@ -274,7 +275,8 @@ This annotation exercise was to demonstrate the application of weak supervision 
 \textbf{Physio set.} A test set comprising 153 PICO annotated documents from Physiotherapy and Rehabilitation RCTs (Randomized Controlled Trials) was used as an additional benchmark to evaluate the generalization power of our approach for this sub-domain~\cite{dhrangadhariya2021end}.
 
 These datasets come tokenized, and we did not do additional preprocessing except adding complementary token information like POS tags, and token lemmas were obtained using spaCy.
-Multi-class fine-grained annotations were binarized i.e. a token label was set to 1 if the token represented an entity otherwise it was set to 0.
+Multi-class fine-grained PICO annotations were binarized i.e. a token label was set to 1 if the token represented an entity otherwise it was set to 0.
+All the state of the art approaches use non-binarized labels for fine-grained PICO recognition making them incomparable to our approach.
 %
 %
 %
@@ -381,11 +383,18 @@ Hand-crafted dictionaries are separately designed for participant gender, interv
 %
 We sought to test the feasibility of using weak supervision for PICO extraction and its extension to an additional study type entity.
 At this point, we aimed to test whether using UMLS vocabularies as sources for weak classifiers could lead to sufficient performance and if addition of non-UMLS classifiers could aid performance as well.
-We divided the experiments based on this level of information.
-First set of experiments was done using only cheaper UMLS vocabularies.
+We divided the the labelling functions $\lambda^{m}$ into ontology-based (UMLS + non-UMLS ontologies) vs. ontology-based combined with rule-based (ReGeX, heuristics, dictionaries and distant supervision). 
+
+
+To investigate the optimal number of UMLS labelling functions required, we used the same methodology as in Trove holding all non-UMLS labeling functions fixed across all ablation tiers and computed performance across partitions = $s = ( 1, 2, \dotso , 127 )$ partitions of the UMLS by terminology. 
+
+
+Next we aimed to inspect effect of ablation tiers.
+First set of experiments was done using only easier to obtain UMLS vocabularies.
 The second set of experiments was done on using the target-specific non-UMLS vocabularies in addition to the UMLS vocabularies. 
 To further check the performance contribution from the high-cost expert-generated rules, we added a third arm with all the ReGeX, heuristics and distant supervision labelling functions.
-As it is difficult to directly build the UMLS based classifiers for the study type entity, we built seven ReGeX and hand-crafted dictionaries for the study type entity. 
+As it is difficult to directly build the UMLS based classifiers for the study type entity, we built seven ReGeX and hand-crafted dictionaries for the study type entity.
+
 
 The labelling functions were used to label the EBM-PICO training set. 
 Snorkel's label model was used to aggregate several weak labellers and obtain probabilistic labels.
@@ -432,7 +441,7 @@ For all the target classes, adding task-specific rules improves the performance 
         ~ & +Ontology & 0.63 & 0.67 & 68.06 & 70.72 & ~ & ~ \\ 
         ~ & +Rules & 0.64 & 0.68 & 71.32 & 73.63 & ~ & ~ \\ 
         O & UMLS & running & running & running & running & 81.02 & 80.12 \\ 
-        ~ & +Ontology & 59.53 & 62.47 & running & running & ~ & ~ \\ 
+        ~ & +Ontology & 59.53 & 62.47 & 58.74 & 59.27 & ~ & ~ \\ 
         ~ & +Rules & 61.02 & 63.11 & 60.36 & 61.93 & ~ & ~ \\ \hline
     \end{tabular}
     \caption{\label{tab:res} F1 scores for UMLS, UMLS+other and rule-based weak supervision.}
