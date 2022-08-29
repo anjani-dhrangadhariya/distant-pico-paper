@@ -246,6 +246,13 @@ We show how using only ontology dependent classifiers vs combining them with mor
 %==============================
 %
 The birds-eye view of our approach is shown in the Figure.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.98\textwidth]{figures/approach.pdf}
+\caption{Approach overview.}
+\label{fig:approach}
+\end{figure}
 %
 %
 %
@@ -321,17 +328,6 @@ Our task was to design weak labellers $\lambda^{m}$ corresponding to this fine-g
 %
 %
 %==============================
-\subsection{Classifier aggregation}\label{lms}
-%==============================
-%
-In this work, we use the recently proposed data programming9 method, a generalization of distant supervision that uses a factor graph-based model to learn both the unobserved accuracies of labeling sources and statistical dependencies between those sources.
-In this approach, source accuracy and dependencies are estimated without requiring labeled data, enabling the use of weaker forms of supervision to generate training data, such as using noisy heuristics from clinical experts.
-
-Explain a bit about the noise-aware loss function as well.
-%
-%
-%
-%==============================
 \subsection{Labelling sources}\label{lss}
 %==============================
 %
@@ -362,6 +358,7 @@ A distant supervision labelling function is designed to extract non-standardized
 As the target class specific labelling like ReGeX, heuristics, hand-coded dictionaries and distant supervision were designed for individual PICO classes, they are clubbed under task-specific labelling functions category.
 Clinical studies have several abbreviations that were taken into account using heuristics to identify abbreviations from the training text and assign these to either of the target classes. 
 Ontology labellers then use the abbreviations with these target classes.
+Any labelling function using ontologies or dictionaries used string matching as the labelling heuristic.
 %
 %
 %
@@ -380,14 +377,25 @@ Hand-crafted dictionaries are separately designed for participant gender, interv
 %
 %
 %==============================
+\subsection{LF aggregation}\label{lms}
+%==============================
+%
+Each labelling function $ \lambda_{i} \in \bm{\Lambda^{m}}; \bm{\Lambda} = \{\lambda_{1}, \lambda_{2}, \dotso, \lambda_{m} \} $ maps $\bm{X^{m}}$ to output sequence $ \widetilde{\bm{Y}}$ with labels $\widetilde{y} \in \{-1, 0, +1\}$ leading to $\{-1, 0, +1\}^{m \times n}$.
+A key finding of data programming is that we can use $\Lambda$ to recover the latent class-conditional accuracy of each label source without ground-truth labels by observing the rates of agreement and disagreement across all pairs of labeling functions.
+
+
+In this work, we use the data programming method implemented as Snorkel, a generalization of distant supervision that uses a factor graph-based model to learn both the unobserved accuracies of labeling sources and statistical dependencies between those sources.
+In this approach, source accuracy and dependencies are estimated without requiring labeled data, enabling the use of weaker forms of supervision to generate training data, such as using noisy heuristics from clinical experts.
+%
+%
+%
+%==============================
 \subsection{Experiments}\label{transformers}
 %==============================
 %
 We sought to test the feasibility of using weak supervision for PICO extraction and its extension to an additional study type entity.
 At this point, we aimed to test whether using UMLS vocabularies as sources for weak classifiers could lead to sufficient performance and if addition of non-UMLS classifiers could aid performance as well.
 We divided the the labelling functions $\lambda^{m}$ into ontology-based (UMLS + non-UMLS ontologies) vs. ontology-based combined with rule-based (ReGeX, heuristics, dictionaries and distant supervision). 
-
-
 
 
 Next we aimed to inspect effect of ablation tiers.
@@ -450,7 +458,8 @@ For all the target classes, adding task-specific rules improves the performance 
 \end{table}
 
 
-To investigate the optimal number of UMLS labelling functions required, we used the same methodology as in Trove holding all non-UMLS labeling functions fixed across all ablation tiers and computed performance across partitions = $s = ( 1, 2, \dotso , 127 )$ partitions of the UMLS by terminology. 
+To investigate the optimal number of UMLS labelling functions required, we used the same methodology as in Trove holding all non-UMLS labeling functions fixed across all ablation tiers and computed performance across partitions = $s = ( 1, 2, \dotso , 127 )$ partitions of the UMLS by terminology obtaining similar results.
+The optimal number of partitions mainly lied between two and eight (make a figure for it.
 
 
 %
