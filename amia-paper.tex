@@ -153,17 +153,17 @@
 % Note: Abstract is limited to 250 words
 %
 \textbf{Objective:}
-PICO entity extraction is a vital but time-consuming task for conducting systematic reviews. 
-Supervised machine learning methods can help fully automate PICO entity extraction, but a lack of large annotated corpora restricts innovation and adoption of automated PICO recognition systems.
+PICO analysis is a vital but time-consuming task for conducting systematic reviews (SR). 
+Supervised machine learning methods can help fully automate PICO analysis, but a lack of large annotated corpora restricts innovation and adoption of automated PICO recognition systems.
 The largest-available PICO entity corpus is manually annotated, which is too expensive for the most scientific community.
-Moreover, even the well-trained annotators disagree on the exact spans or entities constituting PICO mentions, often requiring resource-intensive post-annotation corrections.
-Our objective is to investigate a weak supervision approach devising ontologies and expert-generated rules for PICO entity extraction without relying on hand-labelled data.\\
+Additionally, depending upon the SR question, PICO criteria are extended to PICOS (S-Study type or design), PICOC (C-Context), and PICOT (T-timeframe) meaning the static hand-labelled corpora should undergo costly re-annotation as per the downstream requirements.
+We test feasibility of developing a weak supervision system to extract PICO without hand-labelled data.\\
 \textbf{Materials and Methods:}
-Ontologies - UMLS + more, dictionaries and expert-generated rules for designed for PICO recognition along with weakly supervised models.\\
+We investigate a weak supervision approach using medical ontologies and expert-generated rules for PICO entity recognition without relying on hand-labelled data.
 \textbf{Results:}
-We present Weak-PICO+, a method for weakly supervised PICO entity recognition using medical and non-medical ontologies and expert-generated rules.
+We present Weak-PICO+, a method for weakly supervised PICO entity recognition using medical ontologies, non-medical ontologies and expert-generated rules.
 Unlike manual annotation, Weak-PICO+ does not use any hand-labelled data and is quickly adaptable and extensible to other entities.
-We demonstrate this through extracting an additional Study Type entity making PICO go PICOS without manual annotation effort.\\
+We demonstrate this through extracting an additional Study Type and Design entity making PICO go PICOS without manual annotation effort.\\
 \textbf{Conclusion:}
 Weak supervision using weak-PICO+ for PICO entity recognition has good results and extends to more clinical entities without hand-labelled data.\\
 %
