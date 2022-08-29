@@ -351,13 +351,15 @@ Data in CTO is manually entered by principal investigators of the clinical study
 \subsection{Labeling functions}\label{lfs}
 %==============================
 %
-A labelling function is a weak classifier $\lambda$ that uses domain-specific labelling sources and heuristics to emit a non-zero $\{-1, 0, +1\}$ label for a subset of input tokens.
+For a binary token labelling task, a labelling function is a weak classifier $\lambda$ that uses domain-specific labelling sources and heuristics to emit token labels $ \widetilde{\bm{Y_{i}}}$ with labels $ \widetilde{y} \in \{-1, 0, +1\}$ for a subset of input $\bm{X_{i}}$ tokens.
 A labelling function designed for a particular target class $t \in \bm{T}$ (in here; $\bm{T} \subset \{ Participant, Intervention, Outcome \} $) should output  +1 for the positive token label, -1 for the negative token label, and abstain on the tokens where decision-making is confusing $\lambda \mapsto \{-1, 0, +1\}$.
 We designed four labelling functions depending on the types of labelling sources.
 The ontology or dictionary labelling functions for a target class take a dictionary of terminologies mapped to one of $y \subset \{-1, +1\} $ token labels.
 Relevant bigram word co-occurrences were used to account for fuzzy span matching from the terminologies.
 A ReGeX labelling function for a target class takes regex patterns for $\{-1, +1\}$ labels and abstains on the rest.
 A heuristic labelling function is personalized for each target class and takes a generic regex pattern and specific POS tag filters.
+A distant supervision labelling function is designed to extract non-standardized terms from a knowledge-base and use them to map tokens to $\{-1, +1\}$ labels .
+As the target class specific labelling like ReGeX, heuristics, hand-coded dictionaries and distant supervision were designed for individual PICO classes, they are clubbed under task-specific labelling functions category.
 Clinical studies have several abbreviations that were taken into account using heuristics to identify abbreviations from the training text and assign these to either of the target classes. 
 Ontology labellers then use the abbreviations with these target classes.
 %
@@ -386,7 +388,6 @@ At this point, we aimed to test whether using UMLS vocabularies as sources for w
 We divided the the labelling functions $\lambda^{m}$ into ontology-based (UMLS + non-UMLS ontologies) vs. ontology-based combined with rule-based (ReGeX, heuristics, dictionaries and distant supervision). 
 
 
-To investigate the optimal number of UMLS labelling functions required, we used the same methodology as in Trove holding all non-UMLS labeling functions fixed across all ablation tiers and computed performance across partitions = $s = ( 1, 2, \dotso , 127 )$ partitions of the UMLS by terminology. 
 
 
 Next we aimed to inspect effect of ablation tiers.
@@ -422,30 +423,35 @@ We used students t-test with a alpha threshold of 0.05 to measure the statistica
 \section{RESULTS}\label{results}
 %==============================
 %
-Table~\ref{tab:res} reports F1 performance for weak supervision using ontology labeling functions and those incorporating additional, task-specific rules.
-For all the target classes, adding task-specific rules improves the performance between 3 to 13\% performance boost. 
+Table~\ref{tab:res} reports macro-averaged F1 scores for weak supervision using ontology labeling functions and those incorporating additional, task-specific rules in comparison to the fully-supervised approach.
+For all the target classes, adding task-specific rules improves the performance between 1 to 13\% performance boost for LM. 
 
 \begin{table}[!ht]
     \centering
-    \begin{tabular}{|l|l|l|l|l|l|l|l|}
+    \begin{tabular}{|l|l|l|l|l|l|l|l|l|}
         \hline
         \Xhline{1pt}
-        \multicolumn{2}{|c|}{Model} & \multicolumn{2}{|c|}{LM} & \multicolumn{2}{|c|}{WS} & \multicolumn{2}{|c|}{FS} \\ \hline
-        Target class & LF source & Fine & Fine corr & Fine & Fine corr & Fine & Fine corr \\
+        \multicolumn{3}{|c|}{} & \multicolumn{2}{|c|}{LM} & \multicolumn{2}{|c|}{WS} & \multicolumn{2}{|c|}{FS} \\
+        \hline
+        Target class & LF source & \#LF & Fine & Fine corr & Fine & Fine corr & Fine & Fine corr \\
         \hline
         \Xhline{1pt}
-        P & UMLS & 0.64 & 0.72 & 65.37 & 73.51 & 73 & 74 \\ 
-        ~ & +Ontology & 0.64 & 0.72 & 64.62 & 72.17 & ~ & ~ \\ 
-        ~ & +Rules & 0.66 & 0.75 & 67.62 & 76.73 & ~ & ~ \\ 
-        I/C & UMLS & 0.6 & 0.65 & 57.9 & 59.49 & 83.49 & 81.09 \\ 
-        ~ & +Ontology & 0.63 & 0.67 & 68.06 & 70.72 & ~ & ~ \\ 
-        ~ & +Rules & 0.64 & 0.68 & 71.32 & 73.63 & ~ & ~ \\ 
-        O & UMLS & running & running & running & running & 81.02 & 80.12 \\ 
-        ~ & +Ontology & 59.53 & 62.47 & 58.74 & 59.27 & ~ & ~ \\ 
-        ~ & +Rules & 61.02 & 63.11 & 60.36 & 61.93 & ~ & ~ \\ \hline
+        P & UMLS & 0 & 0.64 & 0.72 & 65.37 & 73.51 & 73 & 74 \\ 
+        ~ & +Ontology & 0 & 0.64 & 0.72 & 64.62 & 72.17 & ~ & ~ \\ 
+        ~ & +Rules & 0 & 0.66 & 0.75 & 67.62 & 76.73 & ~ & ~ \\ 
+        I/C & UMLS & 0 & 0.6 & 0.65 & 57.9 & 59.49 & 83.49 & 81.09 \\ 
+        ~ & +Ontology & 0 & 0.63 & 0.67 & 68.06 & 70.72 & ~ & ~ \\ 
+        ~ & +Rules & 0 & 0.64 & 0.68 & 71.32 & 73.63 & ~ & ~ \\ 
+        O & UMLS & 0 & 59.53 & 62.47 & running & running & 81.02 & 80.12 \\ 
+        ~ & +Ontology & 0 & 59.53 & 62.47 & 58.74 & 59.27 & ~ & ~ \\ 
+        ~ & +Rules & 0 & 61.02 & 63.11 & 60.36 & 61.93 & ~ & ~ \\ \hline
     \end{tabular}
-    \caption{\label{tab:res} F1 scores for UMLS, UMLS+other and rule-based weak supervision.}
+    \caption{\label{tab:res} Macro-averaged F1 scores for UMLS, UMLS+other and rule-based weak supervision.}
 \end{table}
+
+
+To investigate the optimal number of UMLS labelling functions required, we used the same methodology as in Trove holding all non-UMLS labeling functions fixed across all ablation tiers and computed performance across partitions = $s = ( 1, 2, \dotso , 127 )$ partitions of the UMLS by terminology. 
+
 
 %
 %
