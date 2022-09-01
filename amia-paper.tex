@@ -277,7 +277,7 @@ We annotated another entity for study type for this corpus to measure the effect
 Our study type entity is restricted to the type and design of a clinical study.
 This annotation exercise demonstrated the application of weak supervision for entities beyond PICO~\cite{menard2019turning}.
 
-\textbf{Physio set.} We used a physiotherapy and rehabilitation test set with 153 PICO annotated documents as a benchmark to evaluate the generalizability of the approach to these sub-domains~\cite{dhrangadhariya2021end}.
+\textbf{Physio set.} We used a physiotherapy and rehabilitation benchmark with 153 PICO annotated documents to evaluate the generalizability of the approach to these sub-domains~\cite{dhrangadhariya2021end}.
 
 These datasets are pre-tokenized and did not require additional preprocessing except the addition of POS tags and token lemma using spaCy.
 Multi-class fine-grained PICO annotations were binarized, i.e. a token label was reset to 1 if the token represented an entity.
@@ -383,9 +383,12 @@ Hand-crafted dictionaries are separately designed for participant gender, interv
 %==============================
 %
 Each labelling function $ \lambda_{i} \in \bm{\Lambda^{m}}; \bm{\Lambda} = \{\lambda_{1}, \lambda_{2}, \dotso, \lambda_{m} \} $ maps inputs $\bm{X^{n}}$ to output sequence $ \widetilde{\bm{Y^{n}}}$ with labels $\widetilde{y} \in \{-1, 0, +1\}$ leading to a label matrix $ \lambda \subset \{-1, 0, +1\}^{m \times n}$.
-Using this label matrix, the source accuracy of each labelling function could be estimated using rate of observed agreements and disagreements across the labelling function pairs.
-
-% Anjani \textcolor{blue}{Explain data programming by Snorkel. Explain about the majority voting procedure as well.}
+The labelling functions can be aggregated using the majority vote (MV) rule, where a token label is elected only when a majority of $\lambda_{i}$ vote for it. 
+Ties and abstains lead to the selection of the majority label.
+However, MV does not take into account the variable accuracies of different labelling sources.
+These accuracies could be estimated without manifest ground truth based on observed agreements and disagreements rates between labelling function pairs $ \lambda_{i}, \lambda_{j}$.
+These label accuracies could be encoded using a generative model $ \bm{P} ( \Lambda , Y )$ which estimates token label probablities $\bm{\hat{Y}}$ for label classes $ \{ 0, 1\} $.
+The generative model is trained using stochastic gradient descent to minimize log loss without a ground truth.
 %
 %
 %
