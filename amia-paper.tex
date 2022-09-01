@@ -224,7 +224,7 @@ By definition, PICO information are spans that encompass multiple sub-class enti
 A shortcoming of span extraction is that even after a machine points a human reviewer to the correct PICO span, the reviewer requires to manually read and understand its finer aspects to screen the study for relevance.
 Span extraction hence leads to semi-automation but hinders full-automation.
 Weakly-supervised PICO entity extraction has not garnered enough attention as much as supervised PICO span extraction.
-As far as our knowledge goes, only two studies exist for weakly-supervised PICO extraction.
+As far as our knowledge goes, only two studies exist for weakly-supervised PICO recognition.
 One of these approaches only explores weak supervision for intervention extraction using a single labelling source~\cite{dhrangadhariya2022distant}, and the other approach relies on a single source of programmatic labelling and focuses on PICO spans and sentences rather than entities.
 Entity recognition approach to PICO is not as easy as entity recognition approach to disease or chemical names which are more or less standardised.
 PICO terms are not standard and even the experts do not agree on the exact tokens constituting PICO~\cite{brockmeier2019improving}.
@@ -317,10 +317,10 @@ The estimates $\bm{\hat{Y}}$ of $\bm{Y}$ are assigned as probabilistic token lab
 
 
 Coarse-grained PICO annotations in EBM-PICO are spans composed of multiple fine-grained subclasses.
-For instance, the participant span can include information about different participant characteristics: disease, disorder, symptoms, age, gender, the sample size in clinical studies, ethnicity, language or geographical location.
-The intervention span can include information about name, role (main intervention or control) dosage, frequency and mode of administration.
-The outcome spans can include the outcome names and how these outcomes were measured by having information about the scales, techniques and instruments used to measure them.
-Our task was to design $m$ weak labellers also called as labelling functions $\lambda^{m}$ corresponding to this fine-grained information, efficiently aggregate them to get probabilistic class labels, and use the weakly-labelled dataset for downstream PICO recognition tasks.
+For instance, the participant span can include information about participant characteristics: disease, disorder, symptoms, age, gender, the sample size in clinical studies, ethnicity, language or geographical location.
+The intervention span can include intervention name, role (main intervention or control), dosage, frequency and mode of administration.
+The outcome span can include the outcome names and information about the scales, techniques and instruments used to measure these outcomes.
+Our task was to design $m$ weak labellers, also called labelling functions $\lambda^{m}$ corresponding to this fine-grained information, efficiently aggregate them to get probabilistic class labels, and use the weakly-labelled dataset for downstream PICO recognition tasks.
 %correct the fine-grained PICO annotations errors in the EBM-PICO test set and evaluate the approach on both the EBM-PICO and its updated version.
 %
 %
@@ -330,14 +330,14 @@ Our task was to design $m$ weak labellers also called as labelling functions $\l
 %==============================
 %
 We used the 2021AB-full release of UMLS Metathesaurus English subset dump with 223 vocabularies. % Anjani: Give an overview of labelling sources in the introduction section.
-After removing non-English and zoonotic source vocabularies as well as sources containing fewer than 500 terms, we remained with 131 vocabularies~\cite{humphreys1998unified}.
+After removing non-English and zoonotic source vocabularies as well as sources containing fewer than 500 terms, we remained with 127 vocabularies~\cite{humphreys1998unified}.
 Terms in the selected vocabularies were preprocessed by removing stopwords, numbers, punctuation's and were lower-cased using Smart lower casing to preserve abbreviations.
-Additional vocabularies included disease ontology (DO), Human Phenotype Ontology (HPO), Ontology of adverse events (OAE), Chemical entities of biological interest (ChEBI),  comparative toxicogenomics database (CTD) Chemical and Disease subclasses, Clinical Trials Ontology (NDD-CTO), Gender, Sex, and Sexual Orientation Ontology (GSSO)~\cite{schriml2012disease,robinson2008human,he2014oae,de2010chemical,lin2021cto,kronk2020development,geifman2011towards}.
-Regular expressions (ReGeX) and heuristics like POS tag cues were used capture recurring class-specific patterns otherwise not captured by standardized terminologies. 
-Our hand-coded dictionaries were for participant gender, participant disease abbreviation, generic intervention comparator terms, and outcome endpoints~\footnote{https://www.thoracic.org/members/assemblies/assemblies/bshsr/patient-outcome/}~\footnote{https://www.safetyandquality.gov.au/our-work/indicators-measurement-and-reporting/patient-reported-outcomes/proms-lists}.
-Vocabularies are structured, standardized data sources that do not capture various writing variations from clinical literature and custom-built ReGeX are restricted by either task or worse even by entity type~\cite{ratner2017snorkel,safranchik2020weakly}.
+Additional vocabularies included disease ontology (DO), Human Phenotype Ontology (HPO), Ontology of adverse events (OAE), Chemical entities of biological interest (ChEBI),  comparative toxicogenomics database (CTD) Chemical and Disease subclasses, Clinical Trials Ontology (NDD-CTO), Gender, Sex, and Sexual Orientation Ontology (GSSO), Chemotherapy Toxicities Ontology (ONTOTOX), Cancer Care: Treatment Outcomes Ontology (CCTOO), symptoms ontology (SYMP), Non-pharmacological interventions ontology (NPI), Nursing Care Coordination Ontology (NCCO)~\cite{schriml2012disease,robinson2008human,he2014oae,de2010chemical,lin2020cto,kronk2020development,geifman2011towards,rogier2021using,lin2018cancer,mohammed2012building,ninot2018definition}.
+Regular expressions (ReGeX) and heuristics like POS tag cues were used to capture recurring class-specific patterns otherwise not captured by standardized terminologies.
+Our hand-coded dictionaries were for participant gender, participant disease abbreviation, generic intervention comparator terms, and outcome endpoints~\footnote{https://www.thoracic.org/members/assemblies/assemblies/bshsr/patient-outcome/} and patient reported outcomes~\footnote{https://www.safetyandquality.gov.au/our-work/indicators-measurement-and-reporting/patient-reported-outcomes/proms-lists}.
+Vocabularies are structured, standardized data sources that do not capture various writing variations from clinical literature and custom-built ReGeX are restricted by either task or even entity type~\cite{ratner2017snorkel,safranchik2020weakly}.
 Therefore, we additionally used distant supervision dictionaries created from the structured fields of clinicaltrials.gov (CTO) as described by~\cite{dhrangadhariya2022distant}.
-Data in CTO is manually entered by principal investigators of the clinical study thereby incorporating large-scale writing variations. 
+Principal investigators of the clinical study manually enter data in CTO, thereby incorporating large-scale writing variations.  
 %
 %
 %
@@ -345,16 +345,16 @@ Data in CTO is manually entered by principal investigators of the clinical study
 \subsection{Labeling functions}\label{lfs}
 %==============================
 %
-For a binary token labelling task, a labelling function is a weak classifier $\lambda$ that uses domain-specific labelling sources and heuristics to emit token labels $ \widetilde{\bm{Y_{i}}}$ with labels $ \widetilde{y} \in \{-1, 0, +1\}$ for a subset of input $\bm{X_{i}}$ tokens.
-A labelling function designed for a particular target class $t \in \bm{T}$ (in here; $\bm{T} \subset \{ Participant, Intervention, Outcome \} $) should output  +1 for the positive token label, -1 for the negative token label, and abstain on the tokens where decision-making is confusing $\lambda \mapsto \{-1, 0, +1\}$.
+In a binary token labelling task, a labelling function is a weak classifier $\lambda$ that uses domain-specific labelling sources $\bm{S}$ and a logic to emit token labels $ \widetilde{\bm{Y_{i}}}$ with labels $ \widetilde{y} \in \{-1, 0, +1\}$ for a subset of input $\bm{X_{i}}$ tokens.
+A labelling function designed for a particular target class $t \in \bm{T}$ (in here; $\bm{T} \subset \{ Participant, Intervention, Outcome \} $) should output  $1$ for the positive token label, $0$ for the negative token label, and abstain ($-1$) on the tokens where decision-making is confusing $\lambda \mapsto \{-1, 0, +1\}$.
 We designed four labelling functions depending on the types of labelling sources.
-The ontology or dictionary labelling functions for a target class take a dictionary of terminologies mapped to one of $y \subset \{-1, +1\} $ token labels.
+The ontology or dictionary labelling functions for a target class take a dictionary of terminologies mapped to one of $y \subset \{0, +1\} $ token labels.
 Relevant bigram word co-occurrences were used to account for fuzzy span matching from the terminologies.
-A ReGeX labelling function for a target class takes regex patterns for $\{-1, +1\}$ labels and abstains on the rest.
+A ReGeX labelling function for a target class takes regex patterns for $\{-1, +1\}$ labels and abstains from the rest.
 A heuristic labelling function is personalized for each target class and takes a generic regex pattern and specific POS tag filters.
-A distant supervision labelling function is designed to extract non-standardized terms from a knowledge-base and use them to map tokens to $\{-1, +1\}$ labels .
-As the target class specific labelling like ReGeX, heuristics, hand-coded dictionaries and distant supervision were designed for individual PICO classes, they are clubbed under task-specific labelling functions category.
-Clinical studies have several abbreviations that were taken into account using heuristics to identify abbreviations from the training text and assign these to either of the target classes. 
+A distant supervision labelling function is designed to extract non-standardized terms from a knowledge base and use them for mapping tokens to $\{0, +1\}$ labels.
+As ReGeX, heuristics, hand-coded dictionaries and distant supervision were designed for individual PICO classes; they are clubbed under the task-specific labelling functions category.
+Clinical studies have several abbreviations taken into account using heuristics to identify abbreviations from the training text and assign these to either of the target classes. 
 Ontology labellers then use the abbreviations with these target classes.
 Any labelling function using ontologies or dictionaries used string matching as the labelling heuristic.
 %
@@ -364,13 +364,16 @@ Any labelling function using ontologies or dictionaries used string matching as 
 \subsection{Sources to Targets}\label{lfs}
 %==============================
 %
-Mapping the UMLS semantic type categories to PICO target classes is a challenging expert-led activity.
-A semantic category was either marked $\{-1, 0, +1\}$ depending upon its relevance to the target class.
+UMLS concepts are organized under semantic type categories (e.g. disease, sign and symptoms, age group, etc.) so mapping these to PICO targets invariably maps the concepts to targets. 
+%Mapping the UMLS semantic type categories to PICO target classes invariably maps concepts to relevant PICO.
+It is a challenging expert-led activity, though.
+A semantic category was either marked $\{1, 0\}$ depending upon its relevance to the target class.
 Non-UMLS vocabularies were chosen to be PICO target specific and were assigned to a single label.
 Target-specific distant supervision dictionaries are created from the structured fields of clinicaltrials.gov (CTO). 
-The structured field ``Condition or Disease'' was mapped to the Participant target class, and the ``Intervention/Treatment'' field is mapped to the Intervention target.
+The structured field ``Condition or Disease'' was mapped to the Participant target, and the ``Intervention/Treatment'' field was mapped to the Intervention target.
 The semi-structured ``Primary Outcome Measures'' and ``Secondary Outcome Measures'' fields are mapped to the Outcomes class.
 Hand-crafted dictionaries are separately designed for participant gender, intervention comparator terms and outcomes.
+
 %
 %
 %
@@ -378,12 +381,10 @@ Hand-crafted dictionaries are separately designed for participant gender, interv
 \subsection{LF aggregation}\label{lms}
 %==============================
 %
-Each labelling function $ \lambda_{i} \in \bm{\Lambda^{m}}; \bm{\Lambda} = \{\lambda_{1}, \lambda_{2}, \dotso, \lambda_{m} \} $ maps $\bm{X^{m}}$ to output sequence $ \widetilde{\bm{Y}}$ with labels $\widetilde{y} \in \{-1, 0, +1\}$ leading to $\{-1, 0, +1\}^{m \times n}$.
-A key finding of data programming is that we can use $\Lambda$ to recover the latent class-conditional accuracy of each label source without ground-truth labels by observing the rates of agreement and disagreement across all pairs of labeling functions.
+Each labelling function $ \lambda_{i} \in \bm{\Lambda^{m}}; \bm{\Lambda} = \{\lambda_{1}, \lambda_{2}, \dotso, \lambda_{m} \} $ maps inputs $\bm{X^{n}}$ to output sequence $ \widetilde{\bm{Y^{n}}}$ with labels $\widetilde{y} \in \{-1, 0, +1\}$ leading to a label matrix $ \lambda \subset \{-1, 0, +1\}^{m \times n}$.
+Using this label matrix, the source accuracy of each labelling function could be estimated using rate of observed agreements and disagreements across the labelling function pairs.
 
-
-In this work, we use the data programming method implemented as Snorkel, a generalization of distant supervision that uses a factor graph-based model to learn both the unobserved accuracies of labeling sources and statistical dependencies between those sources.
-In this approach, source accuracy and dependencies are estimated without requiring labeled data, enabling the use of weaker forms of supervision to generate training data, such as using noisy heuristics from clinical experts.
+% Anjani \textcolor{blue}{Explain data programming by Snorkel. Explain about the majority voting procedure as well.}
 %
 %
 %
@@ -391,26 +392,21 @@ In this approach, source accuracy and dependencies are estimated without requiri
 \subsection{Experiments}\label{transformers}
 %==============================
 %
-We sought to test the feasibility of using weak supervision for PICO extraction and its extension to an additional study type entity.
-At this point, we aimed to test whether using UMLS vocabularies as sources for weak classifiers could lead to sufficient performance and if addition of non-UMLS classifiers could aid performance as well.
-We divided the the labelling functions $\lambda^{m}$ into ontology-based (UMLS + non-UMLS ontologies) vs. ontology-based combined with rule-based (ReGeX, heuristics, dictionaries and distant supervision). 
+Ontologies are cheaper sources of weak supervision and do not require expert knowledge, while rules are higher cost and generated by experts.
+We tested whether adding task-based rules brought performance gains to ontology-based labelling sources.
+We report results on three tiers to gauge the performance changes upon removal of task-specific non-UMLS ontologies: 1) UMLS labelling sources, 2) UMLS and non-UMLS labelling sources, 3) UMLS, non-UMLS and exert generated rules. 
+It is challenging to build the UMLS-based classifiers for the study type entity directly, so we developed task-based rules for this entity.
 
 
-Next we aimed to inspect effect of ablation tiers.
-First set of experiments was done using only easier to obtain UMLS vocabularies.
-The second set of experiments was done on using the target-specific non-UMLS vocabularies in addition to the UMLS vocabularies. 
-To further check the performance contribution from the high-cost expert-generated rules, we added a third arm with all the ReGeX, heuristics and distant supervision labelling functions.
-As it is difficult to directly build the UMLS based classifiers for the study type entity, we built seven ReGeX and hand-crafted dictionaries for the study type entity.
-
-
-The labelling functions were used to label the EBM-PICO training set. 
-Snorkel's label model was used to aggregate several weak labellers and obtain probabilistic labels.
-GridSearch was used to fine tune the parameters of the label model using the hand-labelled validation set from the EBM-PICO. %Anjani ( TODO: list the parameters) 
+The labelling functions $\lambda_{m}$ were used to label the EBM-PICO training set and obtain $\lambda$. 
+We tested majority voting (MV) and label model (LM) to aggregate labelling functions.
+LM outputs probabilistic labels for the training set were used as weak supervision signals to train the PubMedBERT with noise-aware cross-entropy loss function.
+PubMedBERT was chosen because of its domain similarity to our training data and task.
+GridSearch was used to fine tune the parameters of the label model using the hand-labelled validation set from the EBM-PICO. % Anjani ( TODO: list the parameters in Appendix)
+PubMedBERT was trained on fixed parameters listed in the appendix. % Anjani ( TODO: list the parameters in Appendix)
 We did not have a validation set for the study type entity hence we did not optimize on it.
 
-The probabilistic labels obtained from the trained label model were used as noisy labels for the downstream deep neural networks like transformers to see if pretrained knowledge from these models led to performance gains.
-We used PubMedBERT with a linear layer and the noise-aware loss function as the downstream model for PICOS recognition.
-PubMedBERT was chosen because of its domain similarity to our training data and task.
+
 %
 %
 %
@@ -420,7 +416,7 @@ PubMedBERT was chosen because of its domain similarity to our training data and 
 %
 We report the classical macro-averaged F1-scores for the label models, weakly supervised transformer models and the fully supervised transformer models.
 Mean macro-averaged F1-scores are reported over three runs of each of these models with the top three random seeds (0, 1, and 42) used in Python.
-These models were separately trained for each of the PICOS entity recognition tasks using the raw (IO) tagging scheme.
+The models were separately trained for each of the PICOS entity recognition tasks using the raw (IO) tagging scheme.
 We used students t-test with a alpha threshold of 0.05 to measure the statistical significance.
 %
 %
