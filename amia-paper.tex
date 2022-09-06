@@ -154,10 +154,10 @@
 %
 \textbf{Objective:}
 PICO analysis is vital but time-consuming for conducting systematic reviews (SR). 
-Supervised machine learning methods can help fully automate PICO analysis, but a lack of large annotated corpora restricts innovation and adoption of automated PICO recognition systems.
+Supervised machine learning methods can help fully automate it, but a lack of large annotated corpora restricts innovation and adoption of automated PICO recognition systems.
 The largest-available PICO entity corpus is manually annotated, which is too expensive for the most scientific community.
 Additionally, depending upon the SR question, PICO criteria are extended to PICOS (S-Study type or design), PICOC (C-Context), and PICOT (T-timeframe), meaning the static hand-labelled corpora should undergo costly re-annotation as per the downstream requirements.
-Our objective is to test the feasibility of developing a weak supervision system to extract PICO without hand-labelled data.\\
+Our objective is to test the feasibility of developing a weak supervision system to extract these entities without hand-labelled data.\\
 \textbf{Methodology:}
 We use multiple medical and non-medical ontologies and expert-generated rules to obtain programmatic labels for PICO entities.
 These programmatic training labels were used as weak signals to train a downstream discriminative model and observe performance changes. \\
@@ -218,9 +218,10 @@ document classification (Weakly-Supervised Neural Text Classification
 , Leveraging Large Amounts of Weakly Supervised Data for
 Multi-Language Sentiment Classification)
 \textcolor{blue}{Give examples of weakly supervised learning approaches for document classification and relation extraction.}
-Combining multiple weak labeling sources for clinical entity extraction have been explored by Fries et al. in their paper Trove.
+The effectiveness of combining several weak labelling sources for more straightforward classes like disease, chemicals, drugs and disorders has been explored by Fries et al.
 Trove uses Snorkel which is a generative model implemented in python and is a domain agnostic methodology to combine multiple labelling sources of variable accuracy.
-However, Trove only explores the very defined entities like chemical, disease, disorder and drug classes. 
+%However, Trove only explores the very defined entities like chemical, disease, disorder and drug classes. 
+Nonetheless, PICO categories are intricate in that they can be subdivided into subclasses.
 By definition, PICO information are spans that encompass multiple sub-class entities.
 A shortcoming of span extraction is that even after a machine points a human reviewer to the correct PICO span, the reviewer requires to manually read and understand its finer aspects to screen the study for relevance.
 Span extraction hence leads to semi-automation but hinders full-automation.
@@ -261,7 +262,7 @@ The birds-eye view of our approach is shown in the Figure.
 \subsection{Datasets and tasks}\label{data}
 %==============================
 %
-\textbf{EBM-PICO.}
+%\textbf{EBM-PICO.}
 The EBM-PICO dataset is a widely used NLP benchmark with 5000 PICO annotated documents.~\footnote{A single document consists of a title and an abstract.}
 The dataset has annotations at two levels: span-level or coarse-grained and entity-level or fine-grained (see Table~\ref{table:coarsefineconcept}).
 Span-level annotations encompass the maximum information about each class.
@@ -269,7 +270,7 @@ Entity-level annotations cover the more fine-grained information at the entity l
 The dataset comes pre-divided into a training set (n=4,933) annotated through crowd-sourcing and an expert annotated gold test set (n=191) for evaluation purposes.
 
 
-\textbf{EBM-PICO corrected + Study type}
+%\textbf{EBM-PICO corrected + Study type}
 The EBM-PICO annotation guidelines caution about variable annotation quality~\footnote{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6174533/bin/NIHMS988059-supplement-Appendix.pdf}.
 Variable annotation quality in the training dataset is pardonable, but the errors in the EBM-PICO gold standard test set will lead to faulty evaluation of the downstream machine learning methods.
 We evaluate 1\% of the EBM-PICO training set tokens to gauge the possible reasons for the errors and use this error evaluation exercise to conduct an error-focused corpus re-annotation for the EBM-PICO gold corpus (n = 191) for PICO entities.
@@ -277,7 +278,8 @@ We annotated another entity for study type for this corpus to measure the effect
 Our study type entity is restricted to the type and design of a clinical study.
 This annotation exercise demonstrated the application of weak supervision for entities beyond PICO~\cite{menard2019turning}.
 
-\textbf{Physio set.} We used a physiotherapy and rehabilitation benchmark with 153 PICO annotated documents to evaluate the generalizability of the approach to these sub-domains~\cite{dhrangadhariya2021end}.
+%\textbf{Physio set.}
+We used a physiotherapy and rehabilitation benchmark with 153 PICO annotated documents to evaluate the generalizability of the approach to these sub-domains~\cite{dhrangadhariya2021end}.
 
 These datasets are pre-tokenized and did not require additional preprocessing except the addition of POS tags and token lemma using spaCy.
 Multi-class fine-grained PICO annotations were binarized, i.e. a token label was reset to 1 if the token represented an entity.
@@ -320,6 +322,8 @@ The estimates $\bm{\hat{Y}}$ of $\bm{Y}$ are assigned as probabilistic token lab
 Coarse-grained PICO annotations in EBM-PICO are spans composed of multiple fine-grained subclasses.
 For instance, the participant span can include information about participant characteristics: disease, disorder, symptoms, age, gender, the sample size in clinical studies, ethnicity, language or geographical location.
 The intervention span can include intervention name, role (main intervention or control), dosage, frequency and mode of administration.
+An intervention can also be either a drug, surgery, physical (exercise), educational, or psychological.
+According to the EBM-NLP annotation guidelines, we are only supposed to annotate intervention name and it's role (control, placebo).
 The outcome span can include the outcome names and information about the scales, techniques and instruments used to measure these outcomes.
 Our task was to design $m$ weak labellers, also called labelling functions $\lambda^{m}$ corresponding to this fine-grained information, efficiently aggregate them to get probabilistic class labels, and use the weakly-labelled dataset for downstream PICO recognition tasks.
 %correct the fine-grained PICO annotations errors in the EBM-PICO test set and evaluate the approach on both the EBM-PICO and its updated version.
@@ -356,7 +360,7 @@ A heuristic labelling function is personalized for each target class and takes a
 A distant supervision labelling function is designed to extract non-standardized terms from a knowledge base and use them for mapping tokens to $\{0, +1\}$ labels.
 As ReGeX, heuristics, hand-coded dictionaries and distant supervision were designed for individual PICO classes; they are clubbed under the task-specific labelling functions category.
 Clinical studies have several abbreviations taken into account using heuristics to identify abbreviations from the training text and assign these to either of the target classes. 
-Ontology labellers then use the abbreviations with these target classes.
+Ontology labellers then use these target class specific abbreviations.
 Any labelling function using ontologies or dictionaries used string matching as the labelling heuristic.
 %
 %
@@ -367,9 +371,10 @@ Any labelling function using ontologies or dictionaries used string matching as 
 %
 UMLS concepts are organized under semantic type categories (e.g. disease, sign and symptoms, age group, etc.) so mapping these to PICO targets invariably maps the concepts to targets. 
 %Mapping the UMLS semantic type categories to PICO target classes invariably maps concepts to relevant PICO.
-It is a challenging expert-led activity, though.
+It is a challenging expert-led activity, though decomposing PICO into subclasses greatly helps map sources to target classes.
 A semantic category was either marked $\{1, 0\}$ depending upon its relevance to the target class.
 Non-UMLS vocabularies were chosen to be PICO target specific and were assigned to a single label.
+NCBO bioportal was used to search for the non-UMLS ontologies.
 Target-specific distant supervision dictionaries are created from the structured fields of clinicaltrials.gov (CTO). 
 The structured field ``Condition or Disease'' was mapped to the Participant target, and the ``Intervention/Treatment'' field was mapped to the Intervention target.
 The semi-structured ``Primary Outcome Measures'' and ``Secondary Outcome Measures'' fields are mapped to the Outcomes class.
@@ -429,30 +434,56 @@ We used students t-test with a alpha threshold of 0.05 to measure the statistica
 \section{RESULTS}\label{results}
 %==============================
 %
-Table~\ref{tab:res} reports macro-averaged F1 scores for weak supervision using ontology labeling functions and those incorporating additional, task-specific rules in comparison to the fully-supervised approach.
-For all the target classes, adding task-specific rules improves the performance between 1 to 13\% performance boost for LM. 
+Table~\ref{tab:res} and ~\ref{tab:recall_res} report macro-averaged F1 scores and recall for weak supervision using ontology labeling functions and those incorporating additional, task-specific rules in comparison to the fully-supervised approach.
+For all the target classes, adding task-specific rules boosts F1 between 1 to 13\%. 
+However, it has to be noticed that the Recall stands higher fro the majority voter labellers for the obvious reasons.
+
 
 \begin{table}[!ht]
     \centering
-    \begin{tabular}{|l|l|l|l|l|l|l|l|l|}
+    \begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|}
         \hline
-        \Xhline{1pt}
-        \multicolumn{3}{|c|}{} & \multicolumn{2}{|c|}{LM} & \multicolumn{2}{|c|}{WS} & \multicolumn{2}{|c|}{FS} \\
+        %\Xhline{1pt}
+        \multicolumn{3}{|c|}{} &
+        \multicolumn{2}{|c|}{MV} & \multicolumn{2}{|c|}{LM} & \multicolumn{2}{|c|}{WS} & \multicolumn{2}{|c|}{FS} \\
         \hline
-        Target class & LF source & \#LF & Fine & Fine corr & Fine & Fine corr & Fine & Fine corr \\
+        Target & LF source & \#LF & Fine & Corr & Fine & Corr & Fine & Corr & Fine & Corr \\
         \hline
-        \Xhline{1pt}
-        P & UMLS & 0 & 0.64 & 0.72 & 65.37 & 73.51 & 73 & 74 \\ 
-        ~ & +Ontology & 0 & 0.64 & 0.72 & 64.62 & 72.17 & ~ & ~ \\ 
-        ~ & +Rules & 0 & 0.66 & 0.75 & 67.62 & 76.73 & ~ & ~ \\ 
-        I/C & UMLS & 0 & 0.6 & 0.65 & 57.9 & 59.49 & 83.49 & 81.09 \\ 
-        ~ & +Ontology & 0 & 0.63 & 0.67 & 68.06 & 70.72 & ~ & ~ \\ 
-        ~ & +Rules & 0 & 0.64 & 0.68 & 71.32 & 73.63 & ~ & ~ \\ 
-        O & UMLS & 0 & 59.53 & 62.47 & running & running & 81.02 & 80.12 \\ 
-        ~ & +Ontology & 0 & 59.53 & 62.47 & 58.74 & 59.27 & ~ & ~ \\ 
-        ~ & +Rules & 0 & 61.02 & 63.11 & 60.36 & 61.93 & ~ & ~ \\ \hline
+        %\Xhline{1pt}
+        P & UMLS & 0 & - & - & 0.64 & 0.72 & 65.37 & 73.51 & 73 & 74 \\ 
+        ~ & +Ontology & 0 & - & - & 0.64 & 0.72 & 64.62 & 72.17 & ~ & ~ \\ 
+        ~ & +Rules & 0 & - & - & 0.66 & 0.75 & 67.62 & 76.73 & ~ & ~ \\ 
+        I/C & UMLS & 0 & - & - & 0.6 & 0.65 & 57.9 & 59.49 & 83.49 & 81.09 \\ 
+        ~ & +Ontology & 0 & - & - & 0.63 & 0.67 & 68.06 & 70.72 & ~ & ~ \\ 
+        ~ & +Rules & 0 & - & - & 0.64 & 0.68 & 71.32 & 73.63 & ~ & ~ \\ 
+        O & UMLS & 0 & - & - & 59.53 & 62.47 & running & running & 81.02 & 80.12 \\ 
+        ~ & +Ontology & 0 & - & - & 59.53 & 62.47 & 58.74 & 59.27 & ~ & ~ \\ 
+        ~ & +Rules & 0 & - & - & 61.02 & 63.11 & 60.36 & 61.93 & ~ & ~ \\ \hline
     \end{tabular}
     \caption{\label{tab:res} Macro-averaged F1 scores for UMLS, UMLS+other and rule-based weak supervision.}
+\end{table}
+
+
+\begin{table}[!ht]
+    \centering
+    \begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|}
+        \hline
+        %\Xhline{1pt}
+        \multicolumn{3}{|c|}{} &
+        \multicolumn{2}{|c|}{MV} & \multicolumn{2}{|c|}{LM} & \multicolumn{2}{|c|}{WS} & \multicolumn{2}{|c|}{FS} \\
+        \hline
+        Target & LF source & \#LF & Fine & Corr & Fine & Corr & Fine & Corr & Fine & Corr \\ \hline
+        P & UMLS & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~  \\ \hline
+        ~ & +Ontology & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~  \\ \hline
+        ~ & +Rules & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~  \\ \hline
+        I/C & UMLS & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~  \\ \hline
+        ~ & +Ontology & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~   \\ \hline
+        ~ & +Rules & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~   \\ \hline
+        O & UMLS & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~   \\ \hline
+        ~ & +Ontology & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~   \\ \hline
+        ~ & +Rules & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~   \\\hline
+    \end{tabular}
+    \caption{\label{tab:recall_res} Macro-averaged Recall scores for UMLS, UMLS+other and rule-based weak supervision.}
 \end{table}
 
 
@@ -524,6 +555,16 @@ These errors are categorized for each of the PIO classes and are shown in the Ta
 %==============================
 \section{DISCUSSION}\label{discussion}
 %==============================
+%
+We demonstrate the effectiveness of weak supervision for a complicated PICO extraction task using medical and non-medical ontologies and expert-generated rules.
+It is easy to re-purpose the low-cost ontologies but challenging to map these to our targets.
+PICO classes are complex targets encompassing several subclasses, decomposing which allows identifying ontology labelling sources and designing rules. 
+Moreover, each tier requires labelling sources that contribute to the target classes.
+For example, additional ontologies perform better than tier one only when other ontologies are added for pharmaceutical and non-pharmaceutical interventions.
+Similarly, tier two for participants performs well only if ontologies are added for the participant subclasses like age and gender not limited to diseases or disorders.
+
+%
+%
 %
 %==============================
 \subsection{Error Analysis and correction}\label{err_ana}
