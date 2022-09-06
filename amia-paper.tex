@@ -436,7 +436,16 @@ We used students t-test with a alpha threshold of 0.05 to measure the statistica
 %
 Table~\ref{tab:res} and ~\ref{tab:recall_res} report macro-averaged F1 scores and recall for weak supervision using ontology labeling functions and those incorporating additional, task-specific rules in comparison to the fully-supervised approach.
 For all the target classes, adding task-specific rules boosts F1 between 1 to 13\%. 
+
+
 However, it has to be noticed that the Recall stands higher fro the majority voter labellers for the obvious reasons.
+
+
+Training PubMedBERT on top of label model increases the F1 performance by x\% - xx\% and has considerable boost for the participant entity.
+
+
+Error correction leads to better performance for all the targets but especially for the participant class.
+
 
 
 \begin{table}[!ht]
@@ -561,7 +570,13 @@ It is easy to re-purpose the low-cost ontologies but challenging to map these to
 PICO classes are complex targets encompassing several subclasses, decomposing which allows identifying ontology labelling sources and designing rules. 
 Moreover, each tier requires labelling sources that contribute to the target classes.
 For example, additional ontologies perform better than tier one only when other ontologies are added for pharmaceutical and non-pharmaceutical interventions.
-Similarly, tier two for participants performs well only if ontologies are added for the participant subclasses like age and gender not limited to diseases or disorders.
+Similarly, tier two for participant class performs well only if ontologies are added for the participant subclasses like age and gender and not limited to diseases or disorders.
+This demonstrates the importance of seen vs unseen entities. 
+
+Label model only takes into account the information encoded into the weak sources to label phrases from the training text but does not take into account the contextual information around this phrase.
+The performance boost using PubMedBERT, especially for the Participants class, demonstrates how using downstream contextual models could improve the performance by taking into account the structural properties of text.
+
+The performance boost using task-specific rules shows that PICO tasks could benefit from encoding idiosyncrasies into rules.
 
 %
 %
