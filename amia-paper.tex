@@ -185,61 +185,54 @@ Weak supervision using weak-PICO+ for PICO entity recognition has promising resu
 %
 Systematic Review (SR) is an evidence-based practice of answering clinical questions using a transparent and quantitative approach whereby the reviewers must collect as many research publications as possible, identifying the relevant publications from these and integrating their results via statistical analysis.
 Filtering relevant publications from the bulk collected ones often uses PICO (Participants, Interventions, Comparators, Outcomes) criteria. 
-A clinical study or a publication is relevant only for answering a question only if it studies question relevant participants, interventions (and their comparators) and outcomes. 
+A clinical study or a publication is relevant only for answering a question if it studies relevant participants, interventions (and their comparators) and outcomes. 
 Manually analysing PICO information from thousands of publications for a single SR takes about 12 months of two medical experts' time.
-The process can be automated using machine learning based information extraction strategies by directly pointing the human reviewers to the correct text chunks describing PICO.
-Machine learning classifiers rely on hand-labelled training corpora.
-Hand labelling corpora with PICO information for a downstream IE application requires people with combined medical and informatics skills, is expensive and time-consuming in terms of the actual annotation process and annotator training.
+The process can be automated using machine learning (ML) by directly pointing the human reviewers to the correct text chunks describing PICO.
+%Machine learning classifiers rely on hand-labelled training corpora.
+Hand labelling corpora with PICO information requires people with combined medical and informatics skills, which is expensive and time-consuming in terms of the actual annotation process and annotator training.
 
 
-Extracting PICO information is somewhat tricky because of high disagreement between human annotators on the exact spans constituting PICO.
-This leads to human errors in hand-labeled corpora.
+Labelling PICO information is tricky because of the high disagreement between human annotators on the exact spans constituting PICO, leading to human errors in hand-labelled corpora.
 Additionally, depending upon the systematic review question, PICO criteria are extended to PICOS (S-Study design), PICOC (C-Context), and PICOT (T-timeframe).
-Hand-labeled datasets are static and prohibit quick manual re-labeling in case of human errors or when a downstream task requires new entities.
-Additionally, in SRs, the step after PICO information analysis is to identify risk of bias from the studies which is another information extraction lacking a manually labelled corpora. 
-This annotation bottleneck across domains has shifted gears in favour of weakly-supervised learning that relies on programmatic labelling sources to obtain training data.
-Programmatic labelling is quick and allows efficient modifications to the training data labels as per the downstream application changes.
+Hand-labelled datasets are static and prohibit quick manual re-labelling in case of human errors or when a downstream task requires new entities.
+In SRs, the step after PICO information analysis is to identify the risk of bias from the studies, which is another information extraction lacking a manually labelled corpus. 
+This annotation bottleneck across domains has pivoted attention towards weakly-supervised learning that relies on programmatic labelling sources to obtain training data.
+Programmatic labelling is quick and allows efficient modifications to the training data labels per the downstream application changes.
 
 
-Medical ontology compendium like UMLS with several vocabularies, other external vocabularies and open access knowledgebases are an excellent resource for building clinical entity labelled training data~\cite{humphreys1998unified}. 
-Legacy clinical applications both in NLP and image analysis are often automated using a multiple \textit{if-else} rules relying on key-phrases and visual cues (refer to document and image classification methods that are rule based).
-The bottleneck here is how to combine these labelling sources of varying accuracy and strength.
-Combining multiple labeling sources of variable accuracy is one of challenges.
+Weakly-supervised (WS) learning has demonstrated its prowess for clinical document classification and relation extraction, but clinical entity extraction tasks have heavily relied on fully supervised (FS) approaches~\cite{meng2018weakly,mintz2009distant}.
+Despite the availability of UMLS, a large compendium of medical ontologies, which could be re-purposed for weak entity labelling, it has not been extensively applied to clinical entity labelling~\cite{humphreys1998unified}.
+Several legacy clinical applications are also supported by rule-based \textit{if-else} systems relying on keyword cues that aid weak labelling. 
+The challenge for weak supervision is efficiently combining these several weak labelling sources of varying accuracy. % References
+%Medical ontology compendium like UMLS with several vocabularies, other external vocabularies and open access knowledgebases are an excellent resource for building clinical entity labelled training data~\cite{humphreys1998unified}. 
 %\textcolor{blue}{Give some paper examples where they utilize non-generative models to combine multiple labelling sources.}
-There have been some fundamental works investigating how to combine multiple label sources of variable accuracy by ranking their importance based on their probability of error and efficiently assembling them.
-The problem of aggregating several weak labellers have now transitioned to training a generative model that estimates the accuracy of each labelling source~\cite{ratner2016data,safranchik2020weakly,lison2021skweak}.
-\textcolor{blue}{Expound on weakly-supervised learning and generative modelling using Snorkel, AutoNER, Swellshark.}
+%There have been some fundamental works investigating how to combine multiple label sources of variable accuracy by ranking their importance based on their probability of error and efficiently assembling them.
+%The problem of aggregating several weak labellers have now transitioned to training a generative model that estimates the accuracy of each labelling source~\cite{ratner2016data,safranchik2020weakly,lison2021skweak}.
+%\textcolor{blue}{Expound on weakly-supervised learning and generative modelling using Snorkel, AutoNER, Swellshark.}
 
 
-
-Weakly-supervised learning has demonstrated its prowess for clinical document classification and relation extraction, but clinical entity extraction tasks have relied on fully-supervised approaches.
-relation extraction (Distant supervision for relation extraction without labeled data, Distant supervision for relation extraction without labeled data)
-document classification (Weakly-Supervised Neural Text Classification
-, Leveraging Large Amounts of Weakly Supervised Data for
-Multi-Language Sentiment Classification)
-\textcolor{blue}{Give examples of weakly supervised learning approaches for document classification and relation extraction.}
-The effectiveness of combining several weak labelling sources for more straightforward classes like disease, chemicals, drugs and disorders has been explored by Fries et al.
-Trove uses Snorkel which is a generative model implemented in python and is a domain agnostic methodology to combine multiple labelling sources of variable accuracy.
-%However, Trove only explores the very defined entities like chemical, disease, disorder and drug classes. 
-Nonetheless, PICO categories are intricate in that they can be subdivided into subclasses.
+The effectiveness of combining several weak labelling sources has been explored by Fries \textit{et al.}~\cite{fries2021ontology} in their Trove system.
+Trove uses the data programming approach, a domain agnostic methodology, to combine multiple labelling sources of variable accuracy.
+However, Trove only explores the very defined entities like chemical, disease, disorder and drug classes. 
+PICO categories are fuzzier in comparison and much intricate in that they can be subdivided into subclasses.
 By definition, PICO information are spans that encompass multiple sub-class entities.
 A shortcoming of span extraction is that even after a machine points a human reviewer to the correct PICO span, the reviewer requires to manually read and understand its finer aspects to screen the study for relevance.
 Span extraction hence leads to semi-automation but hinders full-automation.
-Weakly-supervised PICO entity extraction has not garnered enough attention as much as supervised PICO span extraction.
+As a result, weakly-supervised PICO entity extraction has not garnered enough attention as much as supervised PICO span extraction.
 As far as our knowledge goes, only two studies exist for weakly-supervised PICO recognition.
 One of these approaches only explores weak supervision for intervention extraction using a single labelling source~\cite{dhrangadhariya2022distant}, and the other approach relies on a single source of programmatic labelling and focuses on PICO spans and sentences rather than entities.
 Entity recognition approach to PICO is not as easy as entity recognition approach to disease or chemical names which are more or less standardised.
 PICO terms are not standard and even the experts do not agree on the exact tokens constituting PICO~\cite{brockmeier2019improving}.
 
-A Trove-like weak-supervision for PICO entities has several challenges.
-Consideration 1: Defining the sub-classes or entities encompassed within PICO spans
-Consideration 2: Mapping the several ontologies, vocabularies and terminologies to the target sub-classes of PICO.
-Consideration 3: Developing weakly-supervised classifiers optimally combining several ontologies and evaluate its performance in comparison to fully-supervised approach.
-Consideration 4: Extending the ontology-based classifiers using expert-generated rules and evaluate performance in comparison to fully-supervised approach. This serves as an ablation study whereby the importance of low cost ontology labellers could be compared to addition of high cost expert generated rules.
-Consideration 5: Identifying lags in the currently available PICO training dataset and correcting it.
 
-In this work, we demonstrate the feasibility of weakly-supervised PICO entity extraction using two benchmark test sets.
-We show how using only ontology dependent classifiers vs combining them with more expensive expert-generated rules compares to fully-supervised PICO entity extraction.
+Trove-like weak supervision for PICO entities has several challenges.
+The first challenge is defining the sub-classes encompassed within PICO spans.
+The second challenge is mapping the several ontologies, vocabularies and terminologies to these sub-classes.
+Next is developing weakly-supervised classifiers by optimally combining several ontologies and evaluating their performance compared to full supervision.
+Another challenge is developing higher-cost expert-generated rules to aid ontology classifiers and evaluate their combined performance compared to full supervision.
+One of our challenges was identifying the lags in the currently available EBM-PICO training dataset and correcting them for reliable evaluation of the WS approaches.
+This work demonstrates the feasibility of weakly-supervised PICO entity extraction using two benchmarks.
+We show how using only ontology-dependent classifiers vs combining them with more expensive expert-generated rules compares to fully-supervised PICO entity extraction.
 %
 %
 %
@@ -436,6 +429,7 @@ We used students t-test with a alpha threshold of 0.05 to measure the statistica
 %
 Table~\ref{tab:res} and ~\ref{tab:recall_res} report macro-averaged F1 scores and recall for weak supervision using ontology labeling functions and those incorporating additional, task-specific rules in comparison to the fully-supervised approach.
 For all the target classes, adding task-specific rules boosts F1 between 1 to 13\%. 
+Adding non-UMLS ontologies consistently improved performance for all the tasks across LM and WS.
 
 
 However, it has to be noticed that the Recall stands higher fro the majority voter labellers for the obvious reasons.
@@ -575,6 +569,7 @@ This demonstrates the importance of seen vs unseen entities.
 
 Label model only takes into account the information encoded into the weak sources to label phrases from the training text but does not take into account the contextual information around this phrase.
 The performance boost using PubMedBERT, especially for the Participants class, demonstrates how using downstream contextual models could improve the performance by taking into account the structural properties of text.
+they generalize beyond the labelling functions.
 
 The performance boost using task-specific rules shows that PICO tasks could benefit from encoding idiosyncrasies into rules.
 
