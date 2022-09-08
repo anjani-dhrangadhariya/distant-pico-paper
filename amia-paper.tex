@@ -154,19 +154,24 @@
 %
 \textbf{Objective:}
 PICO analysis is vital but time-consuming for conducting systematic reviews (SR). 
-Supervised machine learning methods can help fully automate it, but a lack of large annotated corpora restricts innovation and adoption of automated PICO recognition systems.
-The largest-available PICO entity corpus is manually annotated, which is too expensive for the most scientific community.
+Supervised machine learning can help fully automate it, but a lack of large annotated corpora restricts innovation and adoption of automated PICO recognition systems.
+The largest-available PICO corpus is manually annotated, which is too expensive for the most scientific community.
 Additionally, depending upon the SR question, PICO criteria are extended to PICOS (S-Study type or design), PICOC (C-Context), and PICOT (T-timeframe), meaning the static hand-labelled corpora should undergo costly re-annotation as per the downstream requirements.
-Our objective is to test the feasibility of developing a weak supervision system to extract these entities without hand-labelled data.\\
+We aim to test the feasibility of designing a weak supervision system to extract these entities without hand-labelled data.
+
 \textbf{Methodology:}
-We use multiple medical and non-medical ontologies and expert-generated rules to obtain programmatic labels for PICO entities.
-These programmatic training labels were used as weak signals to train a downstream discriminative model and observe performance changes. \\
+We use multiple medical and non-medical ontologies and expert-generated rules to obtain labels for PICO entities.
+These labels were aggregated using simple majority voting and generative modelling.
+The resulting programmatic labels were used as weak signals to train a weakly-supervised discriminative model and observe performance changes.
+Additionally, we explore the current PICO gold standard errors that could have led to inaccurate evaluation of several automation methods.\\
+
 \textbf{Results:}
-We present Weak-PICO+, a weakly supervised PICO entity recognition method using medical ontologies, non-medical ontologies and expert-generated rules.
+We present Weak-PICO+, a weakly supervised PICO entity recognition approach using medical ontologies, non-medical ontologies and various expert-generated rules and dictionaries.
 Unlike manual annotation, Weak-PICO+ does not use hand-labelled data and is quickly adaptable and extensible to other entities.
-We demonstrate this by extracting an additional Study Type and Design entity, making PICO go PICOS without costly manual reannotation effort.\\
+We demonstrate this by extracting an additional Study Type and Design entity extending to PICOS without costly reannotation.\\
+
 \textbf{Conclusion:}
-Weak supervision using weak-PICO+ for PICO entity recognition has promising results and easily extends to more clinical entities.\\
+Weak supervision using weak-PICO+ for PICO entity recognition has encouraging results and readily extends to more clinical entities.\\
 %
 %
 %
@@ -240,12 +245,14 @@ We show how using only ontology-dependent classifiers vs combining them with mor
 %
 The birds-eye view of our approach is shown in the Figure.
 
+\iffalse
 \begin{figure}[ht]
 \centering
 \includegraphics[width=0.98\textwidth]{figures/approach.pdf}
 \caption{Approach overview.}
 \label{fig:approach}
 \end{figure}
+\fi
 %
 %
 %
@@ -254,7 +261,7 @@ The birds-eye view of our approach is shown in the Figure.
 %==============================
 %
 %\textbf{EBM-PICO.}
-EBM-PICO is a widely used dataset with PICO annotations at two levels: span-level or coarse-grained and entity-level or fine-grained (see Table~\ref{table:coarsefineconcept}).
+EBM-PICO is a widely used dataset with PICO annotations at two levels: span-level or coarse-grained and entity-level or fine-grained (see Table~\ref{tab:coarsefineconcept}).
 Span-level annotations encompass the maximum information about each class.
 Entity-level annotations cover the more fine-grained information at the entity level, with PICO classes further divided into fine-grained subclasses.
 The dataset comes pre-divided into a training set (n=4,933) annotated through crowd-sourcing and an expert annotated gold test set (n=191) for evaluation purposes.
@@ -267,14 +274,13 @@ We evaluate 1\% of the EBM-PICO training set tokens to gauge the possible reason
 We annotated another entity designated ``Study type and design'' for this corpus to measure the effectiveness and extensibility of weak supervision approaches.
 Our ``Study type and design'' entity is restricted to the type and design of a clinical study.
 This annotation exercise demonstrated the application of weak supervision for entities beyond PICO~\cite{menard2019turning}.
-%\textbf{Physio set.}
-We used a physiotherapy/rehabilitation PICO annotation benchmark (n=153) to evaluate the generalizability of the approach to these sub-domains~\cite{dhrangadhariya2021end}.
 These datasets are pre-tokenized and did not require additional preprocessing except the addition of POS tags and token lemma using spaCy.
 Multi-class fine-grained PICO annotations were binarized, i.e. a token label was reset to 1 if the token represented a fine-grained entity.
 %All the state of the art approaches use non-binarized labels for fine-grained PICO recognition making them incomparable to our approach.
 %
 %
 %
+%\iffalse
 \begin{table}[h!]
 \begin{center}
 \begin{tabular}{| c | c | c | c |} 
@@ -291,9 +297,10 @@ Multi-class fine-grained PICO annotations were binarized, i.e. a token label was
 7 &  & Control &  \\
 \hline
 \end{tabular}
-\caption{\label{table:coarsefineconcept} P (Participant), I (Intervention) and O (Outcome) represent the coarse-grained labels which are further divided into respective fine-grained labels.}
+\caption{\label{tab:coarsefineconcept} P (Participant), I (Intervention) and O (Outcome) represent the coarse-grained labels which are further divided into respective fine-grained labels.}
 \end{center}
 \end{table}
+%\fi
 %
 %
 %
@@ -314,9 +321,10 @@ The estimates $\bm{\hat{Y}}$ of $\bm{Y}$ are assigned as probabilistic token lab
 We used the 2021AB-full release of UMLS Metathesaurus English subset dump with 223 vocabularies.
 After removing non-English and zoonotic source vocabularies as well as sources containing fewer than 500 terms, we remained with 127 vocabularies~\cite{humphreys1998unified}.
 Terms in the selected vocabularies were preprocessed by removing stopwords, numbers, punctuation's and were lower-cased using Smart lower casing to preserve abbreviations.
-Additional vocabularies included disease ontology (DO), Human Phenotype Ontology (HPO), Ontology of adverse events (OAE), Chemical entities of biological interest (ChEBI),  comparative toxicogenomics database (CTD) Chemical and Disease subclasses, Clinical Trials Ontology (NDD-CTO), Gender, Sex, and Sexual Orientation Ontology (GSSO), Chemotherapy Toxicities Ontology (ONTOTOX), Cancer Care: Treatment Outcomes Ontology (CCTOO), symptoms ontology (SYMP), Non-pharmacological interventions ontology (NPI), Nursing Care Coordination Ontology (NCCO)~\cite{schriml2012disease,robinson2008human,he2014oae,de2010chemical,lin2020cto,kronk2020development,geifman2011towards,rogier2021using,lin2018cancer,mohammed2012building,ninot2018definition}.
+Non-UMLS vocabularies are detailed in Table~ref{tab:source2targets}~\cite{schriml2012disease,robinson2008human,he2014oae,de2010chemical,lin2020cto,kronk2020development,geifman2011towards,rogier2021using,lin2018cancer,mohammed2012building,ninot2018definition}.
+%Additional vocabularies included disease ontology (DO), Human Phenotype Ontology (HPO), Ontology of adverse events (OAE), Chemical entities of biological interest (ChEBI),  comparative toxicogenomics database (CTD) Chemical and Disease subclasses, Clinical Trials Ontology (NDD-CTO), Gender, Sex, and Sexual Orientation Ontology (GSSO), Chemotherapy Toxicities Ontology (ONTOTOX), Cancer Care: Treatment Outcomes Ontology (CCTOO), symptoms ontology (SYMP), Non-pharmacological interventions ontology (NPI), Nursing Care Coordination Ontology (NCCO)~\cite{schriml2012disease,robinson2008human,he2014oae,de2010chemical,lin2020cto,kronk2020development,geifman2011towards,rogier2021using,lin2018cancer,mohammed2012building,ninot2018definition}.
 Regular expressions (ReGeX) and heuristics like POS tag cues were used to capture recurring class-specific patterns otherwise not captured by standardized terminologies.
-Our hand-coded dictionaries were designed from the official websites listing patient reported outcome (PROMs) questionnaires~\footnote{https://www.thoracic.org/members/assemblies/assemblies/bshsr/patient-outcome/} and PROMs~\footnote{https://www.safetyandquality.gov.au/our-work/indicators-measurement-and-reporting/patient-reported-outcomes/proms-lists}.
+The hand-coded dictionaries were designed using the official websites listing patient reported outcome (PROMs) questionnaires~\footnote{https://www.thoracic.org/members/assemblies/assemblies/bshsr/patient-outcome/} and PROMs~\footnote{https://www.safetyandquality.gov.au/our-work/indicators-measurement-and-reporting/patient-reported-outcomes/proms-lists}.
 Vocabularies are structured, standardized data sources that do not capture various writing variations from clinical literature and custom-built ReGeX are restricted by either task or even entity type~\cite{ratner2017snorkel,safranchik2020weakly}.
 Therefore, we used distant supervision dictionaries created from the structured fields of clinicaltrials.gov (CTO) as described by~\cite{dhrangadhariya2022distant}.
 Principal investigators of the clinical study manually enter data in CTO, thereby incorporating large-scale writing variations.  
@@ -333,7 +341,7 @@ We designed three labelling functions depending on the types of labelling source
 The ontology or dictionary labelling functions for a target class take a dictionary of terminologies mapped to one of $y \subset \{0, +1\} $ token labels.
 Relevant bigram word co-occurrences were used to account for fuzzy span matching from the terminologies.
 A ReGeX labelling function for a target class takes regex patterns for $\{-1, +1\}$ labels and abstains from the rest.
-A heuristic labelling function is personalized for each target class and takes a generic regex pattern and specific POS tag filters.
+A heuristic labelling function is personalized for each target class and takes a generic regex pattern and specific POS (part-of-speech) tag filters.
 %A distant supervision labelling function is designed to extract non-standardized terms from a knowledge base and use them for mapping tokens to $\{0, +1\}$ labels.
 %As ReGeX, heuristics, hand-coded dictionaries and distant supervision were designed for individual PICO classes; they are clubbed under the task-specific labelling functions category.
 Clinical studies have several abbreviations taken into account using heuristics to identify abbreviations from the training text and assign these to either of the target classes. 
@@ -343,7 +351,7 @@ Any labelling function using ontologies or dictionaries used string matching as 
 %
 %
 %==============================
-\subsection{Sources to Targets}\label{lfs}
+\subsection{Sources to Targets}\label{s2t}
 %==============================
 %
 UMLS concepts are organized under semantic type categories (e.g. disease, sign and symptoms, age group, etc.) so mapping these to PICO targets invariably maps the concepts to target classes. 
@@ -378,7 +386,7 @@ This generative model is trained using stochastic gradient descent to minimize l
 %
 Ontologies are cheaper sources of weak supervision and do not require expert knowledge, while rules are higher cost and generated by experts.
 We tested whether adding rule-based labelling sources brought performance gains to ontology-based labelling sources.
-We report results on three tiers to gauge the performance changes upon removal of task-specific non-UMLS ontologies: 1) UMLS labelling sources, 2) UMLS and non-UMLS labelling sources, 3) UMLS, non-UMLS and exert generated rules. 
+We report results on three tiers to gauge the performance changes: 1) UMLS labelling sources, 2) UMLS and non-UMLS labelling sources, 3) UMLS, non-UMLS and exert generated rules. 
 It is challenging to build the UMLS-based classifiers for the ``Study type and design'' entity, so we developed only some task-based rules for this entity.
 
 
@@ -410,11 +418,91 @@ We used students t-test with a alpha threshold of 0.05 to measure the statistica
 Coarse-grained PICO annotations in EBM-PICO are spans composed of multiple fine-grained subclasses.
 For instance, the participant span can include information about participant characteristics: disease, disorder, symptoms, age, gender, the sample size in clinical studies, ethnicity, language or geographical location.
 The intervention span can include intervention name, role (main intervention or control), dosage, frequency and mode of administration.
-An intervention can also be either a drug, surgery, physical (exercise), educational, or psychological.
+An intervention can also be either a drug, surgery, physical (exercise), educational, or psychological (refer Table~\ref{tab:coarsefineconcept}).
 According to the EBM-NLP annotation guidelines, we are only supposed to annotate intervention name and it's role (control, placebo).
-The outcome span can include the outcome names and information about the scales, techniques and instruments used to measure these outcomes.
-Our task was to design $m$ weak labellers, also called labelling functions $\lambda^{m}$ corresponding to this fine-grained information, efficiently aggregate them to get probabilistic class labels, and use the weakly-labelled dataset for downstream PICO recognition tasks.
+The outcome span can include the outcome names, information about the scales, techniques and instruments used to measure these outcomes, and the absolute outcome measurement values.
+According to the EBM-NLP annotation guidelines, we are only supposed to annotate outcome name and how it was measured.
+
+
+\begin{table}[!ht]
+    \centering
+    \begin{tabular}{|l|l|}
+    \hline
+        Ontology & target and subcategory \\ 
+    \hline
+        Disease Ontology DO & P - Condition \\ 
+        Human Phenotype Ontology HPO & P - Condition \\ 
+        Ontology of adverse events OAE & O - Adverse reactions \\ 
+        Chemical entities of biological interest ChEBI & I - Pharma / Drugs \\ 
+        Comparative toxicogenomics database - Disease CTD - D & P - Condition \\ 
+        Comparative toxicogenomics database - Chemicals CTD - C & I - Pharma / Drugs \\ 
+        Gender, Sex, and Sexual Orientation Ontology GSSO & P - Gender, Sex \\ 
+        Chemotherapy Toxicities Ontology ONTOTOX & O - Adverse reactions \\ 
+        Cancer Care: Treatment Outcomes Ontology CCTOO & O - All \\ 
+        Symptoms Ontology SYMP & P - Condition \\ 
+        Non-pharmacological interventions ontology NPI & I - Non-pharma / non-drug \\ 
+        Nursing Care Coordination Ontology NCCO & I - Non-pharma / non-drug \\ \hline
+    \end{tabular}
+    \caption{\label{tab:source2targets}}
+\end{table}
+
+
+Our task was to design $m$ labelling functions $\lambda^{m}$ corresponding to this fine-grained information, efficiently aggregate them to get probabilistic class labels, and use the weakly-labelled dataset for downstream PICO recognition tasks.
 Another aim was to correct the fine-grained PICO annotations errors in the EBM-PICO test set and evaluate the approach on both the EBM-PICO and its updated version.
+%==============================
+%\subsection{Error Analysis for re-annotation}\label{subsec:err}
+%==============================
+%
+%We used 1\% of the EBM-PICO training set tokens and evaluated for errors individually for PIO classes.
+Of 12,960 (1\%) training tokens evaluated to gauge the errors, 4.4\% of the Intervention class tokens, 5.4\% of the Participant class tokens and 4.9\% of the Outcome class tokens were errors.
+These errors are categorized for each of the PIO classes and are shown in the Table~\ref{tab:errordist}.
+%
+\iffalse
+\begin{table}[!ht]
+    \centering
+    \begin{tabular}{|l|r|r|r|}
+    \hline
+        Error category & Participant & Intervention & Outcome \\ \hline
+        Repeat mention unmarked & 213 & 220 & 207 \\ 
+        Remain unannotated & 47 & 59 & 71 \\ 
+        Inconsistency & 46 & 18 & 85 \\ 
+        Punctuation/article & 15 & 23 & 48 \\ 
+        Conjunction connector & 30 & 36 & 57 \\ 
+        Junk & 53 & 79 & 30 \\ 
+        Extra information & 80 & 146 & 58 \\ 
+        Generic mention & 90 & 120 & 85 \\ \hline
+        Total errors & 574 & 701 & 641 \\ \hline
+    \end{tabular}
+    \caption{\label{tab:errordist} Error distribution in the analysed tokens of EBM-PICO corpus.}
+\end{table}
+
+%
+
+\begin{table}[!ht]
+    \centering
+    \begin{tabular}{|l|r|l|r|l|r|}
+    \hline
+    \multicolumn{2}{|c|}{Intervention} & \multicolumn{2}{|c|}{Participant} & \multicolumn{2}{|c|}{Outcome} \\
+    \hline
+    Error type & Count & Error type & Count & Error type & Count \\
+    \hline
+        Description inconsistency & 18 & Remain unannotated & 93 & Scale inconsistency & 85 \\
+        Period/article & 23 & Period/article & 15 & Period/article & 48 \\ 
+        Unmarked control & 59 & Extra info marked & 80 & Extra info marked & 58 \\ 
+        Junk information & 225 & Junk information & 53 & Junk information & 30 \\ 
+        Generic name & 120 & Generic name & 90 & Generic name & 85 \\ 
+        Conjunction connector & 36 & Conjunction connector & 30 & Conjunction connector & 57 \\ 
+        Repeated mention & 220 & Repeated mention & 213 & Repeated mention & 207 \\
+        - & - & - & - & Outcomes not marked & 71 \\ 
+        Total errors & 701 & Total errors & 574 & Total errors & 641 \\ 
+        %Total tokens evaluated & 12960 & Total tokens evaluated & 12960 & Total tokens evaluated & 12960 \\
+        \hline
+        \multicolumn{3}{|l|}{Total tokens evaluated} & \multicolumn{3}{|c|}{12960}\\
+        \hline
+    \end{tabular}
+    \caption{\label{tab:errordist} Error distribution in the analysed tokens of EBM-PICO corpus.}
+\end{table}
+\fi
 
 
 Table~\ref{tab:res} and ~\ref{tab:recall_res} report macro-averaged F1 scores and recall for weak supervision using ontology labeling functions and those incorporating additional, task-specific rules in comparison to the fully-supervised approach.
@@ -428,9 +516,9 @@ However, it has to be noticed that the Recall stands higher fro the majority vot
 Training PubMedBERT on top of label model increases the F1 performance by x\% - xx\% and has considerable boost for the participant entity.
 
 
-Error correction leads to better performance for all the targets but especially for the participant class.
+Error correction leads to better F1 performance for all the targets but especially for the participant class.
 
-
+\iffalse
 
 \begin{table}[!ht]
     \centering
@@ -479,69 +567,10 @@ Error correction leads to better performance for all the targets but especially 
     \caption{\label{tab:recall_res} Macro-averaged Recall scores for UMLS, UMLS+other and rule-based weak supervision.}
 \end{table}
 
+\fi
 
 To investigate the optimal number of UMLS labelling functions required, we used the same methodology as in Trove holding all non-UMLS labeling functions fixed across all ablation tiers and computed performance across partitions = $s = ( 1, 2, \dotso , 127 )$ partitions of the UMLS by terminology obtaining similar results.
 The optimal number of partitions mainly lied between two and eight (make a figure for it.
-
-
-%
-%
-%
-%==============================
-\subsection{Error Analysis for re-annotation}\label{subsec:err}
-%==============================
-%
-%We used 1\% of the EBM-PICO training set tokens and evaluated for errors individually for PIO classes.
-Of 12,960 (1\%) training tokens evaluated to gauge the errors, 4.4\% of the Intervention class tokens, 5.4\% of the Participant class tokens and 4.9\% of the Outcome class tokens were errors.
-These errors are categorized for each of the PIO classes and are shown in the Table~\ref{tab:errordist}.
-%
-
-\begin{table}[!ht]
-    \centering
-    \begin{tabular}{|l|r|r|r|}
-    \hline
-        Error category & Participant & Intervention & Outcome \\ \hline
-        Repeat mention unmarked & 213 & 220 & 207 \\ 
-        Remain unannotated & 47 & 59 & 71 \\ 
-        Inconsistency & 46 & 18 & 85 \\ 
-        Punctuation/article & 15 & 23 & 48 \\ 
-        Conjunction connector & 30 & 36 & 57 \\ 
-        Junk & 53 & 79 & 30 \\ 
-        Extra information & 80 & 146 & 58 \\ 
-        Generic mention & 90 & 120 & 85 \\ \hline
-        Total errors & 574 & 701 & 641 \\ \hline
-    \end{tabular}
-    \caption{\label{tab:errordist} Error distribution in the analysed tokens of EBM-PICO corpus.}
-\end{table}
-
-%
-\iffalse
-\begin{table}[!ht]
-    \centering
-    \begin{tabular}{|l|r|l|r|l|r|}
-    \hline
-    \multicolumn{2}{|c|}{Intervention} & \multicolumn{2}{|c|}{Participant} & \multicolumn{2}{|c|}{Outcome} \\
-    \hline
-    Error type & Count & Error type & Count & Error type & Count \\
-    \hline
-        Description inconsistency & 18 & Remain unannotated & 93 & Scale inconsistency & 85 \\
-        Period/article & 23 & Period/article & 15 & Period/article & 48 \\ 
-        Unmarked control & 59 & Extra info marked & 80 & Extra info marked & 58 \\ 
-        Junk information & 225 & Junk information & 53 & Junk information & 30 \\ 
-        Generic name & 120 & Generic name & 90 & Generic name & 85 \\ 
-        Conjunction connector & 36 & Conjunction connector & 30 & Conjunction connector & 57 \\ 
-        Repeated mention & 220 & Repeated mention & 213 & Repeated mention & 207 \\
-        - & - & - & - & Outcomes not marked & 71 \\ 
-        Total errors & 701 & Total errors & 574 & Total errors & 641 \\ 
-        %Total tokens evaluated & 12960 & Total tokens evaluated & 12960 & Total tokens evaluated & 12960 \\
-        \hline
-        \multicolumn{3}{|l|}{Total tokens evaluated} & \multicolumn{3}{|c|}{12960}\\
-        \hline
-    \end{tabular}
-    \caption{\label{tab:errordist} Error distribution in the analysed tokens of EBM-PICO corpus.}
-\end{table}
-\fi
-
 %
 %
 %
@@ -571,10 +600,8 @@ The performance boost using task-specific rules shows that PICO tasks could bene
 %==============================
 %
 We expound on the error categories and provide examples here.
-An error falls under \textit{repeated mention} if one instance of an entity is marked, but another identical instance of the same entity in the same context is not marked within the same abstract. 
-This error category is the largest.
-%These errors emanate from the EBM-PICO corpus annotation process that follows the sequence of first annotating the span-level PICO information and then restricting the entity-level PICO annotation to these larger spans.
-%This sequence leads to explicitly missing out on the repeated mentions of the fine-grained information that is not covered in the longer spans.
+An error falls under \textit{repeated mention} if one instance of an entity is marked, but another identical instance of the same entity in the same context is not marked within the abstract. 
+%This error category is the largest.
 The reason could be the EBM-PICO guidelines flaw where the annotators of fine-grained entity annotation were confined to only annotate within the longer span-level annotation.
 Hence any annotation error missed by the coarse-grained annotators was continued by the fine-grained annotators.
 
@@ -586,9 +613,7 @@ In the Outcome class, the annotators missed several important outcomes (along wi
 
 \textit{Conjunction connector} errors are the conjunctions occurring between two semantically separate entities but are falsely marked as entities.
 For example, ``Nausea and vomiting'' are two separate outcomes marked as one by annotating the conjunction between them.
-
 Sometimes a punctuation succeeding the entity or an article or a preposition preceding the entity was falsely marked as an entity. These fall under \textit{punctuation/article} errors.
-
 Sometimes extraneous tokens were marked along with the entity tokens. 
 Such errors fell under \textit{extra information} category.
 %For example, in the phrase ``This trial demonstrated short-term efficacy of smokeless tobacco in combination with'', the annotators had marked ``short-term efficacy of smokeless tobacco'' as an outcome entity, but only ``short-term efficacy'' is an outcome entity.
@@ -618,7 +643,7 @@ For example, in the Outcomes evaluation, the phrase ``evaluate and compare'' fro
 
 %Why were errors corrected?
 These errors and inconsistencies in the EBM-PICO gold test (and training) set can cause faulty evaluation of the machine learning approaches defying the purpose of the corpus.
-The reason behind these inconsistencies in the EBM-PICO corpus could be that the annotators had clinical background but lacked an informatics background.
+A possible reason behind these inconsistencies in the EBM-PICO corpus could be that the annotators had clinical background but lacked an informatics background.
 This situation could undermine the importance of semantic consistency required for annotating such corpora.
 Hiring annotators with the combined knowledge of clinical and informatics domains might improve the manual annotation quality.
 The errors for PIO categories were corrected, and the updated dataset is available on Zenodo.
