@@ -244,15 +244,12 @@ We show how using only ontology-dependent classifiers vs combining them with mor
 %==============================
 %
 The birds-eye view of our approach is shown in the Figure.
-
-\iffalse
 \begin{figure}[ht]
 \centering
 \includegraphics[width=0.98\textwidth]{figures/approach.pdf}
 \caption{Approach overview.}
 \label{fig:approach}
 \end{figure}
-\fi
 %
 %
 %
@@ -280,7 +277,6 @@ Multi-class fine-grained PICO annotations were binarized, i.e. a token label was
 %
 %
 %
-%\iffalse
 \begin{table}[h!]
 \begin{center}
 \begin{tabular}{| c | c | c | c |} 
@@ -300,7 +296,6 @@ Multi-class fine-grained PICO annotations were binarized, i.e. a token label was
 \caption{\label{tab:coarsefineconcept} P (Participant), I (Intervention) and O (Outcome) represent the coarse-grained labels which are further divided into respective fine-grained labels.}
 \end{center}
 \end{table}
-%\fi
 %
 %
 %
@@ -457,7 +452,7 @@ Another aim was to correct the fine-grained PICO annotations errors in the EBM-P
 Of 12,960 (1\%) training tokens evaluated to gauge the errors, 4.4\% of the Intervention class tokens, 5.4\% of the Participant class tokens and 4.9\% of the Outcome class tokens were errors.
 These errors are categorized for each of the PIO classes and are shown in the Table~\ref{tab:errordist}.
 %
-\iffalse
+
 \begin{table}[!ht]
     \centering
     \begin{tabular}{|l|r|r|r|}
@@ -478,47 +473,25 @@ These errors are categorized for each of the PIO classes and are shown in the Ta
 
 %
 
-\begin{table}[!ht]
-    \centering
-    \begin{tabular}{|l|r|l|r|l|r|}
-    \hline
-    \multicolumn{2}{|c|}{Intervention} & \multicolumn{2}{|c|}{Participant} & \multicolumn{2}{|c|}{Outcome} \\
-    \hline
-    Error type & Count & Error type & Count & Error type & Count \\
-    \hline
-        Description inconsistency & 18 & Remain unannotated & 93 & Scale inconsistency & 85 \\
-        Period/article & 23 & Period/article & 15 & Period/article & 48 \\ 
-        Unmarked control & 59 & Extra info marked & 80 & Extra info marked & 58 \\ 
-        Junk information & 225 & Junk information & 53 & Junk information & 30 \\ 
-        Generic name & 120 & Generic name & 90 & Generic name & 85 \\ 
-        Conjunction connector & 36 & Conjunction connector & 30 & Conjunction connector & 57 \\ 
-        Repeated mention & 220 & Repeated mention & 213 & Repeated mention & 207 \\
-        - & - & - & - & Outcomes not marked & 71 \\ 
-        Total errors & 701 & Total errors & 574 & Total errors & 641 \\ 
-        %Total tokens evaluated & 12960 & Total tokens evaluated & 12960 & Total tokens evaluated & 12960 \\
-        \hline
-        \multicolumn{3}{|l|}{Total tokens evaluated} & \multicolumn{3}{|c|}{12960}\\
-        \hline
-    \end{tabular}
-    \caption{\label{tab:errordist} Error distribution in the analysed tokens of EBM-PICO corpus.}
-\end{table}
-\fi
+
+Table~\ref{tab:res} and ~\ref{tab:recall_res} report macro-averaged F1 and recall for weak supervision using ontology labeling functions and those incorporating additional, task-specific rules in comparison to the fully-supervised approach.
 
 
-Table~\ref{tab:res} and ~\ref{tab:recall_res} report macro-averaged F1 scores and recall for weak supervision using ontology labeling functions and those incorporating additional, task-specific rules in comparison to the fully-supervised approach.
-For all the target classes, adding task-specific rules boosts F1 between 1 to 13\%. 
-Adding non-UMLS ontologies consistently improved performance for all the tasks across LM and WS.
+For obvious reasons, the recall always stands higher and the precision lower; therefore, the MV labellers have lower F1.
 
 
-However, it has to be noticed that the Recall stands higher fro the majority voter labellers for the obvious reasons.
+For all the target classes and tiers, adding task-specific rules boosts F1 between 1.20 to 14.14\%.
+Lowest overall improvements were seen in Outcomes target and highest in the intervention target.
 
 
-Training PubMedBERT on top of label model increases the F1 performance by x\% - xx\% and has considerable boost for the participant entity.
+Adding non-UMLS ontologies sometimes increased performance and sometimes decreased it across all tiers.
 
 
-Error correction leads to better F1 performance for all the targets but especially for the participant class.
+Training PubMedBERT on top of label model increases the F1 performance by x\% - xx\% and has considerable boost for the intervention entity.
 
-\iffalse
+
+Error correction leads to better F1 performance for all the targets, especially for the participant class where both the LM and the weakly supervised F1 overtake the full-supervision score.
+
 
 \begin{table}[!ht]
     \centering
@@ -544,7 +517,6 @@ Error correction leads to better F1 performance for all the targets but especial
     \caption{\label{tab:res} Macro-averaged F1 scores for UMLS, UMLS+other and rule-based weak supervision.}
 \end{table}
 
-
 \begin{table}[!ht]
     \centering
     \begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|}
@@ -566,8 +538,6 @@ Error correction leads to better F1 performance for all the targets but especial
     \end{tabular}
     \caption{\label{tab:recall_res} Macro-averaged Recall scores for UMLS, UMLS+other and rule-based weak supervision.}
 \end{table}
-
-\fi
 
 To investigate the optimal number of UMLS labelling functions required, we used the same methodology as in Trove holding all non-UMLS labeling functions fixed across all ablation tiers and computed performance across partitions = $s = ( 1, 2, \dotso , 127 )$ partitions of the UMLS by terminology obtaining similar results.
 The optimal number of partitions mainly lied between two and eight (make a figure for it.
