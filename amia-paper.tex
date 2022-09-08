@@ -244,6 +244,7 @@ We show how using only ontology-dependent classifiers vs combining them with mor
 %==============================
 %
 The birds-eye view of our approach is shown in the Figure.
+%
 \begin{figure}[ht]
 \centering
 \includegraphics[width=0.98\textwidth]{figures/approach.pdf}
@@ -417,8 +418,17 @@ An intervention can also be either a drug, surgery, physical (exercise), educati
 According to the EBM-NLP annotation guidelines, we are only supposed to annotate intervention name and it's role (control, placebo).
 The outcome span can include the outcome names, information about the scales, techniques and instruments used to measure these outcomes, and the absolute outcome measurement values.
 According to the EBM-NLP annotation guidelines, we are only supposed to annotate outcome name and how it was measured.
-
-
+For detailed subgrouping of the target classes, check the figure~\ref{fig:target_subgroups}.
+For a more comprehensive subgrouping, we propose developing a PICO ontology.
+%
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.98\textwidth]{figures/target_subgroups.pdf}
+\caption{\label{fig:target_subgroups} Hierarchical representation of PICO target subclasses}
+\end{figure}
+%
+%
+%
 \begin{table}[!ht]
     \centering
     \begin{tabular}{|l|l|}
@@ -438,7 +448,7 @@ According to the EBM-NLP annotation guidelines, we are only supposed to annotate
         Non-pharmacological interventions ontology NPI & I - Non-pharma / non-drug \\ 
         Nursing Care Coordination Ontology NCCO & I - Non-pharma / non-drug \\ \hline
     \end{tabular}
-    \caption{\label{tab:source2targets}}
+    \caption{\label{tab:source2targets} List of non-UMLS ontology sources chosen based on their mapping to the respective target subclasses.}
 \end{table}
 
 
@@ -468,7 +478,7 @@ These errors are categorized for each of the PIO classes and are shown in the Ta
         Generic mention & 90 & 120 & 85 \\ \hline
         Total errors & 574 & 701 & 641 \\ \hline
     \end{tabular}
-    \caption{\label{tab:errordist} Error distribution in the analysed tokens of EBM-PICO corpus.}
+    \caption{\label{tab:errordist} Error distribution in the analysed tokens (1\%) of EBM-PICO corpus.}
 \end{table}
 
 %
