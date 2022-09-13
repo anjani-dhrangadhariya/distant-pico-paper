@@ -68,6 +68,7 @@
 \DeclareMathOperator*{\argmax}{arg\,max}
 \DeclareMathOperator*{\argmin}{arg\,min}
 
+
 % No new line after subsubsection
 \makeatletter
 %\renewcommand\subsubsection{\@startsection{subsubsection}{3}{\z@}%
@@ -361,8 +362,6 @@ Any labelling function using ontologies or dictionaries used string matching as 
 Relevant bigram word co-occurrences were used to account for fuzzy span matching from the terminologies.
 A ReGeX labelling function for a target class takes regex patterns for $\{-1, +1\}$ labels and abstains from the rest.
 A heuristic labelling function is personalized for each target class and takes a generic regex pattern and specific POS (part-of-speech) tag signals.
-%A distant supervision labelling function is designed to extract non-standardized terms from a knowledge base and use them for mapping tokens to $\{0, +1\}$ labels.
-%As ReGeX, heuristics, hand-coded dictionaries and distant supervision were designed for individual PICO classes; they are clubbed under the task-specific labelling functions category.
 Clinical studies have several abbreviations.
 Abbreviations in clinical studies are taken into account using a heuristics abbreviation identifier and the identified abbreviations were mapped to their respective target classes.
 %
@@ -422,14 +421,14 @@ It is challenging to build the UMLS-based classifiers for the ``Study type and d
 
 The labelling functions $\lambda_{m}$ were used to label the EBM-PICO training set and obtain $\lambda$. 
 We tested majority voting (MV) and label model (LM) to aggregate labelling functions.
-LM outputs probabilistic labels for the training set were used as weak supervision signals to train the PubMedBERT that was trained to minimize noise-aware cross-entropy loss. % Anjani: Noise-aware loss functions
+LM outputs probabilistic labels for the training set were used as weak supervision signals to train the PubMedBERT that was trained to minimize noise-aware cross-entropy loss.
 %
 \begin{equation}
-\bm{\hat{Y}} = \max_{{y \subset \{ 0, 1 \} }} \sum_{i=1}^{m} \mathds{1} (\lambda_{i})
+\bm{\hat{\omega}} = \argmin_{\omega} \frac{1}{N} \sum_{i=1}^{n} \mathbb{ E }_{ \hat{y} \sim \hat{Y}} \big[ l \big( f(x, w), \hat{y} \big) \big]
 \end{equation}
 %
 PubMedBERT was chosen because of its domain similarity to our training data (abstracts from PubMed) and task.
-PubMedBERT was trained on fixed parameters listed in the supplementary material. 
+The model was tuned on fixed parameters listed in the supplementary material. 
 %We did not have a validation set for the study type entity hence we did not optimize on this task.
 %
 %
