@@ -63,6 +63,9 @@
 
 \usepackage{xcolor}
 
+\usepackage{dsfont}
+\usepackage{amsmath,amssymb}
+
 % No new line after subsubsection
 \makeatletter
 %\renewcommand\subsubsection{\@startsection{subsubsection}{3}{\z@}%
@@ -386,7 +389,7 @@ Each labelling function $ \lambda_{i} \in \bm{\Lambda^{m}}; \bm{\Lambda} = \{\la
 The labelling functions can be aggregated using the majority vote (MV) rule, where a token label is elected only when a majority of $\lambda_{i}$ vote for it.
 %
 \begin{equation}
-\bm{\hat{Y}} = \max_{{y \subset \{ 0, 1 \} }} \sum_{i=1}^{m} \lambda_{i}
+\bm{\hat{Y}} = \max_{{y \subset \{ 0, 1 \} }} \sum_{i=1}^{m} \mathds{1} (\lambda_{i})
 \end{equation}
 %
 Ties and abstains lead to the selection of the majority label.
