@@ -458,7 +458,7 @@ For a more comprehensive subgrouping, we propose developing a PICO ontology.
 %
 %
 Our task was to design $m$ labelling functions $\lambda^{m}$ corresponding to this fine-grained information, efficiently aggregate them to get probabilistic class labels, and use the weakly-labelled dataset for downstream PICO recognition tasks.
-Another aim was to correct the fine-grained PICO annotations errors in the EBM-PICO test set and evaluate the approach on both the EBM-PICO and its updated version.
+Another aim was to rectify the fine-grained PICO annotations errors in the EBM-PICO test set and evaluate the approach on both the EBM-PICO and its updated version.
 %==============================
 %\subsection{Error Analysis for re-annotation}\label{subsec:err}
 %==============================
@@ -485,12 +485,13 @@ These errors are categorized for each of the PIO classes and are shown in the Ta
     \end{tabular}
     \caption{\label{tab:errordist} Error distribution and error categories in the analysed tokens (1\%) of EBM-PICO corpus.}
 \end{table}
-
 %
-
-
+%
+%
 Table~\ref{tab:res} reports macro-averaged F1 for weak supervision using ontology labeling functions and those incorporating additional, task-specific rules in comparison to the fully-supervised approach.
-Weak supervision performs better on the corrected benchmark by 1.71\% for the participant entity. 
+Error rectification leads to F1 performance improvement between 2.12\%-9.52\% for all the targets, especially for the participant class where both the LM and the weakly supervised F1 overtake the full-supervision score by 1.71\%. 
+It has to be noticed that weak supervision performs better on the rectified benchmark only for once for the participant entity.
+
 
 
 For obvious reasons, the recall always stands higher and the precision lower; therefore, the MV labellers have lower F1.
@@ -506,7 +507,6 @@ Adding non-UMLS ontologies sometimes increased performance and sometimes decreas
 Training PubMedBERT on top of label model increases the F1 performance by x\% - xx\% and has considerable boost for the intervention entity.
 
 
-Error correction leads to better F1 performance for all the targets, especially for the participant class where both the LM and the weakly supervised F1 overtake the full-supervision score by x\% - xx\% . 
 
 
 \begin{table}[!ht]
@@ -520,12 +520,12 @@ Error correction leads to better F1 performance for all the targets, especially 
         Target & LF source & \#LF & Fine & Corr & Fine & Corr & Fine & Corr & Fine & Corr \\
         \hline
         %\Xhline{1pt}
-        P & UMLS & 0 & 62.13 & 69.28 & 64.28 & 72.22 & 65.32 & 73.49 & 72.99 & 74.41 \\ 
-        ~ & +Ontology & 0 & 61.72 & 69.32 & 64.23 & 72.18 & 64.76 & 72.31 & ~ & ~ \\ 
-        ~ & +Rules & 0 & 63.08 & 72.06 & 65.79 & 75.31 & 66.73 & \textbf{76.12} & ~ & ~ \\ \hline
-        I/C & UMLS & 0 &59.7 & 63.94 & 60.11 & 64.28 & 59.17 & 61.72 & \textbf{83.37} & 81.06 \\ 
-        ~ & +Ontology & 0 & 62.14 & 66.92 & 62.83 & 67.09 & 67.06 & 69.76 & ~ & ~ \\ 
-        ~ & +Rules & 0 & 58.51 & 63.45 & 64.34 & 68.17 & 70.27 & 72.39 & ~ & ~ \\  \hline
+        P & UMLS & 24 & 62.13 & 69.28 & 64.28 & 72.22 & 65.32 & 73.49 & 72.99 & 74.41 \\ 
+        ~ & +Ontology & 25 & 61.72 & 69.32 & 64.23 & 72.18 & 64.76 & 72.31 & ~ & ~ \\ 
+        ~ & +Rules & 36-40 & 63.08 & 72.06 & 65.79 & 75.31 & 66.73 & \textbf{76.12} & ~ & ~ \\ \hline
+        I/C & UMLS & 17-104 &59.7 & 63.94 & 60.11 & 64.28 & 59.17 & 61.72 & \textbf{83.37} & 81.06 \\ 
+        ~ & +Ontology & 18-125 & 62.14 & 66.92 & 62.83 & 67.09 & 67.06 & 69.76 & ~ & ~ \\ 
+        ~ & +Rules & 14-18 & 58.51 & 63.45 & 64.34 & 68.17 & 70.27 & 72.39 & ~ & ~ \\  \hline
         O & UMLS & 0 & - & - & 59.53 & 62.47 & running & running & \textbf{81.20} & 80.53 \\ 
         ~ & +Ontology & 0 & - & - & 59.53 & 62.47 & 58.74 & 59.27 & ~ & ~ \\ 
         ~ & +Rules & 0 & - & - & 61.02 & 63.11 & 60.36 & 61.93 & ~ & ~ \\ \hline
@@ -558,7 +558,7 @@ The performance boost using task-specific rules shows that PICO tasks could bene
 %
 %
 %==============================
-\subsection{Error Analysis and correction}\label{err_ana}
+\subsection{Error Analysis and rectification}\label{err_ana}
 %==============================
 %
 We expound on the error categories and provide examples here.
@@ -606,7 +606,7 @@ These errors and inconsistencies in the EBM-PICO gold test (and training) set ca
 A possible reason behind these inconsistencies in the EBM-PICO corpus could be that the annotators had clinical background but lacked an informatics background.
 This situation could undermine the importance of semantic consistency required for annotating such corpora.
 Hiring annotators with the combined knowledge of clinical and informatics domains might improve the manual annotation quality.
-The errors for PIO categories were corrected, and the updated dataset is available on Zenodo.
+The errors for PIO categories were rectified, and the updated dataset is available on Zenodo.
 %
 %
 %
@@ -614,7 +614,10 @@ The errors for PIO categories were corrected, and the updated dataset is availab
 \section{CONCLUSION}\label{conclusion}
 %==============================
 %
-OxO
+We adopted a weak supervision methodology for PICO spans and developed models for predicting PICO entities without hand-labelled corpus.
+We also identify errors pertinent to the current PICO benchmark, rectify them and use both datasets to evaluate the weakly supervised models.
+The approach achieves promising performance compared to full supervision and warrants further research into weak supervision.
+We firmly believe the approach could be extended to more clinical SR entities in absence of a manually labelled corpus, thereby being a starting point to overcome the annotation bottleneck.
 %
 %
 %
