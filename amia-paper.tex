@@ -135,21 +135,21 @@
 %==============================
 
 % reduce space between title and beginning of page
-\title{\vspace{-2em} Not So Weak-PICO: Leveraging weak supervision for Participants, Interventions, and Outcomes recognition for systematic review automation}
-\date{\vspace{-5ex}}
+\title{Not So Weak-PICO: Leveraging weak supervision for Participants, Interventions, and Outcomes recognition for systematic review automation}
+\date{} % \vspace{-2em}
 \author[ ] {
     % Authors
     \bf\fontsize{13}{14}\selectfont
-    Anjani Dhrangadhariya,\textsuperscript{\rm 1, 2}
+    Anjani Dhrangadhariya\textsuperscript{\rm 1, 2},
     Henning M\"uller \textsuperscript{\rm 1, 2}
 }
-\affil[1]{Institute of Business Information Systems, University of Applied Sciences Western Switzerland (HES-SO Valais-Wallis), Sierre, Switzerland}
-\affil[2]{Department of Computer Science, University of Geneva (UNIGE), Geneva, Switzerland}
-\affil[*]{Corresponding author: Anjani Dhrangadhariya, Institute of Business Information Systems, University of Applied Sciences Western Switzerland (HES-SO Valais-Wallis), Sierre, Switzerland; anjani.dhrangadhariya@hevs.ch}
+\affil[1]{Informatics Institute, University of Applied Sciences Western Switzerland (HES-SO), Sierre, Switzerland}
+\affil[2]{University of Geneva (UNIGE), Geneva, Switzerland}
+\affil[*]{Corresponding author: Anjani Dhrangadhariya, Informatics Institute, University of Applied Sciences Western Switzerland (HES-SO), Sierre, Switzerland; anjani.dhrangadhariya@hevs.ch}
 %==============================
 \begin{document}
 \maketitle
-\vspace{2em} %separation between the affiliations and abstract
+%\vspace{2em} %separation between the affiliations and abstract
 %==============================
 \doublespacing
 %==============================
@@ -159,24 +159,24 @@
 % Note: Abstract is limited to 250 words
 %
 \textbf{Objective:}
-PICO analysis is vital but time-consuming for conducting systematic reviews (SR). 
-Supervised machine learning can help fully automate it, but a lack of large annotated corpora restricts innovation and adoption of automated PICO recognition systems.
-The largest-available PICO corpus is manually annotated, which is too expensive for the most scientific community.
-Additionally, depending upon the SR question, PICO criteria are extended to PICOS (S-Study type or design), PICOC (C-Context), and PICOT (T-timeframe), meaning the static hand-labelled corpora should undergo costly re-annotation as per the downstream requirements.
-We aim to test the feasibility of designing a weak supervision system to extract these entities without hand-labelled data.\\
+PICO (Participants, Interventions, Comparators, Outcomes) analysis is vital but time-consuming for conducting systematic reviews (SRs). 
+Supervised machine learning can help fully automate it, but a lack of large annotated corpora limits the quality of automated PICO recognition systems.
+The largest currently available PICO corpus is manually annotated, which is an approach that is often too expensive for the scientific community to apply.
+Depending on the specific SR question, PICO criteria are extended to PICOS (S-Study type or design), PICOC (C-Context), and PICOT (T-timeframe), meaning the static hand-labelled corpora need to undergo costly re-annotation as per the downstream requirements.
+We aim to test the feasibility of designing a weak supervision system to extract these entities without hand-labelled data.
+
 \textbf{Methodology:}
 We use multiple medical and non-medical ontologies and expert-generated rules to obtain labels for PICO entities.
 These labels were aggregated using simple majority voting and generative modelling.
 The resulting programmatic labels were used as weak signals to train a weakly-supervised discriminative model and observe performance changes.
-Additionally, we explore the current PICO gold standard errors that could have led to inaccurate evaluation of several automation methods.\\
+Additionally, we explore mistakes in the current PICO gold standard that could have led to inaccurate evaluation of several automation methods.
+
 \textbf{Results:}
-We present Weak-PICO+, a weakly supervised PICO entity recognition approach using medical ontologies, non-medical ontologies and various expert-generated rules and dictionaries.
-Unlike manual annotation, Weak-PICO+ does not use hand-labelled data and is quickly adaptable and extensible to other entities.\\
+We present Weak-PICO+, a weakly-supervised PICO entity recognition approach using medical ontologies, non-medical ontologies and various expert-generated rules and dictionaries.
+Unlike manual annotation, Weak-PICO+ does not use hand-labelled data and is quickly adaptable and extensible to other entities.
+
 \textbf{Conclusion:}
-Weak supervision using weak-PICO+ for PICO entity recognition has encouraging results and readily extends to more clinical entities.\\
-%
-%
-%
+Weak supervision using weak-PICO+ for PICO entity recognition has encouraging results and readily extends to more clinical entities.
 
 
 \keywords{Weak supervision, Machine learning, Information extraction, Evidence-based Medicine}
@@ -184,15 +184,14 @@ Weak supervision using weak-PICO+ for PICO entity recognition has encouraging re
 \clearpage
 % Full paper is limited to 4000 words (approx. 14.6 pages)
 %
-%
-%
 %==============================
 \section{INTRODUCTION}\label{introduction}
 %==============================
 %
-Systematic Review (SR) is an evidence-based practice of answering clinical questions using a transparent and quantitative approach whereby the reviewers must collect as many research publications as possible, identifying the relevant ones from these and integrating their results via statistical analysis.
-Filtering relevant publications from the bulk collected ones often uses PICO (Participants, Interventions, Comparators, Outcomes) criteria. 
-A clinical study or a publication is relevant only for answering a question if it studies relevant participants, interventions (and their comparators) and outcomes~\cite{uman2011systematic}. 
+Systematic Reviews (SR) are an evidence-based practice of answering clinical questions using a transparent and quantitative approach.
+The reviewers must collect as many candidate publications as possible, identifying the relevant ones from these and integrating their results via statistical analysis.
+Filtering relevant publications from non-relevant publications with similar keywords often uses PICO (Participants, Interventions, Comparators, Outcomes) criteria. 
+A clinical study or a publication is only relevant for answering a question if it studies the selected participants, interventions (and their comparators) and outcomes~\cite{uman2011systematic}. 
 Manually analyzing PICO information from thousands of publications for a single SR takes about 12 months of two medical experts' time.
 The process can be automated using machine learning (ML) by directly pointing the human reviewers to the correct text chunks describing PICO.
 Hand labelling corpora with PICO information requires people with combined medical and informatics skills, which is expensive and time-consuming in terms of the actual annotation process and annotator training.
@@ -206,7 +205,7 @@ This annotation bottleneck has pivoted attention towards weakly-supervised learn
 Programmatic labelling is quick and allows efficient modifications to the training data labels per the downstream application changes.
 
 
-Weakly-supervised (WS) learning has demonstrated strengths for clinical document classification and relation extraction, but clinical entity extraction tasks have heavily relied on fully supervised (FS) approaches~\cite{meng2018weakly,wang2019clinical,mintz2009distant,elangovan2020assigning,weber2020pedl,mallory2020extracting}.
+Weakly-supervised (WS) learning has demonstrated strengths for clinical document classification and relation extraction, but clinical entity extraction tasks have heavily relied on fully-supervised (FS) approaches~\cite{meng2018weakly,wang2019clinical,mintz2009distant,elangovan2020assigning,weber2020pedl,mallory2020extracting}.
 Despite the availability of UMLS, a large compendium of medical ontologies, which could be re-purposed for weak entity labelling, it has not been extensively applied to clinical entity labelling~\cite{humphreys1998unified}.
 Several legacy clinical applications are also supported by rule-based \textit{if-else} systems relying on keyword cues that aid weak labelling~\cite{friedlin2008software,kim2017extracting,yang2015automatic}.
 With so many weak labelling sources available, the challenge for weak supervision is efficiently aggregating these sources of varying accuracy.
@@ -224,7 +223,7 @@ A shortcoming of span extraction is that even after a machine points a human rev
 Span extraction hence leads to semi-automation but hinders full-automation.
 The entity recognition approach to PICO is not as easy as the entity recognition approach to disease or chemical names which are more or less standardized.
 These terms are not standard, and even the experts disagree on the exact tokens constituting PICO~\cite{brockmeier2019improving}.
-Weakly-supervised PICO entity extraction has not garnered enough attention as supervised span extraction.
+Weakly-supervised PICO entity recognition has not garnered enough attention as supervised span recognition.
 As far as our knowledge goes, only two studies exist for weakly-supervised PICO recognition.
 One of these approaches only explores distant supervision for intervention extraction using a single labelling source~\cite{dhrangadhariya2022distant}, and the other relies on a single source of programmatic labelling and focuses on PICO spans and sentences rather than entities.
 
@@ -439,7 +438,7 @@ It was tuned on fixed parameters listed in the Experimental details section in t
 \subsection{Evaluation}\label{eval}
 %==============================
 %
-We report the classical macro-averaged F1 and recall for MV, LM, weakly supervised transformer models and the fully supervised transformer models.
+We report the classical macro-averaged F1 and recall for MV, LM, weakly-supervised transformer models and the fully-supervised transformer models.
 Mean macro-averaged scores are reported over three runs of each of these models with the top three random seeds (0, 1, and 42) used in Python.
 The models were separately trained for each target class recognition tasks using the raw (IO) tagging scheme.
 We used students t-test with a alpha $\alpha$ threshold of 0.05 to measure the statistical significance.
@@ -450,9 +449,9 @@ We used students t-test with a alpha $\alpha$ threshold of 0.05 to measure the s
 \section{RESULTS}\label{results}
 %==============================
 %
-Coarse-grained PICO annotations in EBM-PICO are spans composed of multiple fine-grained subclasses (refer to Table).
-We extended these fine-grained classes further to better design the labelling sources and functions (see Figure~\ref{fig:target_subgroups}).
-For example, it's easier to search for ontologies representing adverse events or diseases rather than for the entire PIO spans.
+Coarse-grained PICO annotations in EBM-PICO are spans composed of multiple fine-grained subclasses (refer to Table~\ref{tab:coarsefineconcept}).
+We extended these fine-grained classes further to better query the labelling sources and design labelling functions (see Figure~\ref{fig:target_subgroups}).
+For example, it's easier to search for ontologies representing adverse events or diseases rather than for the entire participant or outcome spans.
 Similarly, it is easier to design heuristics separately for outcome terms and instruments of measurement.
 %For instance, the participant span encompasses participant characteristics: condition (disease, disorder, symptoms), age, gender, ethnicity, language and the sample size in clinical studies.
 The intervention span can include intervention name, role (primary intervention or comparator), dosage, frequency, mode of administration and administrator.
@@ -460,7 +459,7 @@ The outcome span can include the outcome names, the scales, techniques or instru
 The EBM-NLP guidelines restrict annotating the outcome name and how it was measured and to the intervention's name and role (control, placebo), leaving out the other subclasses.
 The LFs were designed according to these guidelines.
 For a more comprehensive subgrouping, we propose developing a PICO ontology.
-We designed $m$ labelling functions $\lambda^{m}$ corresponding to this fine-grained information, aggregated them to get probabilistic class labels, and use the weakly-labelled dataset for downstream PICO recognition tasks.
+We designed $m$ labelling functions $\lambda^{m}$ corresponding to this fine-grained information, aggregated them to get probabilistic token labels, and used the weakly-labelled dataset for downstream PICO recognition tasks.
 %
 \begin{figure}[ht]
 \centering
@@ -503,7 +502,7 @@ These errors are categorized for each of the PIO classes and are shown in the Ta
 
 Table~\ref{tab:res} reports macro-averaged F1 for weak supervision using ontology labeling functions and those incorporating additional, task-specific rules in comparison to the fully-supervised approach.
 
-\paragraph{Error correction} Error rectification leads to F1 performance improvement between 2.12\%-9.52\% for all the targets, especially for the participant class where both the LM and the weakly supervised F1 overtake the full-supervision score by 1.71\%. It has to be noticed that weak supervision outperforms the state-of-the-art on the rectified benchmark only for the participant entity.
+\paragraph{Error correction} Error rectification leads to F1 performance improvement between 2.12\%-9.52\% for all the targets, especially for the participant class where both the LM and the weakly-supervised F1 overtake the full supervision score by 1.71\%. It has to be noticed that weak supervision outperforms the state-of-the-art on the rectified benchmark only for the participant entity.
 
 \paragraph{LF tiers} Adding non-UMLS ontologies increased performance for the intervention target between 2.81\%-8.04\% but was detrimental (-1.18\%-0.04\%) to the performance across the experiments and tiers for the participant target.
 For all the target classes and tiers, adding task-specific rules boosts F1 between 1.20 to 14.14\%.
@@ -512,6 +511,7 @@ Lowest overall improvements were seen in Outcomes target and highest in the inte
 \paragraph{MV vs. LM vs. WS} Label model improved the performance between 0.34\%-5.85\% in comparison to majority voting.
 However, PubMedBERT did not consistently improve the performance leading to a performance drop between 0.94 - 2.56\%.
 For obvious reasons, the recall always stood higher and the precision lower; therefore, the MV labellers have lower F1 compared the label model.
+weakly-supervised PubMedBERT did not always improve the performance compared to its label model counterpart, but led to the best F1 score for each target class.
 
 
 
@@ -550,7 +550,7 @@ The optimal number of partitions mainly lied between two and eight.
 \section{DISCUSSION}\label{discussion}
 %==============================
 %
-We demonstrate the effectiveness of weak supervision for a complicated PICO extraction task using medical and non-medical ontologies and expert-generated rules.
+We demonstrate the effectiveness of weak supervision for a complicated PICO recognition task using medical and non-medical ontologies and expert-generated rules.
 It is easy to re-purpose the low-cost ontologies but challenging to map these to our targets.
 PICO classes are complex targets encompassing several subclasses, decomposing which allows identifying ontology labelling sources and designing rules. 
 Moreover, each tier requires labelling sources that contribute to the target subclasses.
@@ -622,10 +622,11 @@ The errors for PIO categories were rectified, and the updated dataset is availab
 \section{CONCLUSION}\label{conclusion}
 %==============================
 %
-We adopted a weak supervision methodology for PICO spans and developed models for predicting PICO entities without hand-labelled corpus.
-We also identify errors pertinent to the current PICO benchmark, rectify them and use both datasets to evaluate the weakly supervised models.
+We adopted weak supervision for PICO spans and developed models for predicting PICO entities without a hand-labelled corpus.
+We also identified errors pertinent to the current PICO benchmark, rectified them and used both datasets to evaluate the recognition models.
 The approach achieves promising performance compared to full supervision and warrants further research into weak supervision.
-We firmly believe the approach could be extended to more clinical SR entities in absence of a manually labelled corpus, thereby being a starting point to overcome the annotation bottleneck.
+We firmly believe the approach could be extended to more clinical SR entities in the absence of a manually labelled corpus, thereby being a starting point to overcome the annotation bottleneck for SR entities.
+In future, we will work on extending the data programming approach to the SR entities that do not have a manually labelled corpus like EBM-PICO and inspect strategies for mapping ontologies to PICO subclasses.
 %
 %
 %
