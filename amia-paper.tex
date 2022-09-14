@@ -469,14 +469,12 @@ We designed $m$ labelling functions $\lambda^{m}$ corresponding to this fine-gra
 %
 %
 %
-We also rectified the fine-grained PICO annotations errors in the EBM-PICO test set and evaluated the approach on both the EBM-PICO and its updated version.
-%==============================
-%\subsection{Error Analysis for re-annotation}\label{subsec:err}
-%==============================
-%
-%We used 1\% of the EBM-PICO training set tokens and evaluated for errors individually for PIO classes.
+Table~\ref{tab:res} reports macro-averaged F1 for weak supervision using ontology labeling functions and those incorporating additional, task-specific rules in comparison to the fully-supervised approach.
+
+\paragraph{Error rectification}  We also rectified the fine-grained PICO annotations errors in the EBM-PICO test set and evaluated the approach on both the EBM-PICO and its updated version.
 Of 12,960 (1\%) training tokens evaluated to gauge the errors, 4.4\% of the Intervention class tokens, 5.4\% of the Participant class tokens and 4.9\% of the Outcome class tokens were errors.
 These errors are categorized for each of the PIO classes and are shown in the Table~\ref{tab:errordist}.
+Error rectification leads to F1 performance improvement between 2.12\%-9.52\% for all the targets, especially for the participant class where both the LM and the weakly-supervised F1 overtake the full supervision score by 1.71\%. It has to be noticed that weak supervision outperforms the state-of-the-art on the rectified benchmark only for the participant entity.
 %
 
 \begin{table}[!ht]
@@ -500,18 +498,15 @@ These errors are categorized for each of the PIO classes and are shown in the Ta
 %
 %
 
-Table~\ref{tab:res} reports macro-averaged F1 for weak supervision using ontology labeling functions and those incorporating additional, task-specific rules in comparison to the fully-supervised approach.
 
-\paragraph{Error correction} Error rectification leads to F1 performance improvement between 2.12\%-9.52\% for all the targets, especially for the participant class where both the LM and the weakly-supervised F1 overtake the full supervision score by 1.71\%. It has to be noticed that weak supervision outperforms the state-of-the-art on the rectified benchmark only for the participant entity.
+\paragraph{MV vs. LM vs. WS} Label model improved the performance between 0.34\%-5.85\% in comparison to majority voting.
+However, PubMedBERT did not consistently improve the performance leading to a performance drop between 0.94 - 2.56\%.
+Though the weakly-supervised PubMedBERT models did not always improve the performance compared to their label model counterparts, they led to the best F1 score for the each target class.
+Majority voting has higher recall in comparison to precision for obvious reasons.
 
 \paragraph{LF tiers} Adding non-UMLS ontologies increased performance for the intervention target between 2.81\%-8.04\% but was detrimental (-1.18\%-0.04\%) to the performance across the experiments and tiers for the participant target.
 For all the target classes and tiers, adding task-specific rules boosts F1 between 1.20 to 14.14\%.
 Lowest overall improvements were seen in Outcomes target and highest in the intervention target.
-
-\paragraph{MV vs. LM vs. WS} Label model improved the performance between 0.34\%-5.85\% in comparison to majority voting.
-However, PubMedBERT did not consistently improve the performance leading to a performance drop between 0.94 - 2.56\%.
-For obvious reasons, the recall always stood higher and the precision lower; therefore, the MV labellers have lower F1 compared the label model.
-weakly-supervised PubMedBERT did not always improve the performance compared to its label model counterpart, but led to the best F1 score for each target class.
 
 
 
@@ -533,9 +528,9 @@ weakly-supervised PubMedBERT did not always improve the performance compared to 
         I/C & UMLS & 17-104 &59.7 & 63.94 & 60.11 & 64.28 & 59.17 & 61.72 & \textbf{83.37} & 81.06 \\ 
         ~ & +Ontology & 18-125 & 62.14 & 66.92 & 62.83 & 67.09 & 67.06 & 69.76 & ~ & ~ \\ 
         ~ & +Rules & 14-18 & 58.51 & 63.45 & 64.34 & 68.17 & 70.27 & 72.39 & ~ & ~ \\  \hline
-        O & UMLS & 0 & - & - & 59.53 & 62.47 & - & - & \textbf{81.20} & 80.53 \\ 
-        ~ & +Ontology & 0 & - & - & 59.53 & 62.47 & 58.74 & 59.27 & ~ & ~ \\ 
-        ~ & +Rules & 0 & - & - & 61.02 & 63.11 & 60.36 & 61.93 & ~ & ~ \\ \hline
+        O & UMLS & 0 & 55.59 & 59.86 & 61.25 & 61.25 & 60.85 & 63.49& \textbf{81.20} & 80.53 \\ 
+        ~ & +Ontology & 0 & 5.92 & 59.58 & 59.38 & 62.52 & 60.77 & 62.5 & ~ & ~ \\ 
+        ~ & +Rules & 0 & 55.08 & 59.36 & 60.88 & 62.86 & 59.15 & 60.39 & ~ & ~ \\ \hline
     \end{tabular}
     \caption{\label{tab:res} Macro-averaged F1 scores for UMLS, UMLS+other and rule-based weak supervision.}
 \end{table}
@@ -550,18 +545,19 @@ The optimal number of partitions mainly lied between two and eight.
 \section{DISCUSSION}\label{discussion}
 %==============================
 %
-We demonstrate the effectiveness of weak supervision for a complicated PICO recognition task using medical and non-medical ontologies and expert-generated rules.
-It is easy to re-purpose the low-cost ontologies but challenging to map these to our targets.
-PICO classes are complex targets encompassing several subclasses, decomposing which allows identifying ontology labelling sources and designing rules. 
-Moreover, each tier requires labelling sources that contribute to the target subclasses.
-For example, separate labelling functions were developed for all the participant subclasses to reach a better than SOTA improvement.
+Our weakly-supervised experiments show promising results for a very complicated PICO recognition task using medical and non-medical ontologies and expert-generated rules.
+It is easy to re-purpose the low-cost ontologies but challenging to map these to our targets which is shown by a decreased F1 performance after addition of non-UMLS ontologies.
+%Moreover, each tier requires labelling sources that contribute to the target subclasses.
+%For example, separate labelling functions were developed for all the participant subclasses to reach a better than SOTA improvement.
+Task-specific ReGeX and heuristics were developed upon inspection of the most frequent terms in the EBM-PICO validation set annotations.
+The same procedure was followed across the targets, but the performance boost using these LFs was only observed in the the participants and interventions target and was detrimental to the outcomes.
+
 
 
 Label model only takes into account the information encoded into the weak sources to label phrases from the training text but does not take into account the contextual information around the phrases.
 Transformers take into account the contextual information and generalize beyond the labelling functions.
 This is shown by the performance boost that PubMedBERT brings on top of the label model.
 
-The performance boost using task-specific rules shows that PICO tasks could benefit from carefully designed rules.
 %
 %
 %
