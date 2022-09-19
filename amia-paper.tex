@@ -300,13 +300,52 @@ The estimates $\bm{\hat{Y}}$ of $\bm{Y}$ are assigned as probabilistic token lab
 We used the 2021AB-full release of UMLS Metathesaurus English subset dump with 223 vocabularies.
 After removing non-English and zoonotic source vocabularies as well as sources containing fewer than 500 terms, we remained with 127 vocabularies~\cite{humphreys1998unified}.
 Terms in the selected vocabularies were preprocessed by removing stopwords, numbers, punctuation's and were lower-cased using Smart lower casing to preserve abbreviations.
-Non-UMLS vocabularies are detailed in the Table~\ref{tab:source2targets}~\cite{schriml2012disease,robinson2008human,he2014oae,de2010chemical,lin2020cto,kronk2020development,geifman2011towards,rogier2021using,lin2018cancer,mohammed2012building,ninot2018definition}.
+Non-UMLS vocabularies are detailed in the %Table~\ref{tab:source2targets}~\cite{schriml2012disease,robinson2008human,he2014oae,de2010chemical,lin2020cto,kronk2020development,geifman2011towards,rogier2021using,lin2018cancer,mohammed2012building,ninot2018definition}.
 Additional vocabularies included disease ontology (DO), Human Phenotype Ontology (HPO), Ontology of adverse events (OAE), Chemical entities of biological interest (ChEBI),  comparative toxicogenomics database (CTD) Chemical and Disease subclasses, Clinical Trials Ontology (NDD-CTO), Gender, Sex, and Sexual Orientation Ontology (GSSO), Chemotherapy Toxicities Ontology (ONTOTOX), Cancer Care: Treatment Outcomes Ontology (CCTOO), symptoms ontology (SYMP), Non-pharmacological interventions ontology (NPI), Nursing Care Coordination Ontology (NCCO)~\cite{schriml2012disease,robinson2008human,he2014oae,de2010chemical,lin2020cto,kronk2020development,geifman2011towards,rogier2021using,lin2018cancer,mohammed2012building,ninot2018definition}.
 Regular expressions (ReGeX) and heuristics like POS tag cues were used to capture recurring class-specific patterns otherwise not captured by standardized terminologies.
 The hand-coded dictionaries were designed using the official websites listing patient reported outcome (PROMs) questionnaires~\footnote{https://www.thoracic.org/members/assemblies/assemblies/bshsr/patient-outcome/} and PROMs~\footnote{https://www.safetyandquality.gov.au/our-work/indicators-measurement-and-reporting/patient-reported-outcomes/proms-lists}.
 Vocabularies are structured, standardized data sources that do not capture various writing variations from clinical literature and custom-built ReGeX are restricted by either task or even entity type~\cite{ratner2017snorkel,safranchik2020weakly}.
 Therefore, we used distant supervision dictionaries created from the structured fields of clinicaltrials.gov (CTO) as described by~\cite{dhrangadhariya2022distant}.
 Principal investigators of the clinical study manually enter data in CTO, thereby incorporating large-scale writing variations.  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 %
 % \begin{table}[!ht]
 %     \centering
@@ -487,7 +526,14 @@ It has to be noticed that weak supervision outperforms full supervision on the r
 Label model improved the average performance by 2.74\% (0.17\%-5.83\%) in comparison to majority voting.
 However, PubMedBERT did not guarantee improved performance across the targets leading to performance drops between 0.4 - 2.56\%.
 Though the weakly-supervised PubMedBERT models did not always improve the performance compared to their label model counterparts, they had the best F1 score for the each target class without any labelled data.
-Majority voting has higher recall in comparison to precision for obvious reasons. %Anjani: Recall vs. Precision: a debate in PICO extraction.
+Majority voting has higher recall in comparison to precision~\ref{fig:precRecall}. %Anjani: Recall vs. Precision: a debate in PICO extraction.
+
+\begin{figure}
+    \centering
+    \includegraphics{figures/precRecall.pdf}
+    \caption{Precision and recall across I. Majority vote models and II. Label models}
+    \label{fig:precRecall}
+\end{figure}
 
 \paragraph{LF tiers}
 Adding non-UMLS LFs increases performance for the intervention target on an average of 4.48\%, but the other classes see a reduced average F1 performance by 0.36\% and 0.64\% for the participants and outcomes targets. 
