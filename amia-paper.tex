@@ -301,34 +301,34 @@ We used the 2021AB-full release of UMLS Metathesaurus English subset dump with 2
 After removing non-English and zoonotic source vocabularies as well as sources containing fewer than 500 terms, we remained with 127 vocabularies~\cite{humphreys1998unified}.
 Terms in the selected vocabularies were preprocessed by removing stopwords, numbers, punctuation's and were lower-cased using Smart lower casing to preserve abbreviations.
 Non-UMLS vocabularies are detailed in the Table~\ref{tab:source2targets}~\cite{schriml2012disease,robinson2008human,he2014oae,de2010chemical,lin2020cto,kronk2020development,geifman2011towards,rogier2021using,lin2018cancer,mohammed2012building,ninot2018definition}.
-%Additional vocabularies included disease ontology (DO), Human Phenotype Ontology (HPO), Ontology of adverse events (OAE), Chemical entities of biological interest (ChEBI),  comparative toxicogenomics database (CTD) Chemical and Disease subclasses, Clinical Trials Ontology (NDD-CTO), Gender, Sex, and Sexual Orientation Ontology (GSSO), Chemotherapy Toxicities Ontology (ONTOTOX), Cancer Care: Treatment Outcomes Ontology (CCTOO), symptoms ontology (SYMP), Non-pharmacological interventions ontology (NPI), Nursing Care Coordination Ontology (NCCO)~\cite{schriml2012disease,robinson2008human,he2014oae,de2010chemical,lin2020cto,kronk2020development,geifman2011towards,rogier2021using,lin2018cancer,mohammed2012building,ninot2018definition}.
+Additional vocabularies included disease ontology (DO), Human Phenotype Ontology (HPO), Ontology of adverse events (OAE), Chemical entities of biological interest (ChEBI),  comparative toxicogenomics database (CTD) Chemical and Disease subclasses, Clinical Trials Ontology (NDD-CTO), Gender, Sex, and Sexual Orientation Ontology (GSSO), Chemotherapy Toxicities Ontology (ONTOTOX), Cancer Care: Treatment Outcomes Ontology (CCTOO), symptoms ontology (SYMP), Non-pharmacological interventions ontology (NPI), Nursing Care Coordination Ontology (NCCO)~\cite{schriml2012disease,robinson2008human,he2014oae,de2010chemical,lin2020cto,kronk2020development,geifman2011towards,rogier2021using,lin2018cancer,mohammed2012building,ninot2018definition}.
 Regular expressions (ReGeX) and heuristics like POS tag cues were used to capture recurring class-specific patterns otherwise not captured by standardized terminologies.
 The hand-coded dictionaries were designed using the official websites listing patient reported outcome (PROMs) questionnaires~\footnote{https://www.thoracic.org/members/assemblies/assemblies/bshsr/patient-outcome/} and PROMs~\footnote{https://www.safetyandquality.gov.au/our-work/indicators-measurement-and-reporting/patient-reported-outcomes/proms-lists}.
 Vocabularies are structured, standardized data sources that do not capture various writing variations from clinical literature and custom-built ReGeX are restricted by either task or even entity type~\cite{ratner2017snorkel,safranchik2020weakly}.
 Therefore, we used distant supervision dictionaries created from the structured fields of clinicaltrials.gov (CTO) as described by~\cite{dhrangadhariya2022distant}.
 Principal investigators of the clinical study manually enter data in CTO, thereby incorporating large-scale writing variations.  
 %
-\begin{table}[!ht]
-    \centering
-    \begin{tabular}{|l|l|}
-    \hline
-        Ontology & target and subcategory \\ 
-    \hline
-        Disease Ontology DO & P - Condition \\ 
-        Human Phenotype Ontology HPO & P - Condition \\ 
-        Ontology of adverse events OAE & O - Adverse reactions \\ 
-        Chemical entities of biological interest ChEBI & I - Pharma / Drugs \\ 
-        Comparative toxicogenomics database - Disease CTD - D & P - Condition \\ 
-        Comparative toxicogenomics database - Chemicals CTD - C & I - Pharma / Drugs \\ 
-        Gender, Sex, and Sexual Orientation Ontology GSSO & P - Gender, Sex \\ 
-        Chemotherapy Toxicities Ontology ONTOTOX & O - Adverse reactions \\ 
-        Cancer Care: Treatment Outcomes Ontology CCTOO & O - All \\ 
-        Symptoms Ontology SYMP & P - Condition \\ 
-        Non-pharmacological interventions ontology NPI & I - Non-pharma / non-drug \\ 
-        Nursing Care Coordination Ontology NCCO & I - Non-pharma / non-drug \\ \hline
-    \end{tabular}
-    \caption{\label{tab:source2targets} List of non-UMLS ontology sources chosen based on their mapping to the respective target subclasses.}
-\end{table}
+% \begin{table}[!ht]
+%     \centering
+%     \begin{tabular}{|l|l|}
+%     \hline
+%         Ontology & target and subcategory \\ 
+%     \hline
+%         Disease Ontology DO & P - Condition \\ 
+%         Human Phenotype Ontology HPO & P - Condition \\ 
+%         Ontology of adverse events OAE & O - Adverse reactions \\ 
+%         Chemical entities of biological interest ChEBI & I - Pharma / Drugs \\ 
+%         Comparative toxicogenomics database - Disease CTD - D & P - Condition \\ 
+%         Comparative toxicogenomics database - Chemicals CTD - C & I - Pharma / Drugs \\ 
+%         Gender, Sex, and Sexual Orientation Ontology GSSO & P - Gender, Sex \\ 
+%         Chemotherapy Toxicities Ontology ONTOTOX & O - Adverse reactions \\ 
+%         Cancer Care: Treatment Outcomes Ontology CCTOO & O - All \\ 
+%         Symptoms Ontology SYMP & P - Condition \\ 
+%         Non-pharmacological interventions ontology NPI & I - Non-pharma / non-drug \\ 
+%         Nursing Care Coordination Ontology NCCO & I - Non-pharma / non-drug \\ \hline
+%     \end{tabular}
+%     \caption{\label{tab:source2targets} List of non-UMLS ontology sources chosen based on their mapping to the respective target subclasses.}
+% \end{table}
 %
 %
 %
@@ -383,7 +383,7 @@ To do this, label model trains a generative model $ \bm{P} ( \Lambda , Y )$ to e
 Even though the ground truth is not observable to estimate accuracies, they can be estimated using observed agreements and disagreements rates between labelling function pairs $ \lambda_{i}, \lambda_{j}$ in $\Lambda$.
 Generative modeling results ultimately results into token label probablities $\bm{\hat{Y}}$ for label classes $ \{ 0, 1\} $.
 GridSearch was used to fine tune the parameters of the label model using the hand-labelled validation set from the EBM-PICO.
-The parameters are listed section Experimental details section in the supplementary material.
+The parameters are listed in the Experimental details section of the supplementary material.
 Once we have the pseudo-labels generated by majority voting or the label model, these could be used to train an end model.
 %
 \begin{equation}
@@ -478,16 +478,21 @@ Table~\ref{tab:res} reports macro-averaged F1 for the experiments detailed in th
 %
 %
 %
-\paragraph{Error rectification} Error rectification leads to F1 performance improvement between 2.12\%-9.52\% for all the targets, especially for the participant class where both the LM and the weakly-supervised F1 overtake the full supervision score by 1.71\%. It has to be noticed that weak supervision outperforms the state-of-the-art on the rectified benchmark only for the participant entity.
+\paragraph{Error rectification}
+Error rectification leads to an overall average F1 improvement of 4.88\% across the experiments using weakly labelled training set with highest average improvement of 8.25\% (7.15\%-9.52\%) for Participants and 2.68\% (-0.11\%-4.28\%) for Outcomes. 
+For the participant class, both the LM and the WS F1 scores overtake the full supervision score by 1.71\%.
+It has to be noticed that weak supervision outperforms full supervision on the rectified benchmark only for the participant entity.
 
-\paragraph{MV vs. LM vs. WS} Label model improved the performance between 0.34\%-5.85\% in comparison to majority voting.
-However, PubMedBERT did not consistently improve the performance leading to a performance drop between 0.94 - 2.56\%.
-Though the weakly-supervised PubMedBERT models did not always improve the performance compared to their label model counterparts, they led to the best F1 score for the each target class.
-Majority voting has higher recall in comparison to precision for obvious reasons. Recall vs. Precision: a debate in PICO extraction.
+\paragraph{MV vs. LM vs. WS}
+Label model improved the average performance by 2.74\% (0.17\%-5.83\%) in comparison to majority voting.
+However, PubMedBERT did not guarantee improved performance across the targets leading to performance drops between 0.4 - 2.56\%.
+Though the weakly-supervised PubMedBERT models did not always improve the performance compared to their label model counterparts, they had the best F1 score for the each target class without any labelled data.
+Majority voting has higher recall in comparison to precision for obvious reasons. %Anjani: Recall vs. Precision: a debate in PICO extraction.
 
-\paragraph{LF tiers} Adding non-UMLS ontologies increased performance for the intervention target between 2.81\%-8.04\% but was detrimental (-1.18\%-0.04\%) to the performance across the experiments and tiers for the participant target.
-For all the target classes and tiers, adding task-specific rules boosts F1 between 1.20 to 14.14\%.
-Lowest overall improvements were seen in Outcomes target and highest in the intervention target.
+\paragraph{LF tiers}
+Adding non-UMLS LFs increases performance for the intervention target on an average of 4.48\%, but the other classes see a reduced average F1 performance by 0.36\% and 0.64\% for the participants and outcomes targets. 
+Adding task-specific LF's increased the average performance by a negligible 0.98\%.
+Heuristics improved performance for weakly supervised intervention extraction by about 11.1\%.
 %
 %
 \begin{table}[!ht]
@@ -501,15 +506,15 @@ Lowest overall improvements were seen in Outcomes target and highest in the inte
         Target & LF source & \#LF & Fine & Corr & Fine & Corr & Fine & Corr & Fine & Corr \\  \hline
         P & UMLS &  & 62.13 & 69.28 & 64.28 & 72.22 & 65.32 & 73.49 & 72.99 & 74.41 \\
          & +Ontology &  & 61.72 & 69.32 & 64.23 & 72.18 & 64.76 & 72.31 &  &  \\ 
-         & +Rules &  & 63.08 & 72.06 & 65.79 & 75.31 & 66.73 & \textbf{76.12} &  &  \\ \hline
+         & +Rules &  & 63.08 & 72.06 & 65.79 & 75.31 & 66.73 & \underline{\textbf{76.12}} &  &  \\ \hline
         I/C & UMLS &  & 59.7 & 63.94 & 60.11 & 64.28 & 59.17 & 61.72 & \textbf{83.37} & 81.06 \\ 
          & +Ontology &  & 62.14 & 66.92 & 62.83 & 67.09 & 67.06 & 69.76 & &  \\
-         & +Rules &  & 58.51 & 63.45 & 64.34 & 68.17 & 70.27 & 72.39 &  &  \\ \hline
-        O & UMLS &  & 55.79 & 59.85 & 58.76 & 62.36 & 60.83 & 63.55 & \textbf{81.2} & 80.53 \\
+         & +Rules &  & 58.51 & 63.45 & 64.34 & 68.17 & 70.27 & \underline{72.39} &  &  \\ \hline
+        O & UMLS &  & 55.79 & 59.85 & 58.76 & 62.36 & 60.83 & \underline{63.55} & \textbf{81.2} & 80.53 \\
          & +Ontology &  & 56.006 & 59.64 & 59.27 & 62.34 & 59.55 & 60.46 &  &  \\ 
          & +Rules &  & 55.08 & 59.36 & 60.9 & 62.87 & 60.5 & 60.39 &  &  \\ \hline
     \end{tabular}
-    \caption{\label{tab:res} Macro-averaged F1 scores for UMLS, UMLS+other and rule-based weak supervision.}
+    \caption{\label{tab:res} Macro-averaged F1 scores for UMLS, UMLS+other and rule-based weak supervision. Underlined values show the best score without manually labelled training data.}
 \end{table}
 
 %\paragraph{UMLS partitions} To investigate the optimal number of UMLS labelling functions required, we used the same methodology as in Trove holding all non-UMLS labeling functions fixed across all ablation tiers and computed performance across partitions = $s = ( 1, 2, \dotso , 127 )$ partitions of the UMLS by terminology obtaining similar results.
