@@ -164,17 +164,14 @@ Supervised machine learning can help fully automate it, but a lack of large anno
 The largest currently available PICO corpus is manually annotated, which is an approach that is often too expensive for the scientific community to apply.
 Depending on the specific SR question, PICO criteria are extended to PICOS (S-Study type or design), PICOC (C-Context), and PICOT (T-timeframe), meaning the static hand-labelled corpora need to undergo costly re-annotation as per the downstream requirements.
 We aim to test the feasibility of designing a weak supervision system to extract these entities without hand-labelled data.
-
 \textbf{Methodology:}
 We use multiple medical and non-medical ontologies and expert-generated rules to obtain labels for PICO entities.
 These labels were aggregated using simple majority voting and generative modelling.
 The resulting programmatic labels were used as weak signals to train a weakly-supervised discriminative model and observe performance changes.
 Additionally, we explore mistakes in the current PICO gold standard that could have led to inaccurate evaluation of several automation methods.
-
 \textbf{Results:}
 We present Weak-PICO, a weakly-supervised PICO entity recognition approach using medical ontologies, non-medical ontologies and various expert-generated rules and dictionaries.
 Unlike manual annotation, Weak-PICO does not use hand-labelled data and is quickly adaptable and extensible to other entities.
-
 \textbf{Conclusion:}
 Weak supervision using weak-PICO for PICO entity recognition has encouraging results and readily extends to more clinical entities.
 
