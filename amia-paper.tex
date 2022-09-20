@@ -241,7 +241,7 @@ The birds-eye view of our approach is shown in the Figure~\ref{fig:approach}.
 \begin{figure}[ht]
 \centering
 \includegraphics[width=0.98\textwidth]{figures/approach.pdf}
-\caption{Weak PICO entity extraction approach: I) Multi-class labels in the EBM-PICO benchmark are binarized. II) Low-cost UMLS vocabularies are repurposed as labelling sources and experts design rules as high-cost labelling courses. III) Labelling functions map the training sequences to class labels using labelling sources resulting in an $m \times n$ label matrix. IV-V) Label matrix is used to train a generative model that outputs probabilistic labels that a downstream transformer models can use for entity recognition.}
+\caption{Weak PICO entity extraction approach: I) Multi-class labels in the EBM-PICO benchmark are binarized. II) Low-cost UMLS vocabularies are repurposed as labelling sources and experts design rules as high-cost labelling courses. III) Labelling functions map the training sequences to class labels using labelling sources resulting in an $m \times n$ label matrix. IV-V) The label matrix is used to train a generative model that outputs probabilistic labels that a downstream transformer model can use for entity recognition.}
 \label{fig:approach}
 \end{figure}
 %
@@ -290,7 +290,7 @@ Multi-class fine-grained PICO annotations were binarized, i.e. a token label was
 %==============================
 %
 Automatic PICO entity labelling is a classical binary sequence labelling problem whereby a function maps an input sequence of n text tokens, $ \bm{X} = (x_{1}, x_{2}, \dotso , x_{n} )$ to output sequence $\bm{Y} = (y_{1}, y_{2}, \dotso , y_{n} )$, where $y_{i} \subset y; y = \{1,0\} $ is the label for token $x_{i}$.
-In weak supervision, $\bm{Y}$ is latent and should be estimated by aggregating several weak labellers of variable accuracy.
+In weak supervision, $\bm{Y}$ is latent and should be estimated by aggregating several weak labelers of variable accuracy.
 The estimates $\bm{\hat{Y}}$ of $\bm{Y}$ are assigned as probabilistic token labels of $\bm{X}$ leading to a weakly labelled dataset that can be used to train downstream ML models.
 %
 %==============================
@@ -299,12 +299,12 @@ The estimates $\bm{\hat{Y}}$ of $\bm{Y}$ are assigned as probabilistic token lab
 %
 We used the 2021AB-full release of UMLS Metathesaurus English subset dump with 223 vocabularies.
 After removing non-English and zoonotic source vocabularies as well as sources containing fewer than 500 terms, we remained with 127 vocabularies~\cite{humphreys1998unified}.
-Terms in the selected vocabularies were preprocessed by removing stopwords, numbers, punctuation's and were lower-cased using Smart lower casing to preserve abbreviations.
-Non-UMLS vocabularies are detailed in the %Table~\ref{tab:source2targets}~\cite{schriml2012disease,robinson2008human,he2014oae,de2010chemical,lin2020cto,kronk2020development,geifman2011towards,rogier2021using,lin2018cancer,mohammed2012building,ninot2018definition}.
+Terms in the selected vocabularies were preprocessed by removing stopwords, numbers, punctuations and were lower-cased using Smart lower casing to preserve abbreviations.
+%Non-UMLS vocabularies are detailed in the Table~\ref{tab:source2targets}~\cite{schriml2012disease,robinson2008human,he2014oae,de2010chemical,lin2020cto,kronk2020development,geifman2011towards,rogier2021using,lin2018cancer,mohammed2012building,ninot2018definition}.
 Additional vocabularies included disease ontology (DO), Human Phenotype Ontology (HPO), Ontology of adverse events (OAE), Chemical entities of biological interest (ChEBI),  comparative toxicogenomics database (CTD) Chemical and Disease subclasses, Clinical Trials Ontology (NDD-CTO), Gender, Sex, and Sexual Orientation Ontology (GSSO), Chemotherapy Toxicities Ontology (ONTOTOX), Cancer Care: Treatment Outcomes Ontology (CCTOO), symptoms ontology (SYMP), Non-pharmacological interventions ontology (NPI), Nursing Care Coordination Ontology (NCCO)~\cite{schriml2012disease,robinson2008human,he2014oae,de2010chemical,lin2020cto,kronk2020development,geifman2011towards,rogier2021using,lin2018cancer,mohammed2012building,ninot2018definition}.
 Regular expressions (ReGeX) and heuristics like POS tag cues were used to capture recurring class-specific patterns otherwise not captured by standardized terminologies.
 The hand-coded dictionaries were designed using the official websites listing patient reported outcome (PROMs) questionnaires~\footnote{https://www.thoracic.org/members/assemblies/assemblies/bshsr/patient-outcome/} and PROMs~\footnote{https://www.safetyandquality.gov.au/our-work/indicators-measurement-and-reporting/patient-reported-outcomes/proms-lists}.
-Vocabularies are structured, standardized data sources that do not capture various writing variations from clinical literature and custom-built ReGeX are restricted by either task or even entity type~\cite{ratner2017snorkel,safranchik2020weakly}.
+Vocabularies are structured, standardized data sources that do not capture writing variations from clinical literature and custom-built ReGeX are restricted by either task or even entity type~\cite{ratner2017snorkel,safranchik2020weakly}.
 Therefore, we used distant supervision dictionaries created from the structured fields of clinicaltrials.gov (CTO) as described by~\cite{dhrangadhariya2022distant}.
 Principal investigators of the clinical study manually enter data in CTO, thereby incorporating large-scale writing variations.  
 
@@ -491,7 +491,7 @@ Majority voting has higher recall across experiments in comparison to precision 
 \begin{figure}
     \centering
     \includegraphics{figures/precRecall.pdf}
-    \caption{Precision and recall across I. Majority vote models and II. Label models}
+    \caption{Precision and recall across the experiments for the I. Majority vote models and II. Label models}
     \label{fig:precRecall}
 \end{figure}
 
@@ -524,9 +524,16 @@ Heuristics improved performance for interventions LM by 11.1\%.
     \caption{\label{tab:res} Macro-averaged F1 scores for UMLS, UMLS+other and rule-based weak supervision. Underlined values show the best score without manually labelled training data.}
 \end{table}
 
-%\paragraph{UMLS partitions} To investigate the optimal number of UMLS labelling functions required, we used the same methodology as in Trove holding all non-UMLS labeling functions fixed across all ablation tiers and computed performance across partitions = $s = ( 1, 2, \dotso , 127 )$ partitions of the UMLS by terminology obtaining similar results.
-%The optimal number of partitions mainly lied between two and eight.
-% Anjani: make a figure for it.
+\paragraph{UMLS partitions}
+To investigate the optimal number of UMLS labelling functions required, we used the same methodology as in Trove holding all non-UMLS and heuristics LFs fixed across all ablation tiers and computed performance across partitions = $s = ( 1, 2, \dotso , 127 )$ partitions of the UMLS by terminology.
+We did notice an increasing performance for the first few partitions but did not see the performance drop with a further increase in the partition number in contrast to Trove (refer Figure~\ref{fig:partitions}).
+%
+\begin{figure}
+    \centering
+    \includegraphics{figures/partitions.pdf}
+    \caption{The relationship between the number of UMLS partitions and the macro-averaged F1 score for i) Participants target, ii) Interventions target and iii) Outcomes target.}
+    \label{fig:partitions}
+\end{figure}
 %
 %
 %
