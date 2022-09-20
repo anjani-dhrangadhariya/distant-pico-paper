@@ -528,7 +528,7 @@ Heuristics improved performance for interventions LM by 11.1\%.
 To investigate the optimal number of UMLS labelling functions required, we used the same methodology as in Trove holding all non-UMLS and heuristics LFs fixed across all ablation tiers and computed performance across partitions = $s = ( 1, 2, \dotso , 127 )$ partitions of the UMLS by terminology.
 We did notice an increasing performance for the first few partitions but did not see the performance drop with a further increase in the partition number in contrast to Trove (refer Figure~\ref{fig:partitions}).
 %
-\begin{figure}
+\begin{figure} %Anjani: Improve the figure quality
     \centering
     \includegraphics{figures/partitions.pdf}
     \caption{The relationship between the number of UMLS partitions and the macro-averaged F1 score for i) Participants target, ii) Interventions target and iii) Outcomes target.}
