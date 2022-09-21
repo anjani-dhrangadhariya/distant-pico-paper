@@ -518,18 +518,18 @@ Notice that LM outperforms MV on training performance across the targets and exp
 \section{DISCUSSION}\label{discussion}
 %==============================
 %
-Our experiments show that the weak-PICO approach to weakly supervised PICO extraction shows promising results for this challenging entity recognition task using medical and non-medical ontologies and expert-generated rules.
+Our experiments show that weak-PICO approach to weakly supervised PICO extraction shows promising results for this challenging entity recognition task.
 However, it is not straightforward to design labelling functions corresponding to the PICO targets, given their fuzzy nature and errors in the EBM-PICO gold test set.
-It is easy to re-purpose the low-cost ontologies but challenging to map them to our fuzzy targets, which is shown by a decreased F1 performance after adding non-UMLS ontologies.
-Task-specific ReGeX and heuristics were developed upon inspection of the most frequent terms in the EBM-PICO validation set annotations.
-The same procedure was followed across the targets, but the performance boost using these LFs was only observed in the the participants and interventions target and was detrimental to the outcomes.
+It is easy to re-purpose the low-cost ontologies but challenging to map them to our fuzzy targets, which is shown by a decreased or stagnant F1 after adding non-UMLS ontologies.
+Task-specific ReGeX and heuristics were developed upon inspection of the most frequent terms in the EBM-PICO validation set.
+The same procedure was followed across the targets, but the performance boost using these LFs was only observed in the the participants and interventions and was detrimental to the outcomes.
 
 
 Even though LM improves performance compared to MV, MV has a higher recall across experiments indicating a good corpus coverage of the labelling functions.
-While some studies press on PICO extraction being a recall-oriented task, this is debated in practice for entity extraction.
-In practice, high recall might lead to an accompanying high false positive rate, leading to the reviewers needing to manually weed out false positive noise than reading and annotating the abstract with the entities~\cite{liu2021sent2span}. 
-The label model only considers the information encoded into the weak sources to label phrases from the training text but does not consider the contextual information around the phrases.
-Transformers consider the contextual information and should generalize beyond the labelling functions in theory.
+While some studies press on PICO extraction being a recall-oriented task, this is debated in practice.
+In practice, high recall might lead to an accompanying high false positive (FP) rate, leading to the reviewers spending more time to manually weed out FP noise than reading and annotating the abstract with the entities~\cite{liu2021sent2span}. 
+LM only considers the information encoded into the weak sources to label phrases from the training text but does not consider the contextual information around the phrases.
+Transformers consider the contextual information and should generalize beyond the label models in theory.
 It is empirically confirmed by the performance boost that PubMedBERT brings on top of the label model for some instances, but the WS outcomes extraction results refute it.
 %
 %
@@ -540,7 +540,6 @@ It is empirically confirmed by the performance boost that PubMedBERT brings on t
 %
 We expound on the error categories and provide examples here.
 An error falls under \textit{repeated mention} if one instance of an entity is marked, but another identical instance of the same entity in the same context is not marked within the abstract. 
-%This error category is the largest.
 The reason could be the EBM-PICO guidelines flaw where the annotators of fine-grained entity annotation were confined to only annotate within the longer span-level annotation.
 Hence any annotation error missed by the coarse-grained annotators was continued by the fine-grained annotators.
 
