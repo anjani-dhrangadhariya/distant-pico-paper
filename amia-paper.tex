@@ -424,7 +424,7 @@ We designed $m$ labelling functions $\lambda^{m}$ corresponding to these guideli
 %
 %
 We rectified the errors in EBM-PICO validation set and categorized them for each of the PIO classes as shown in the Table~\ref{tab:errordist}.
-Of 12,960 (1\%) training tokens evaluated to gauge the errors, 4.4\% of the Intervention class tokens, 5.4\% of the Participant class tokens and 4.9\% of the Outcome class tokens were errors.
+Of 12,960 (1\%) training tokens evaluated to gauge the errors, 18.30\% of the Intervention class tokens, 23.39\% of the Participant class tokens and 20.21\% of the Outcome class tokens were errors.
 The error analysis was used to correct fine-grained annotation errors in the EBM-PICO test set and both the EBM-PICO and its updated version were used for evaluation.
 Table~\ref{tab:res} reports macro-averaged F1 for the experiments detailed in the Experiments section in comparison to the fully-supervised approach.
 %
@@ -433,15 +433,15 @@ Table~\ref{tab:res} reports macro-averaged F1 for the experiments detailed in th
     \begin{tabular}{|l|r|r|r|}
     \hline
         Error category & Participant & Intervention & Outcome \\ \hline
-        Repeat mention unmarked & 213 & 220 & 207 \\ 
+        Repeat mention unmarked & 213 & 227 & 207 \\ 
         Remain unannotated & 47 & 59 & 71 \\ 
         Inconsistency & 46 & 18 & 85 \\ 
         Punctuation/article & 15 & 23 & 48 \\ 
         Conjunction connector & 30 & 36 & 57 \\ 
         Junk & 53 & 79 & 30 \\ 
         Extra information & 80 & 146 & 58 \\ 
-        Generic mention & 90 & 120 & 85 \\ \hline
-        Total errors & 574 & 701 & 641 \\ \hline
+        Generic mention & 70 & 120 & 85 \\ \hline
+        Total errors & 554 & 708 & 641 \\ \hline
     \end{tabular}
     \caption{\label{tab:errordist} Error distribution and error categories in the analysed tokens (1\%) of EBM-PICO corpus.}
 \end{table}
@@ -582,7 +582,7 @@ These errors and inconsistencies in the EBM-PICO gold test (and training) set ca
 A possible reason behind these inconsistencies in the EBM-PICO corpus could be that the annotators had clinical background but lacked an informatics background.
 This situation could undermine the importance of semantic consistency required for annotating such corpora.
 Hiring annotators with the combined knowledge of clinical and informatics domains might improve the manual annotation quality.
-The errors for PIO categories were rectified, and the updated dataset is available on Zenodo.
+The errors for PIO categories were rectified, and the updated dataset will be made available on Zenodo.
 %
 %
 %
