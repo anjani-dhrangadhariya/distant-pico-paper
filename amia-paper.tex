@@ -19,16 +19,35 @@ maxbibnames=3,
 % Supresses In in the bibliographics
 \renewbibmacro{in:}{}
 
-% Remove () from around the (year) in bibliography
+\renewbibmacro*{journal+issuetitle}{%
+  \usebibmacro{journal}%
+  \setunit*{\addspace}%
+  \iffieldundef{series}
+    {}
+    {\newunit
+     \printfield{series}%
+     \setunit{\addspace}}%
+  \setunit{\addspace}%
+  \usebibmacro{issue+date}%
+  \setunit{\addcolon\space}%
+  \usebibmacro{issue}%
+  \setunit{\addsemicolon}%
+  \usebibmacro{volume+number+eid}%
+  \newunit}
+
+\DeclareFieldFormat[article,periodical]{number}{\mkbibparens{#1}}
+\renewbibmacro*{volume+number+eid}{%
+  \printfield{volume}%
+  \printfield{number}%
+  \setunit{\addcomma\space}%
+  \printfield{eid}}
+
 \renewbibmacro*{issue+date}{%
-  \setunit{\addcomma\space}% NEW
-%  \printtext[parens]{% DELETED
-    \iffieldundef{issue}
-      {\usebibmacro{date}}
-      {\printfield{issue}%
-       \setunit*{}%
-%       \usebibmacro{date}}}% DELETED
-       \usebibmacro{date}}% NEW
+  \iffieldundef{issue}
+    {\usebibmacro{date}}
+    {\printfield{issue}%
+     \setunit*{\addspace}%
+     \usebibmacro{date}}%
   \newunit}
   
  
@@ -457,7 +476,7 @@ Table~\ref{tab:res} reports macro-averaged F1 for the experiments detailed in th
     \hline
         Error category & Participant & Intervention & Outcome \\ \hline
         Repeat mention unmarked & 213 & 227 & 207 \\ 
-        Remain unannotated & 47 & 59 & 71 \\ 
+        Remain un-annotated & 47 & 59 & 71 \\ 
         Inconsistency & 46 & 18 & 85 \\ 
         Punctuation/article & 15 & 23 & 48 \\ 
         Conjunction connector & 30 & 36 & 57 \\ 
@@ -492,16 +511,16 @@ Table~\ref{tab:res} reports macro-averaged F1 for the experiments detailed in th
 \end{table}
 %
 \paragraph{\textit{error rectification}}
-Error rectification leads to an overall average F1 improvement of 4.88\% across the experiments using weakly labelled training set with highest average improvement of 8.25\% (7.15\%-9.52\%) for Participants and 2.68\% (-0.11\%-4.28\%) for Outcomes. 
-For the participant class, both the LM and the WS F1 scores overtake the full supervision score by 0.90\% - 1.71\%.
+Error rectification leads to an overall average F1 improvement of 4.88\% across the experiments using a weakly labelled training set with the highest average improvement of 8.25\% (7.15\%-9.52\%) for Participants and 2.68\% (-0.11\%-4.28\%) for Outcomes. 
+For the Participant class, both the LM and the WS F1 scores increase the full supervision score by 0.90\% - 1.71\%.
 It has to be noticed that weak supervision outperforms full supervision on the rectified benchmark only for the participant entity.
 
 \paragraph{\textit{MV vs. LM vs. WS}}
-Label model improved the average performance by 2.74\% (0.17\%-5.83\%) in comparison to majority voting.
+The label model improved the average performance by 2.74\% (0.17\%-5.83\%) in comparison to majority voting.
 However, PubMedBERT did not guarantee improved performance across the targets leading to performance drops between 0.4 - 2.56\%.
-Though the weakly-supervised PubMedBERT models did not always improve the performance compared to their label model counterparts, they had the best F1 score for the each target class.
-Majority voting had higher recall across experiments in comparison to precision while LM focused on precision (refer Figure~\ref{fig:precRecall}).
-
+Though the weakly-supervised PubMedBERT models did not always improve the performance compared to their label model counterparts, they had the best F1 score for each target class.
+Majority voting had higher recall across experiments in comparison to precision while LM focused on precision (see Figure~\ref{fig:precRecall}).
+%
 \begin{figure}
     \centering
     \includegraphics{figures/precRecall.pdf}
@@ -513,8 +532,6 @@ Majority voting had higher recall across experiments in comparison to precision 
 Adding non-UMLS LFs to the UMLS tier increases performance for the intervention target by an average of 4.48\%, but leads to performance drops for the participants and outcomes targets by 0.36\% and 0.64\% respectively.
 Adding task-specific LF's increased the overall F1 by a negligible 0.98\%.
 Heuristics improved performance for interventions LM by 11.1\%.
-%
-%
 %
 \paragraph{\textit{UMLS partitions}}
 To investigate the optimal number of UMLS labelling functions required, we used the same methodology as in Trove holding all non-UMLS and heuristics LFs fixed across all ablation tiers and computed performance across partitions = $s = ( 1, 2, \dotso , 127 )$ partitions of the UMLS by terminology.
