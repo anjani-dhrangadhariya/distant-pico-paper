@@ -145,7 +145,7 @@
 }
 \affil[1]{Informatics Institute, University of Applied Sciences Western Switzerland (HES-SO), Sierre, Switzerland}
 \affil[2]{University of Geneva (UNIGE), Geneva, Switzerland}
-\affil[*]{Corresponding author: Anjani Dhrangadhariya, Informatics Institute, University of Applied Sciences Western Switzerland (HES-SO), Sierre, Switzerland; anjani.dhrangadhariya@hevs.ch}
+\affil[*]{Corresponding author: Anjani Dhrangadhariya, Rue de Technopôle 3, Informatics Institute, University of Applied Sciences Western Switzerland (HES-SO), 3960 Sierre, Switzerland; anjani.dhrangadhariya@hevs.ch; +41 58 606 90 03}
 %==============================
 \begin{document}
 \maketitle
@@ -153,6 +153,7 @@
 %==============================
 \doublespacing
 %==============================
+\clearpage
 \section{ABSTRACT}
 \label{abstract}
 %==============================
@@ -168,7 +169,7 @@ We aim to test the feasibility of designing a weak supervision system to extract
 We use multiple medical and non-medical ontologies and expert-generated rules to obtain labels for PICO entities.
 These labels were aggregated using simple majority voting and generative modelling.
 The resulting programmatic labels were used as weak signals to train a weakly-supervised discriminative model and observe performance changes.
-Additionally, we explore mistakes in the current PICO gold standard that could have led to inaccurate evaluation of several automation methods.
+Additionally, we explore mistakes in the currently available PICO test set that could have led to inaccurate evaluation of several automation methods.
 \textbf{Results:}
 We present Weak-PICO, a weakly-supervised PICO entity recognition approach using medical ontologies, non-medical ontologies and various expert-generated rules and dictionaries.
 Unlike manual annotation, Weak-PICO does not use hand-labelled data and is quickly adaptable and extensible to other entities.
@@ -294,10 +295,9 @@ The estimates $\bm{\hat{Y}}$ of $\bm{Y}$ are assigned as probabilistic token lab
 \subsection{Labelling sources}\label{lss}
 %==============================
 %
-We used the 2021AB-full release of UMLS Metathesaurus English subset with 223 vocabularies.
-After removing non-English and zoonotic vocabularies as well as the vocabularies containing fewer than 500 terms, we remained with 127 vocabularies~\cite{humphreys1998unified}.
+We used the 2021AB-full release of the UMLS Metathesaurus English subset with 223 vocabularies.
+After removing non-English and zoonotic vocabularies and the vocabularies containing fewer than 500 terms, we remained with 127 vocabularies~\cite{humphreys1998unified}.
 Terms in the selected vocabularies were preprocessed by removing stopwords, numbers, and punctuation.
-%Non-UMLS vocabularies are detailed in the Table~\ref{tab:source2targets}~\cite{schriml2012disease,robinson2008human,he2014oae,de2010chemical,lin2020cto,kronk2020development,geifman2011towards,rogier2021using,lin2018cancer,mohammed2012building,ninot2018definition}.
 Additional vocabularies included disease ontology (DO), Human Phenotype Ontology (HPO), Ontology of adverse events (OAE), Chemical entities of biological interest (ChEBI),  comparative toxicogenomics database (CTD) Chemical and Disease subclasses, Clinical Trials Ontology (NDD-CTO), Gender, Sex, and Sexual Orientation Ontology (GSSO), Chemotherapy Toxicities Ontology (ONTOTOX), Cancer Care: Treatment Outcomes Ontology (CCTOO), symptoms ontology (SYMP), Non-pharmacological interventions ontology (NPI), Nursing Care Coordination Ontology (NCCO)~\cite{schriml2012disease,robinson2008human,he2014oae,de2010chemical,lin2020cto,kronk2020development,geifman2011towards,rogier2021using,lin2018cancer,mohammed2012building,ninot2018definition}.
 Regular expressions (ReGeX) and heuristics like POS tag cues were used to capture recurring class-specific patterns otherwise not captured by standardized terminologies.
 The hand-coded dictionaries were designed using the official websites listing patient-reported outcome (PROMs) questionnaires~\footnote{\url{https://www.thoracic.org/members/assemblies/assemblies/bshsr/patient-outcome/}} and PROMs~\footnote{\url{https://www.safetyandquality.gov.au/our-work/indicators-measurement-and-reporting/patient-reported-outcomes/proms-lists}}.
@@ -313,14 +313,14 @@ Principal investigators of the clinical study manually enter data in CTO, thereb
 %
 In a binary token labelling task, a labelling function is a weak classifier $\lambda$ that uses domain-specific labelling sources $\bm{S}$ and a logic to emit token labels $ \widetilde{\bm{Y_{i}}}$ with labels $ \widetilde{y} \in \{-1, 0, +1\}$ for a subset of input $\bm{X_{i}}$ tokens.
 A labelling function designed for a particular target class $t \in \bm{T}$ (here; $\bm{T} \subset \{ Participant, Intervention, Outcome \} $) should output  $1$ for the positive token label, $0$ for the negative token label, and abstain ($-1$) on the tokens where it is uncertain $\lambda \mapsto \{-1, 0, +1\}$.
-We designed three labelling functions depending on the types of labelling sources.
+We designed three LF types depending on the types of labelling sources.
 The ontology or dictionary labelling functions for a target class take a dictionary of terminologies mapped to one of $y \subset \{0, +1\} $ token labels.
 Any labelling function using ontologies or dictionaries used string matching as the labelling heuristic.
 Relevant bigram word co-occurrences were used to account for fuzzy span matching from the terminologies.
 A ReGeX labelling function for a target class takes regex patterns for $\{-1, +1\}$ labels and abstains from the rest.
 A heuristic labelling function is personalized for each target class and takes a generic regex pattern and specific POS (part-of-speech) tag signals.
-Clinical studies have several abbreviations.
-Abbreviations in clinical studies are taken into account using a heuristics abbreviation identifier and the identified abbreviations were mapped to their respective target classes.
+%Clinical studies have several abbreviations.
+Abbreviations in clinical studies are considered using a heuristics abbreviation identifier, and the identified abbreviations were mapped to their respective target classes.
 Stopwords from Natural Language Tookit (NLTK)~\footnote{\url{https://www.nltk.org}}, spaCy, Gensim~\footnote{\url{https://radimrehurek.com/gensim/}}, and scikit learn~\footnote{\url{https://scikit-learn.org}} were used to initialize negative token label templates.
 %
 %==============================
