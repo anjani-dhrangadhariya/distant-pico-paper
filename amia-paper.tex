@@ -2,12 +2,36 @@
 
 %in the preamble
 %--------------------------------
-%\usepackage[
-%backend=biber,
-%style=numeric,
-%][maxbibnames=3]{biblatex}
+\usepackage[
+backend=biber,
+style=numeric,
+sorting=none,
+maxbibnames=3,
+]{biblatex}
 
-\usepackage[minbibnames=3]{biblatex}
+% supress pp. and add a semi-colon
+\DefineBibliographyStrings{english}{%
+  page             = {:\ifbibliography{}{}},
+  pages            = {:\ifbibliography{}{}},
+} 
+\renewcommand*{\ppspace}{}
+
+% Supresses In in the bibliographics
+\renewbibmacro{in:}{}
+
+% Remove () from around the (year) in bibliography
+\renewbibmacro*{issue+date}{%
+  \setunit{\addcomma\space}% NEW
+%  \printtext[parens]{% DELETED
+    \iffieldundef{issue}
+      {\usebibmacro{date}}
+      {\printfield{issue}%
+       \setunit*{}%
+%       \usebibmacro{date}}}% DELETED
+       \usebibmacro{date}}% NEW
+  \newunit}
+  
+ 
 \addbibresource{literature.bib}
 %--------------------------------
 %\usepackage[numbers]{natbib}
