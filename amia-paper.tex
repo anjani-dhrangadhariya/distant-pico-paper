@@ -2,12 +2,18 @@
 
 %in the preamble
 %--------------------------------
-\usepackage[
-backend=biber,
-style=numeric,
-]{biblatex}
+%\usepackage[
+%backend=biber,
+%style=numeric,
+%][maxbibnames=3]{biblatex}
+
+\usepackage[minbibnames=3]{biblatex}
 \addbibresource{literature.bib}
 %--------------------------------
+%\usepackage[numbers]{natbib}
+%\bibliographystyle{dcu}
+%\bibpunct{[}{]}{;}{n}{}{,}
+
 
 \usepackage[letterpaper, margin=2.54cm, top=2.54cm]{geometry}
 \usepackage{lmodern}
@@ -45,9 +51,6 @@ style=numeric,
 	\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
 
-\usepackage{lipsum} % for dummy text only REMOVE
-
-\newtheorem{exm}{Example}
 
 
 %==============================
@@ -624,6 +627,10 @@ We do not foresee any direct social consequences or ethical issues.
 %Where the bibliography will be printed
 %==============================
 \printbibliography
+%
+%\bibliography{literature}
+
+
 %==============================
 %
 %
