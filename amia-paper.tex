@@ -46,10 +46,11 @@ maxbibnames=3,
   \iffieldundef{issue}
     {\usebibmacro{date}}
     {\printfield{issue}%
-     \setunit*{\addspace}%
+     \setunit*{}%
      \usebibmacro{date}}%
   \newunit}
   
+\renewcommand*{\bibpagespunct}{}
  
 \addbibresource{literature.bib}
 %--------------------------------
