@@ -4,7 +4,7 @@
 %--------------------------------
 \usepackage[
 backend=biber,
-style=numeric,
+style=numeric-comp,
 sorting=none,
 minbibnames=3,
 ]{biblatex}
@@ -205,7 +205,7 @@ minbibnames=3,
 \doublespacing
 %==============================
 
-Word count: 3798 %Anjani TODO - Update before submission
+Word count: 3851 %Anjani TODO - Update before submission
 
 \clearpage
 \section{\textbf{ABSTRACT}}
@@ -241,21 +241,21 @@ Weak supervision using weak-PICO for PICO entity recognition has encouraging res
 %==============================
 %
 Systematic Reviews (SR) are an evidence-based practice of answering clinical questions using a transparent and quantitative approach.
-The reviewers must collect as many candidate publications as possible, identifying the relevant ones from these and integrating their results via statistical meta-analysis.
+The reviewers must collect as many candidate publications as possible, identify the relevant publications from these, and integrate their results via statistical meta-analysis.
 Filtering relevant publications from non-relevant publications with similar keywords often uses PICO (Participants, Interventions, Comparators, Outcomes) criteria. 
-A clinical study or a publication is only relevant for answering a question if it studies the selected participants, interventions (and their comparators) and outcomes.~\cite{uman2011systematic} 
-Manually analyzing PICO information from thousands of publications for a single SR often takes about 12 months of two medical experts' time.
+A clinical study or a publication is only relevant for answering a question if it studies the selected participants, interventions (and their comparators) and outcomes.\cite{uman2011systematic} 
+Manually analyzing PICO information from thousands of publications for a single SR often takes about 2-8 months of two medical experts' time.\cite{borah2017analysis}
 The process can be automated using machine learning (ML) by directly pointing the human reviewers to the correct text chunks describing PICO.
-Hand labelling corpora with PICO information requires people with combined medical and informatics skills, which is expensive and time-consuming in terms of the actual annotation process and annotator training.
+Hand labelling corpora with PICO information requires people with combined medical and informatics skills, which is expensive and time-consuming in terms of intensive annotator training and the actual annotation process.
 
-Labelling PICO information is tricky because of the high disagreement between human annotators on the exact spans constituting PICO, leading to human errors in hand-labelled corpora.~\cite{brockmeier2019improving}
-Additionally, depending upon the systematic review question, PICO criteria are extended to PICOS (S-Study design), PICOC (C-Context), and PICOT (T-timeframe).~\cite{riva2012your,methley2014pico,uman2011systematic}
+Labelling PICO information is tricky because of the high disagreement between human annotators on the exact spans constituting PICO, leading to human errors in hand-labelled corpora.\cite{brockmeier2019improving}
+Additionally, depending upon the systematic review question, PICO criteria are extended to PICOS (S-Study design), PICOC (C-Context), and PICOT (T-timeframe).\cite{riva2012your,methley2014pico,uman2011systematic}
 Hand-labelled datasets are static and prohibit quick manual re-labelling in case of human errors or when a downstream task requires new entities.
 In SRs, the step after PICO information analysis is to identify the risk of bias from the studies, which is another information extraction lacking a manually labelled corpus. 
 This annotation bottleneck has pivoted attention towards weakly-supervised learning that relies on programmatic labelling sources to obtain training data.
 Programmatic labelling is quick and allows efficient modifications to the training data labels per the downstream application changes.
 
-Weakly-supervised (WS) learning has demonstrated strengths for clinical document classification and relation extraction, but clinical entity extraction tasks have heavily relied on fully-supervised (FS) approaches.~\cite{meng2018weakly,wang2019clinical,mintz2009distant,elangovan2020assigning,weber2020pedl,mallory2020extracting}
+Weakly-supervised (WS) learning has demonstrated strengths for clinical document classification and relation extraction, but clinical entity extraction tasks have heavily relied on fully-supervised (FS) approaches.\cite{meng2018weakly,wang2019clinical,mintz2009distant,elangovan2020assigning,weber2020pedl,mallory2020extracting}
 Despite the availability of UMLS, a large compendium of medical ontologies, which can be re-purposed for weak entity labelling, it has not been extensively applied to clinical entity labelling.~\cite{humphreys1998unified}
 Several legacy clinical applications are also supported by rule-based \textit{if-else} systems relying on keyword cues that aid weak labelling.~\cite{friedlin2008software,kim2017extracting,yang2015automatic}
 With so many weak labelling sources available, the challenge for weak supervision is efficiently aggregating these sources of varying accuracy.
@@ -263,25 +263,27 @@ With so many weak labelling sources available, the challenge for weak supervisio
 
 Data programming is a domain agnostic generative modelling approach combining multiple weak labelling sources and estimating their accuracies.
 The effectiveness of data programming for biomedical entity recognition has been explored by Fries \textit{et al.} in their Trove system.
-However, Trove only explores the well defined entities like chemical, disease, disorder and drug classes.~\cite{fries2021ontology}
+However, Trove only explores the well defined entities like chemical, disease, disorder and drug classes.\cite{fries2021ontology}
 PICO categories are text spans by definition, fuzzier in comparison and much more intricate in that they can be divided into subclasses.
 A shortcoming of span extraction is that even after a machine points a human reviewer to the correct PICO span, the reviewer requires to manually read and understand its finer aspects to screen the study for relevance.
 Span extraction hence leads to semi-automation but hinders full-automation.
 The entity recognition approach to PICO is not as easy as the entity recognition approach to disease or chemical names which are more or less standardized.
-These terms are not standard, and even the experts disagree on the exact tokens constituting PICO.~\cite{brockmeier2019improving}
+PICO terms are not standard, and even the experts disagree on the exact tokens constituting them.\cite{brockmeier2019improving}
 Weakly-supervised PICO entity recognition has not garnered as much attention as supervised span recognition.
 As far as our knowledge goes, only two studies exist for weakly-supervised PICO recognition.
-One of these approaches only explores distant supervision for intervention extraction using a single labelling source, and the other relies on a single source of programmatic labelling and focuses on PICO spans and sentences rather than entities.~\cite{liu2021sent2span,dhrangadhariya2022distant}
+One of these approaches only explores distant supervision for intervention extraction using a single labelling source, and the other relies on a single source of programmatic labelling and focuses on PICO spans and sentences rather than entities.\cite{liu2021sent2span,dhrangadhariya2022distant}
 
 The challenges to developing weak supervision approaches to PICO entity recognition are first defining the subclasses within PICO spans and then mapping several available ontologies and terminologies to these.
 The next challenge is developing weakly-supervised classifiers by optimally combining several ontologies and evaluating their performance compared to full supervision.
 Another challenge is developing higher-cost expert-generated rules corresponding to these subclasses to aid ontology classifiers and evaluate their combined performance.
-We also identified limitations in the currently available EBM-PICO training dataset and corrected them for reliable evaluation of the WS approaches.
-This work demonstrates the feasibility of using weak supervision for PICO entity extraction using the EBM-PICO benchmark.
-We show how using only ontology-dependent classifiers vs. combining them with more expensive expert-generated rules compares to fully-supervised extraction and, in some instances overtaking it.
+We also identified limitations in the currently available EBM-PICO training dataset and corrected them in the EBM-PICO test set for reliable evaluation of the WS approaches.
+Our work demonstrates the feasibility of using weak supervision for PICO entity extraction using the EBM-PICO benchmark.
+We show how using only ontology-dependent classifiers vs combining them with more expensive expert-generated rules compares to fully-supervised extraction and, in some instances overtaking it.
+%
+%
 %
 %==============================
-\section{\textbf{METHODOLOGY}}\label{methods}
+\section{METHODOLOGY}\label{methods}
 %==============================
 %
 The birds-eye view of our approach is shown in the Figure~\ref{fig:approach}.
@@ -289,7 +291,7 @@ The birds-eye view of our approach is shown in the Figure~\ref{fig:approach}.
 \begin{figure}[ht]
 \centering
 \includegraphics[width=0.98\textwidth]{figures/approach.pdf}
-\caption{Weak PICO entity extraction approach: I) Multi-class labels in the EBM-PICO benchmark are binarized. II) Low-cost UMLS vocabularies are repurposed as labelling sources and experts design rules as high-cost labelling courses. III) Labelling functions map the training sequences to class labels using labelling sources resulting in an $m \times n$ label matrix. IV-V) The label matrix is used to train a generative model that outputs probabilistic labels that a downstream transformer model can use for entity recognition.}
+\caption{Weak PICO entity extraction approach: I) Multi-class labels in the EBM-PICO benchmark are binarized. II) Low-cost UMLS vocabularies are repurposed as labelling sources and experts design rules as high-cost labelling sources. III) Labelling functions map the training sequences to class labels using labelling sources resulting in an $m \times n$ label matrix. IV-V) The label matrix is used to train a generative model that outputs probabilistic labels that a downstream transformer model can use for entity recognition.}
 \label{fig:approach}
 \end{figure}
 %
@@ -432,7 +434,7 @@ LM output probabilistic labels for the training set were used as weak supervisio
 \bm{\hat{\omega}} = \argmin_{\omega} \frac{1}{N} \sum_{i=1}^{n} \mathbb{ E }_{ \hat{y} \sim \hat{Y}} \big[ l \big( f(x, w), \hat{y} \big) \big]
 \end{equation}
 %
-PubMedBERT was chosen because of its domain similarity to our training data (PubMed abstracts) and task.
+PubMedBERT was trained on PubMed literature and was chosen because of its domain similarity to our training data (PubMed abstracts) and task.
 It was tuned on fixed parameters listed in the experimental details section in the supplementary material. 
 %
 %
