@@ -6,7 +6,7 @@
 backend=biber,
 style=numeric,
 sorting=none,
-maxbibnames=3,
+minbibnames=3,
 ]{biblatex}
 
 % supress pp. and add a semi-colon
@@ -491,21 +491,21 @@ Table~\ref{tab:res} reports macro-averaged F1 for the experiments detailed in th
 %
 \begin{table}[!ht]
     \centering
-    \begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|}
+    \begin{tabular}{|l|l|c|l|l|l|l|l|l|l|l|}
         \hline
         \multicolumn{3}{|c|}{} &
         \multicolumn{2}{|c|}{MV} & \multicolumn{2}{|c|}{LM} & \multicolumn{2}{|c|}{WS} & \multicolumn{2}{|c|}{FS} \\
         \hline
         Target & LF source & \#LF & Fine & Corr & Fine & Corr & Fine & Corr & Fine & Corr \\  \hline
-        P & UMLS &  & 62.13 & 69.28 & 64.28 & 72.22 & 65.32 & 73.49 & 72.99 & 74.41 \\
-         & +Ontology &  & 61.72 & 69.32 & 64.23 & 72.18 & 64.76 & 72.31 &  &  \\ 
-         & +Rules &  & 63.08 & 72.06 & 65.79 & 75.31 & 66.73 & \underbar{\textbf{76.12}} &  &  \\ \hline
-        I/C & UMLS &  & 59.7 & 63.94 & 60.11 & 64.28 & 59.17 & 61.72 & \textbf{83.37} & 81.06 \\ 
-         & +Ontology &  & 62.14 & 66.92 & 62.83 & 67.09 & 67.06 & 69.76 & &  \\
-         & +Rules &  & 58.51 & 63.45 & 64.34 & 68.17 & 70.27 & \underbar{72.39} &  &  \\ \hline
-        O & UMLS &  & 55.79 & 59.85 & 58.76 & 62.36 & 60.83 & \underbar{63.55} & \textbf{81.2} & 80.53 \\
-         & +Ontology &  & 56.006 & 59.64 & 59.27 & 62.34 & 59.55 & 60.46 &  &  \\ 
-         & +Rules &  & 55.08 & 59.36 & 60.9 & 62.87 & 60.5 & 60.39 &  &  \\ \hline
+        P & UMLS & 3-4 & 62.13 & 69.28 & 64.28 & 72.22 & 65.32 & 73.49 & 72.99 & 74.41 \\
+         & +Ontology & 4 & 61.72 & 69.32 & 64.23 & 72.18 & 64.76 & 72.31 &  &  \\ 
+         & +Rules & 19-119 & 63.08 & 72.06 & 65.79 & 75.31 & 66.73 & \underbar{\textbf{76.12}} &  &  \\ \hline
+        I/C & UMLS & 8-95 & 59.7 & 63.94 & 60.11 & 64.28 & 59.17 & 61.72 & \textbf{83.37} & 81.06 \\ 
+         & +Ontology & 5-101 & 62.14 & 66.92 & 62.83 & 67.09 & 67.06 & 69.76 & &  \\
+         & +Rules & 4-35 & 58.51 & 63.45 & 64.34 & 68.17 & 70.27 & \underbar{72.39} &  &  \\ \hline
+        O & UMLS & 5-6 & 55.79 & 59.85 & 58.76 & 62.36 & 60.83 & \underbar{63.55} & \textbf{81.2} & 80.53 \\
+         & +Ontology & 4-5 & 56.006 & 59.64 & 59.27 & 62.34 & 59.55 & 60.46 &  &  \\ 
+         & +Rules & 3-5 & 55.08 & 59.36 & 60.9 & 62.87 & 60.5 & 60.39 &  &  \\ \hline
     \end{tabular}
     \caption{ Macro-averaged F1 scores for UMLS, UMLS+other and rule-based weak supervision. Underlined values show the best score without manually labelled training data. Note: Fine = EBM-PICO fine-grained annotations, Corr = EBM-PICO fine-grained annotations (updated)}
     \label{tab:res}
