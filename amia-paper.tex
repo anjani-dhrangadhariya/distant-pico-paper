@@ -305,6 +305,7 @@ Entity-level annotations cover the more fine-grained information at the entity l
 The dataset comes pre-divided into a training set (n=4,933) annotated through crowd-sourcing and an expert annotated gold test set (n=191) for evaluation.~\cite{nye2018corpus}
 
 The EBM-PICO annotation guidelines caution about variable annotation quality~\footnote{\url{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6174533/bin/NIHMS988059-supplement-Appendix.pdf}}.
+The annotation inconsistencies have also been explored by the studies following EBM-PICO publication.\cite{abaho2019correcting,lee2019study}
 Low annotation quality in the training dataset is excusable, but the errors in the test set can lead to faulty evaluation of the downstream ML methods.
 We evaluate 1\% of the EBM-PICO training set tokens to gauge the possible reasons for the fine-grained labelling errors and use this exercise to conduct an error-focused PICO re-annotation for the EBM-PICO gold test set.
 The dataset is pre-tokenized and did not require additional preprocessing except the addition of POS tags and token lemma using spaCy~\footnote{\url{https://spacy.io/}}.
