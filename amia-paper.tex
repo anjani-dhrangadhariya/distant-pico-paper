@@ -382,8 +382,8 @@ It is a challenging expert-led activity, though decomposing PICO into subclasses
 A semantic category was either marked $\{1, 0\}$ depending upon its relevance to the target class (refer to Supplementary material section on UMLS sources to PICO targets).
 Non-UMLS vocabularies were obtained from NCBO bioportal~\footnote{\url{https://bioportal.bioontology.org/}} and were chosen to be PICO target specific and assigned to a single label.
 Target-specific distant supervision dictionaries were created from the structured fields of clinicaltrials.gov (CTO). 
-The structured field ``Condition or Disease'' was mapped to the Participant target, and the ``Intervention/Treatment'' field was mapped to the Intervention target.
-The semi-structured ``Primary Outcome Measures'' and ``Secondary Outcome Measures'' fields were mapped to the Outcomes class.
+The structured field ``Condition or Disease'' was mapped to the participant target, and the ``Intervention/Treatment'' field was mapped to the intervention target.
+The semi-structured ``Primary Outcome Measures'' and ``Secondary Outcome Measures'' fields were mapped to the outcome target.
 Hand-crafted dictionaries were separately designed for participant gender, intervention comparator terms and outcomes.
 %
 %
@@ -471,7 +471,7 @@ We designed $m$ labelling functions $\lambda^{m}$ corresponding to these guideli
 \end{figure}
 %
 We rectified the errors in EBM-PICO validation set and categorized them for each of the PIO classes as shown in the Table~\ref{tab:errordist}.
-Of 12,960 (1\%) training tokens evaluated to gauge the errors, 18.30\% of the Intervention class tokens, 23.39\% of the Participant class tokens and 20.21\% of the Outcome class tokens were errors.
+Of 12,960 (1\%) training tokens evaluated to gauge the errors, 18.30\% of the intervention class tokens, 23.39\% of the participant class tokens and 20.21\% of the outcome class tokens were errors.
 The error analysis was used to correct fine-grained annotation errors in the EBM-PICO test set and both the EBM-PICO and its updated version were used for evaluation.
 Table~\ref{tab:res} reports macro-averaged F1 for the experiments detailed in the experiments section in comparison to the fully-supervised approach.
 %
@@ -516,8 +516,8 @@ Table~\ref{tab:res} reports macro-averaged F1 for the experiments detailed in th
 \end{table}
 %
 \paragraph{\textit{error rectification}}
-Error rectification leads to an overall average F1 improvement of 4.88\% across the experiments using a weakly labelled training set with the highest average improvement of 8.25\% (7.15\%-9.52\%) for Participants and 2.68\% (-0.11\%-4.28\%) for Outcomes. 
-For the Participant class, both the LM and the WS F1 scores increase the full supervision score by 0.90\% - 1.71\%.
+Error rectification leads to an overall average F1 improvement of 4.88\% across the experiments using a weakly labelled training set with the highest average improvement of 8.25\% (7.15\%-9.52\%) for participants and 2.68\% (-0.11\%-4.28\%) for outcomes. 
+For the participant class, both the LM and the WS F1 scores increase the full supervision score by 0.90\% - 1.71\%.
 It has to be noticed that weak supervision outperforms full supervision on the rectified benchmark only for the participant entity.
 
 \paragraph{\textit{MV vs. LM vs. WS}}
@@ -540,15 +540,15 @@ Heuristics improved performance for the interventions LM by 11.1\%.
 %
 \paragraph{\textit{UMLS partitions}}
 To investigate the optimal number of UMLS labelling functions required, we used the same methodology as in Trove holding all non-UMLS and heuristics LFs fixed across all ablation tiers and computed performance across $s = ( 1, 2, \dotso , 127 )$ partitions of the UMLS terminology.
-We noticed an increasing performance for the first few partitions but did not see the performance drop with a further increase in the partition number for the Participant target.
-For the Outcomes target, an increase in the number of partitions leads to an increased performance initially but to a drop with further increase in the partition numbers.
+We noticed an increasing performance for the first few partitions but did not see the performance drop with a further increase in the partition number for the participant target.
+For the outcomes target, an increase in the number of partitions leads to an increased performance initially but to a drop with further increase in the partition numbers.
 This is in contrast to Trove where an increase in partitions leads to a drop in performance across targets (see Figure~\ref{fig:partitions}).
 LM outperforms MV on training performance across the targets and experiments.
 %
 \begin{figure}
     \centering
     \includegraphics{figures/partitions.pdf}
-    \caption{The relationship between the number of UMLS partitions and the macro-averaged F1 score for i) Participants target, ii) Interventions target and iii) Outcomes target.}
+    \caption{The relationship between the number of UMLS partitions and the macro-averaged F1 score for i) participants target, ii) interventions target and iii) outcomes target.}
     \label{fig:partitions}
 \end{figure}
 %
@@ -575,16 +575,16 @@ It is empirically confirmed by the performance boost that PubMedBERT brings this
 %
 We expound on the error categories and provide examples here.
 Some of our error categories are as identified by Abaho \textit{et al.} but add more categories on top of them.
-While they limit their error exploration to Outcomes class, we extend it to the rest.
+While they limit their error exploration to outcomes class, we extend it to the rest.
 An error falls under \textit{repeated mention} if one instance of an entity is marked, but another identical instance of the same entity in the same context is not marked within the abstract. 
 The reason can be the EBM-PICO guidelines flaw where the annotators of fine-grained entity annotation were confined to only annotate within the longer span-level annotation.
 Hence, any annotation error missed by the coarse-grained annotators was continued by the fine-grained annotators.
 
 An error falls under \textit{remains unannotated} if a token should have been annotated as an entity but was not.
-In the Intervention class, a large portion of this category was constituted by the generic mentions of controls (placebo, saline), which were not annotated.
-In the Participant class, patient ethnicity and other information like smoking status and pregnancy information (marked in the coarse-grained span) were not marked in the fine-grained entity.
+In the intervention class, a large portion of this category was constituted by the generic mentions of controls (placebo, saline), which were not annotated.
+In the participant class, patient ethnicity and other information like smoking status and pregnancy information (marked in the coarse-grained span) were not marked in the fine-grained entity.
 The reason can be that there was no fine-grained class to categorize this information. 
-In the Outcome class, the annotators missed several important outcomes (along with their repeated mention).
+In the outcome class, the annotators missed several important outcomes (along with their repeated mention).
 
 \textit{Conjunction connector} errors are the conjunctions occurring between two semantically separate entities but are falsely marked as entities.
 For example, ``Nausea and vomiting'' are two separate outcomes marked as one by annotating the conjunction between them.
@@ -604,17 +604,17 @@ This error was pronounced especially for the non-pharmaceutical interventions an
 
 An \textit{inconsistency} error arises when an entity is fully marked in some abstracts vs. when in the other abstracts the same entity is partially marked. 
 For example, if an exercise intervention involved aerobic exercise involving stretching and running, this information (``stretching'', ``running'') was marked in some studies while not in all the other studies.
-In the case of the Participant class, the sample size sub-grouping information was inconsistently marked.
+In the case of the participant class, the sample size sub-grouping information was inconsistently marked.
 In another example, participant sample size information was either partially or completely marked (``59'' vs. ``59 subjects'', ``200'' vs. ``200 controls'').
 We consider a phrase as a sample size only when the absolute value quantifying sample size follows an appropriate unit (subject, controls, patients, participants, women, men). 
 Only in some cases, when the unit was unavailable, did we consider a standalone number as a sample size participant span.
-In the Outcome class, the annotation guidelines marked ``what was measured and how it was measured''. 
+In the outcome class, the annotation guidelines marked ``what was measured and how it was measured''. 
 Several times, the method used for measuring outcomes was inconsistently marked.
 
 
 
 A \textit{junk} error is a token entirely irrelevant to an entity but is marked as one.
-For example, in the Outcomes evaluation, the phrase ``evaluate and compare'' from the larger phrase ``This study aimed to evaluate and compare'' was marked as an outcome entity even though it is not a valid outcome.
+For example, in the outcomes evaluation, the phrase ``evaluate and compare'' from the larger phrase ``This study aimed to evaluate and compare'' was marked as an outcome entity even though it is not a valid outcome.
 
 
 
