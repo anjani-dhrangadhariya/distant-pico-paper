@@ -511,7 +511,7 @@ Table~\ref{tab:res} reports macro-averaged F1 for the experiments detailed in th
          & +Ontology & 4-5 & 56.006 & 59.64 & 59.27 & 62.34 & 59.55 & 60.46 &  &  \\ 
          & +Rules & 3-5 & 55.08 & 59.36 & 60.9 & 62.87 & 60.5 & 60.39 &  &  \\ \hline
     \end{tabular}
-    \caption{ Macro-averaged F1 scores for UMLS, UMLS+other and rule-based weak supervision. Underlined values show the best score without manually labelled training data. Note: Fine = EBM-PICO fine-grained annotations, Corr = EBM-PICO fine-grained annotations (updated)}
+    \caption{ Macro-averaged F1 scores for UMLS, UMLS+other and rule-based weak supervision. Underlined values show the best score without manually labelled training data. Note: Fine = EBM-PICO fine-grained annotations, Corr = EBM-PICO fine-grained annotations (EBM-PICO updated)}
     \label{tab:res}
 \end{table}
 %
@@ -524,7 +524,7 @@ It has to be noticed that weak supervision outperforms full supervision on the r
 The label model improved the average performance by 2.74\% (0.17\%-5.83\%) in comparison to majority voting.
 However, PubMedBERT did not guarantee improved performance across the targets leading to performance drops between 0.4 - 2.56\%.
 Though the weakly-supervised PubMedBERT models did not always improve the performance compared to their label model counterparts, they had the best F1 score for each target class.
-Majority voting had higher recall across experiments in comparison to precision while LM focused on precision (see Figure~\ref{fig:precRecall}).
+Majority voting had higher recall across experiments in comparison to precision while LM focused on precision (see Figure~\ref{fig:precRecall}) making it a possible choice for recall oriented PICO extraction task.
 %
 \begin{figure}
     \centering
@@ -622,7 +622,8 @@ These errors and inconsistencies in the EBM-PICO gold test (and training) set ca
 A possible reason behind these inconsistencies in the EBM-PICO corpus could be that the annotators had clinical background but lacked an informatics background.
 This situation could undermine the importance of semantic consistency required for annotating such corpora.
 Hiring annotators with the combined knowledge of clinical and informatics domains might improve the manual annotation quality.
-The errors for PIO categories were rectified, and the updated dataset will be made available on Zenodo.
+The errors for PIO categories were rectified, and the updated dataset is made available on Zenodo (DOI: 10.5281/zenodo.7138641)~\footnote{\url{https://doi.org/10.5281/zenodo.7138641
+}}.
 %
 %==============================
 \section{CONCLUSION}\label{conclusion}
