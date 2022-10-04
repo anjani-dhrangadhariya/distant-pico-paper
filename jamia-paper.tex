@@ -228,8 +228,7 @@ Additionally, we explore mistakes in the currently available PICO test set that 
 We present Weak-PICO, a weakly-supervised PICO entity recognition approach using medical ontologies, non-medical ontologies and various expert-generated rules and dictionaries.
 Unlike manual annotation, Weak-PICO does not use hand-labelled data and is quickly adaptable and extensible to other entities.
 \textbf{Conclusion:}
-Weak supervision using weak-PICO for PICO entity recognition has encouraging results and readily extends to more clinical entities.
-
+Weak supervision using weak-PICO for PICO entity recognition has encouraging results and could readily extend to more clinical entities.
 
 \keywords{Weak supervision, Machine learning, Information extraction, Evidence-based Medicine}
 %
@@ -540,11 +539,12 @@ Adding task-specific LF's increased the overall F1 by a negligible 0.98\%.
 Heuristics improved performance for the interventions LM by 11.1\%.
 %
 \paragraph{\textit{UMLS partitions}}
-To investigate the optimal number of UMLS labelling functions required, we used the same methodology as in Trove holding all non-UMLS and heuristics LFs fixed across all ablation tiers and computed performance across $s = ( 1, 2, \dotso , 127 )$ partitions of the UMLS terminology.
-We noticed an increasing performance for the first few partitions but did not see the performance drop with a further increase in the partition number for the participant target.
-For the outcomes target, an increase in the number of partitions leads to an increased performance initially but to a drop with further increase in the partition numbers.
-This is in contrast to Trove where an increase in partitions leads to a drop in performance across targets (see Figure~\ref{fig:partitions}).
-LM outperforms MV on training performance across the targets and experiments.
+To investigate the optimal number of UMLS labelling functions required, we used the same methodology as in Trove, holding all non-UMLS and heuristics LFs fixed across all ablation tiers and computed performance across $s = ( 1, 2, \dotso , 127 )$ partitions of the UMLS terminology.
+We noticed an increased performance for the first few partitions. However, We did not see the performance drop with a further increase in the participant and intervention target partition number.
+Partitions with more than 100 LFs performed better.
+This situation contrasts with Trove, where an increase in partitions leads to a drop in performance across targets (see Figure~\ref{fig:partitions}).
+For the outcomes target, an increase in the number of partitions leads to an increased performance initially but a drop with a further increase in the partition numbers.
+LM outperforms MV on training performance across the two targets and experiments except for the intervention target, where the MV model combining UMLS and additional ontologies outperforms LM.
 %
 \begin{figure}[ht]
     \centering
