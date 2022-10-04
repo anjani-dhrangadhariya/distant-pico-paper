@@ -473,6 +473,7 @@ We designed $m$ labelling functions $\lambda^{m}$ corresponding to these guideli
 We rectified the errors in EBM-PICO validation set and categorized them for each of the PIO classes as shown in the Table~\ref{tab:errordist}.
 Of 12,960 (1\%) training tokens evaluated to gauge the errors, 18.30\% of the intervention class tokens, 23.39\% of the participant class tokens and 20.21\% of the outcome class tokens were errors.
 The error analysis was used to correct fine-grained annotation errors in the EBM-PICO test set and both the EBM-PICO and its updated version were used for evaluation.
+The error rectified EBM-PICO dataset is available on Zenodo (DOI: 10.5281/zenodo.7139326).
 Table~\ref{tab:res} reports macro-averaged F1 for the experiments detailed in the experiments section in comparison to the fully-supervised approach.
 %
 \begin{table}[!ht]
@@ -528,7 +529,7 @@ Majority voting had higher recall across experiments in comparison to precision 
 %
 \begin{figure}
     \centering
-    \includegraphics{figures/precRecall.pdf}
+    \includegraphics[width=0.99\textwidth]{figures/precRecall.pdf}
     \caption{Precision and recall across the experiments for the I. Majority vote models and II. Label models}
     \label{fig:precRecall}
 \end{figure}
@@ -545,9 +546,9 @@ For the outcomes target, an increase in the number of partitions leads to an inc
 This is in contrast to Trove where an increase in partitions leads to a drop in performance across targets (see Figure~\ref{fig:partitions}).
 LM outperforms MV on training performance across the targets and experiments.
 %
-\begin{figure}
+\begin{figure}[ht]
     \centering
-    \includegraphics{figures/partitions.pdf}
+    \includegraphics[width=0.99\textwidth]{figures/partitions.pdf}
     \caption{The relationship between the number of UMLS partitions and the macro-averaged F1 score for i) participants target, ii) interventions target and iii) outcomes target.}
     \label{fig:partitions}
 \end{figure}
@@ -622,8 +623,7 @@ These errors and inconsistencies in the EBM-PICO gold test (and training) set ca
 A possible reason behind these inconsistencies in the EBM-PICO corpus could be that the annotators had clinical background but lacked an informatics background.
 This situation could undermine the importance of semantic consistency required for annotating such corpora.
 Hiring annotators with the combined knowledge of clinical and informatics domains might improve the manual annotation quality.
-The errors for PIO categories were rectified, and the updated dataset is made available on Zenodo (DOI: 10.5281/zenodo.7138641)~\footnote{\url{https://doi.org/10.5281/zenodo.7138641
-}}.
+The errors for PIO categories were rectified, and the updated dataset is made available on Zenodo (DOI: 10.5281/zenodo.7138641).
 %
 %==============================
 \section{CONCLUSION}\label{conclusion}
@@ -634,6 +634,46 @@ We also identified errors pertinent to the current PICO benchmark, rectified the
 The approach achieves promising performance compared to full supervision and warrants further research into weak supervision for composite entities like PICO.
 We firmly believe the approach can be extended to more clinical SR entities in the absence of a manually labelled corpus, thereby being a starting point to overcome the annotation bottleneck for SR entities.
 In the future, we will work on extending the data programming approach to the SR entities that do not have a manually labelled corpus like EBM-PICO and inspect strategies for mapping ontologies to PICO subclasses.
+The code will be made public on Github upon publication.
+%
+%
+%
+%==============================
+\section{ABBREVIATIONS}\label{abb}
+%==============================
+%
+\begin{itemize}
+    \item PICO: Participant, Intervention, Comparator, Outcome
+    \item PICOT: Participant, Intervention, Comparator, Outcome, timeframe
+    \item PICOS: Participant, Intervention, Comparator, Outcome, Study type and Design
+    \item PIBOSO: Patients/Population, Interventions, Background, Outcome, Study Design, Other
+    \item IO: Inside, Out
+    \item RCT: Randomized Controlled Trial
+    \item EBM: Evidence based Medicine
+    \item UMLS: Unified Medical Language System
+    \item DO: Disease Ontology
+    \item HPO: Human Phenotype Ontology
+    \item OAE: Ontology of Adverse Events
+    \item ChEBI: Chemical Entities of Biological Interest
+    \item CTD: Comparative Toxicogenomics Database
+    \item GSSO: Gender, Sex, Sexual Orientation Ontology
+    \item NDD-CTO: Clinical Trials Ontology
+    \item ONTOTOX: Chemotherapy Toxicities Ontology
+    \item CCTOO: Cancer Care: Treatment Outcomes Ontology
+    \item SYMP: Symptoms Ontology
+    \item NPI: Non-pharmaceutical Interventions Ontology
+    \item NCCO: Nursing Care Coordination Ontology
+    \item NLP: Natural Language Processing
+    \item WS: Weakly supervised
+    \item FS: Fully supervised
+    \item MV: Majority vote
+    \item LM: Label Model
+    \item P: Precision
+    \item R: Recall
+    \item NER: Named Entity Recognition
+\end{itemize}
+%
+%
 %
 %==============================
 \section{ACKNOWLEDGEMENTS}\label{acknowledgements}
