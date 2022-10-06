@@ -355,7 +355,7 @@ Regular expressions (ReGeX) and heuristics like POS tag cues were used to captur
 The hand-coded dictionaries were designed using the official websites listing patient-reported outcome (PROMs) questionnaires~\footnote{\url{https://www.thoracic.org/members/assemblies/assemblies/bshsr/patient-outcome/}} and PROMs~\footnote{\url{https://www.safetyandquality.gov.au/our-work/indicators-measurement-and-reporting/patient-reported-outcomes/proms-lists}}.
 Vocabularies are structured, standardized data sources that do not capture writing variations from clinical literature and custom-built ReGeX are restricted by either task or entity type.~\cite{ratner2017snorkel,safranchik2020weakly}
 We used distant supervision dictionaries created from the structured fields of clinicaltrials.gov (CTO) as described by Dhrangadhariya \textit{et al.}~\cite{dhrangadhariya2022distant}
-Principal investigators of the clinical study manually enter data in CTO, thereby incorporating large-scale writing variations.  
+Principal investigators of the clinical study manually enter data in CTO, thereby incorporating large-scale writing variations.~\cite{califf2012characteristics}
 %
 %
 %
@@ -430,7 +430,6 @@ UMLS ontologies were ranked based on the total number of n-gram overlaps between
 The ontologies were partitioned into $s = ( 1, 2, \dotso , 127 )$ partitions with partition one aggregating all the ontologies into a single LF and partition 127 with all the ontologies as separate LFs.
 
 
-
 The labelling functions $\lambda_{m}$ were used to label the EBM-PICO training set and obtain $\lambda$. 
 We tested MV and LM to aggregate labelling functions.
 LM output probabilistic labels for the training set were used as weak supervision signals to train downstream PubMedBERT to minimize noise-aware cross-entropy loss.
@@ -439,7 +438,7 @@ LM output probabilistic labels for the training set were used as weak supervisio
 \bm{\hat{\omega}} = \argmin_{\omega} \frac{1}{N} \sum_{i=1}^{n} \mathbb{ E }_{ \hat{y} \sim \hat{Y}} \big[ l \big( f(x, w), \hat{y} \big) \big]
 \end{equation}
 %
-PubMedBERT was trained on PubMed literature and was chosen because of its domain similarity to our training data (PubMed abstracts) and task.
+PubMedBERT was trained on PubMed literature and was chosen because of its domain similarity to our training data (PubMed abstracts) and task.~\cite{gu2021domain}
 It was tuned on fixed parameters listed in the experimental details section in the supplementary material. 
 %
 %
