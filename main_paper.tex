@@ -468,13 +468,12 @@ The EBM-NLP guidelines restrict annotating the outcome name, how it was measured
 \begin{figure}[ht]
 \centering
 \includegraphics[width=0.95\textwidth]{figures/target_subgroups_.pdf}
-\caption{\label{fig:target_subgroups} Hierarchical representation of PICO subclasses. The categories marked in \textbf{\textit{bold-italic}} are the same as the fine-grained categories in EBM-PICO corpus.}
+\caption{\label{fig:target_subgroups} Hierarchical representation of PICO subclasses. The categories marked in bold-italic are the same as the fine-grained categories in EBM-PICO corpus.}
 \end{figure}
 %
 We rectified the errors in the EBM-PICO validation set and categorized them for each PIO class, as shown in Table~\ref{tab:errordist}.
 Of 12,960 (1\%) training tokens evaluated to gauge the errors, 18.30\% of the intervention class tokens, 23.39\% of the participant class tokens and 20.21\% of the outcome class tokens were errors.
 The error analysis was used to correct fine-grained annotation errors in the EBM-PICO test set, and both the EBM-PICO and its updated version were used for evaluation.
-The error rectified EBM-PICO dataset is available on Zenodo (DOI: 10.5281/zenodo.7139326).
 Table~\ref{tab:res} reports macro-averaged F1 for the experiments detailed in the experiments section compared to the fully-supervised approach.
 %
 \begin{table}[!ht]
@@ -626,7 +625,6 @@ A possible reason behind these inconsistencies in the corpus could be that the a
 This situation could undermine the importance of semantic consistency required for annotating such corpora.
 Hiring annotators with combined knowledge of clinical and informatics domains might improve the manual annotation quality.
 Aggregation of crowd annotations for spans with fuzzy span boundaries might lead to many boundary errors, for example, when two disparate entities are linked by a \textit{conjunction connector}.
-The errors for PIO categories were rectified, and the updated dataset is available on Zenodo (DOI: 10.5281/zenodo.7138641).
 %
 %==============================
 \section{CONCLUSION}\label{conclusion}
@@ -638,6 +636,9 @@ The approach achieves promising performance compared to full supervision and war
 We firmly believe the approach can be extended to more clinical SR entities in the absence of a manually labelled corpus, thereby being a starting point to overcome the annotation bottleneck for SR entities.
 In the future, we will work on extending the data programming approach to the SR entities that do not have a manually labelled corpus like EBM-PICO and inspect strategies for mapping ontologies to PICO subclasses.
 The code will be made public on Github upon publication.
+EBM-PICO error analysis for validation set is available on Zenodo (DOI: 10.5281/zenodo.7138641). 
+The error rectified EBM-PICO gold test set is available on Zenodo (DOI: 10.5281/zenodo.7139326).
+
 %
 %
 %
