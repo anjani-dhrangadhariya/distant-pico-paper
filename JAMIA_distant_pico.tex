@@ -184,10 +184,8 @@ minbibnames=3,
   \textbf{Key words---} #1
 }
 %==============================
-
-% reduce space between title and beginning of page
 \title{Not So Weak-PICO: Leveraging weak supervision for Participants, Interventions, and Outcomes recognition for systematic review automation}
-\date{} % \vspace{-2em}
+\date{}
 \author[ ] {
     % Authors
     \bf\fontsize{13}{14}\selectfont
@@ -200,12 +198,11 @@ minbibnames=3,
 %==============================
 \begin{document}
 \maketitle
-%\vspace{2em} %separation between the affiliations and abstract
 %==============================
 \doublespacing
 %==============================
 
-Word count: 3981 %Anjani TODO - Update before submission
+Word count: 3981
 
 \clearpage
 \section{\textbf{ABSTRACT}}
@@ -244,10 +241,10 @@ Weak supervision using weak-PICO for PICO entity recognition has encouraging res
 %
 Systematic Reviews (SR) are an evidence-based practice of answering clinical questions using a transparent and quantitative approach.
 The reviewers must collect as many candidate publications as possible, identify the relevant publications from these, and integrate their results via statistical meta-analysis.
-Filtering relevant publications from non-relevant publications with similar keywords often uses PICO (Participants, Interventions, Comparators, Outcomes) criteria. 
-A clinical study or a publication is only relevant for answering a question if it studies the selected participants, interventions (and their comparators) and outcomes.\cite{uman2011systematic} 
-Manually analyzing PICO information from thousands of publications for a single SR often takes 2-8 months of two medical experts' time.\cite{borah2017analysis}
-The process can be automated using machine learning (ML) by directly pointing the human reviewers to the correct text chunks describing PICO.
+A clinical SR question is usually formulated using PICO elements (Participants, Interventions, Comparators, Outcomes), for example, ``Will aerobic exercise (\textbf{Intervention}) improve cancer-related fatigue (\textbf{Outcome}) in elderly cancer patients (\textbf{Participant}) in comparison to usual care (\textbf{Comparator})?''.
+A clinical study or a publication is only relevant for answering a question only if it studies the question-relevant participants, interventions (and their comparators) and outcomes.\cite{uman2011systematic} 
+Manually analyzing PICO information from thousands of publications to measure relevance often takes 2-8 months of two medical experts' time for a single SR.\cite{borah2017analysis}
+The process can be automated using machine learning (ML) by directly pointing the human reviewers to the correct text chunks describing PICO thereby facilitating quick decision-making whether the study is relevant or not.
 Hand labelling corpora with PICO information requires people with combined medical and informatics skills, which is expensive and time-consuming in terms of intensive annotator training and the actual annotation process.
 
 Labelling PICO information is tricky because of the high disagreement between human annotators on the exact spans constituting PICO, leading to human errors in hand-labelled corpora.\cite{brockmeier2019improving}
@@ -299,7 +296,7 @@ The birds-eye view of our approach is shown in the Figure~\ref{fig:approach}.
 \end{figure}
 %
 %==============================
-\subsection{datasets}\label{data}
+\subsection{Datasets}\label{data}
 %==============================
 %
 EBM-PICO is a widely used dataset with PICO annotations at two levels: span-level or coarse-grained and entity-level or fine-grained (see Table~\ref{tab:coarsefineconcept}).
@@ -311,7 +308,8 @@ The EBM-PICO annotation guidelines caution about variable annotation quality~\fo
 Abaho \textit{et al.} developed a framework to post-hoc correct EBM-PICO outcomes annotation inconsistencies\cite{abaho2019correcting}.
 Lee \textit{et al.} studied annotation span disagreements suggesting variability across the annotators.\cite{lee2019study}
 Low annotation quality in the training dataset is excusable, but the errors in the test set can lead to faulty evaluation of the downstream ML methods.
-We evaluate 1\% of the EBM-PICO training set tokens to gauge the possible reasons for the fine-grained labelling errors and use this exercise to conduct an error-focused PICO re-annotation for the EBM-PICO gold test set.
+We evaluate \textasciitilde1\% of the EBM-PICO training set tokens to gauge the possible reasons for the fine-grained labelling errors and use this exercise to conduct an error-focused PICO re-annotation for the EBM-PICO gold test set.
+This re-annotation was done by the paper's first author, who has a master's in Life Science Informatics and previous experience in manual curation projects in Life Sciences.
 The dataset is pre-tokenized and did not require additional preprocessing except the addition of POS tags and token lemma using spaCy~\footnote{\url{https://spacy.io/}}.
 Multi-class fine-grained PICO annotations were binarized, i.e. a token label was reset to 1 if the token represented a fine-grained entity.
 %
@@ -336,21 +334,21 @@ Multi-class fine-grained PICO annotations were binarized, i.e. a token label was
 \end{table}
 %
 %==============================
-\subsection{sequence labeling}\label{seq_lab}
+\subsection{Sequence labeling}\label{seq_lab}
 %==============================
 %
-Automatic PICO entity labelling is a classical binary sequence labelling problem whereby a function maps an input sequence of n text tokens, $ \bm{X} = (x_{1}, x_{2}, \dotso , x_{n} )$ to output sequence $\bm{Y} = (y_{1}, y_{2}, \dotso , y_{n} )$, where $y_{i} \subset y; y = \{1,0\} $ is the label for token $x_{i}$.
+Automatic PICO entity labelling is a classical binary sequence labelling problem whereby a function maps an input sequence of $n$ text tokens, $ \bm{X} = (x_{1}, x_{2}, \dotso , x_{n} )$ to output sequence $\bm{Y} = (y_{1}, y_{2}, \dotso , y_{n} )$, where $y_{i} \subset y; y = \{1,0\} $ is the label for token $x_{i}$.
 In weak supervision, $\bm{Y}$ is latent and should be estimated by aggregating several weak labellers of variable accuracy.
 The estimates $\bm{\hat{Y}}$ of $\bm{Y}$ are assigned as probabilistic token labels of $\bm{X}$ leading to a weakly labelled dataset that can be used to train discriminative models.
 %
 %==============================
-\subsection{labelling sources}\label{lss}
+\subsection{Labelling sources}\label{lss}
 %==============================
 %
 We used the 2021AB-full release of the UMLS Metathesaurus English subset with 223 vocabularies.
 After removing non-English and zoonotic vocabularies and the vocabularies containing fewer than 500 terms, we remained with 127 vocabularies.~\cite{humphreys1998unified}
 Terms in the selected vocabularies were preprocessed by removing stopwords, numbers, and punctuation.
-Additional vocabularies included disease ontology (DO), Human Phenotype Ontology (HPO), Ontology of adverse events (OAE), Chemical entities of biological interest (ChEBI),  comparative toxicogenomics database (CTD) Chemical and Disease subclasses, Clinical Trials Ontology (NDD-CTO), Gender, Sex, and Sexual Orientation Ontology (GSSO), Chemotherapy Toxicities Ontology (ONTOTOX), Cancer Care: Treatment Outcomes Ontology (CCTOO), symptoms ontology (SYMP), Non-pharmacological interventions ontology (NPI), Nursing Care Coordination Ontology (NCCO).~\cite{schriml2012disease,robinson2008human,he2014oae,de2010chemical,lin2020cto,kronk2020development,geifman2011towards,rogier2021using,lin2018cancer,mohammed2012building,ninot2018definition}
+Additional vocabularies included Disease Ontology (DO), Human Phenotype Ontology (HPO), Ontology of Adverse Events (OAE), Chemical entities of biological interest (ChEBI),  Comparative Toxicogenomics Database (CTD) Chemical and Disease subclasses, Clinical Trials Ontology (NDD-CTO), Gender, Sex, and Sexual Orientation Ontology (GSSO), Chemotherapy Toxicities Ontology (ONTOTOX), Cancer Care: Treatment Outcomes Ontology (CCTOO), Symptoms Ontology (SYMP), Non-pharmacological Interventions ontology (NPI), Nursing Care Coordination Ontology (NCCO).~\cite{schriml2012disease,robinson2008human,he2014oae,de2010chemical,lin2020cto,kronk2020development,geifman2011towards,rogier2021using,lin2018cancer,mohammed2012building,ninot2018definition}
 Regular expressions (ReGeX) and heuristics like POS tag cues were used to capture recurring class-specific patterns otherwise not captured by standardized terminologies.
 The hand-coded dictionaries were designed using the official websites listing patient-reported outcome (PROMs) questionnaires~\footnote{\url{https://www.thoracic.org/members/assemblies/assemblies/bshsr/patient-outcome/}} and PROMs~\footnote{\url{https://www.safetyandquality.gov.au/our-work/indicators-measurement-and-reporting/patient-reported-outcomes/proms-lists}}.
 Vocabularies are structured, standardized data sources that do not capture writing variations from clinical literature and custom-built ReGeX are restricted by either task or entity type.~\cite{ratner2017snorkel,safranchik2020weakly}
@@ -377,7 +375,7 @@ Stopwords from Natural Language Tookit (NLTK)~\footnote{\url{https://www.nltk.or
 %
 %
 %==============================
-\subsection{sources to targets}\label{s2t}
+\subsection{Sources to targets}\label{s2t}
 %==============================
 %
 UMLS concepts are organized under semantic type categories (e.g. disease, sign and symptoms, age group, etc.)~\footnote{\url{https://www.nlm.nih.gov/research/umls/META3_current_semantic_types.html}}, so mapping these semantic categories to PICO targets invariably maps the concepts from the vocabularies to target classes.
@@ -401,7 +399,7 @@ The labelling functions can be ensembled using the majority vote (MV) rule, wher
 Ties and abstains lead to the selection of the majority label.
 %
 \begin{equation}
-\bm{\hat{Y_{MV}}} = \max_{{y \subset \{ 0, 1 \} }} \sum_{i=1}^{m} \mathds{1} (\lambda_{i} = y_{i})
+\bm{\hat{Y}_{MV}} = \max_{{y \subset \{ 0, 1 \} }} \sum_{i=1}^{m} \mathds{1} (\lambda_{i} = y_{i})
 \end{equation}
 %
 However, MV considers each labelling function as conditionally independent and does not consider the variable accuracies of different labelling sources weighing them equally.
@@ -420,7 +418,7 @@ Once we have the pseudo-labels generated by majority voting or the label model, 
 %
 %
 %==============================
-\subsection{experiments}\label{subsec:experiments}
+\subsection{Experiments}\label{subsec:experiments}
 %==============================
 %
 Ontologies are readily-available sources of weak supervision and do not require expert knowledge, while rules require expert investment for development.
@@ -444,7 +442,7 @@ It was tuned on fixed parameters listed in the experimental details section in t
 %
 %
 %==============================
-\subsection{evaluation}\label{eval}
+\subsection{Evaluation}\label{eval}
 %==============================
 %
 We report the classical macro-averaged F1 and recall for MV, LM, weakly-supervised (WS) transformer models and the fully-supervised (FS) transformer models.
@@ -472,7 +470,7 @@ The EBM-NLP guidelines restrict annotating the outcome name, how it was measured
 \end{figure}
 %
 We rectified the errors in the EBM-PICO validation set and categorized them for each PIO class, as shown in Table~\ref{tab:errordist}.
-Of 12,960 (1\%) training tokens evaluated to gauge the errors, 18.30\% of the intervention class tokens, 23.39\% of the participant class tokens and 20.21\% of the outcome class tokens were errors.
+Of 12,960 (\textasciitilde1\% of 1303169) training tokens evaluated to gauge the errors, 18.30\% of the intervention class tokens, 23.39\% of the participant class tokens and 20.21\% of the outcome class tokens were errors.
 The error analysis was used to correct fine-grained annotation errors in the EBM-PICO test set, and both the EBM-PICO and its updated version were used for evaluation.
 Table~\ref{tab:res} reports macro-averaged F1 for the experiments detailed in the experiments section compared to the fully-supervised approach.
 %
@@ -582,11 +580,16 @@ An error falls under \textit{repeated mention} if one instance of an entity is m
 The reason can be the EBM-PICO guidelines flaw where the annotators of fine-grained entity annotation were confined to only annotate within the longer span-level annotation.
 Hence, any annotation error missed by the coarse-grained annotators was continued by the fine-grained annotators.
 
+
+
 An error falls under \textit{remains unannotated} if a token should have been annotated as an entity but was not.
 In the intervention class, a large portion of this category was constituted by the generic mentions of controls (placebo, saline), which were not annotated.
 In the participant class, patient ethnicity and other information like smoking status and pregnancy (marked in the coarse-grained span) were not marked in the fine-grained entity.
 The reason can be that there was no fine-grained class to categorize this information. 
 The annotators missed multiple important outcomes and repeated mentions in the outcome class.
+
+
+
 
 \textit{Conjunction connector} errors are the conjunctions occurring between two semantically separate entities but are falsely marked as entities.
 For example, ``Nausea and vomiting'' are two different outcomes marked as one by annotating the conjunction between them.
@@ -597,12 +600,18 @@ In contrast ``smokeless tobacco'' is an intervention entity.
 In the intervention class, the annotation guidelines mentioned not annotating any part of the text that did not mention the intervention name.
 The annotators often marked extraneous information like intervention dosage, frequency, route of administration and information about the intervention administrator.
 
+
+
+
 A generic reference is a co-reference of an entity mentioned using different or similar (but not identical) words. 
 A generic reference of an entity (and its repeated mention) in the same abstract was several times left unmarked by the annotators constituting a \textit{generic reference} error.
 For example, if the outcome endpoint ``smoking cessation'' was referred to in the same abstract elsewhere as ``quitting smoking'', it was not marked even though it is a reference to the outcome phrase ``smoking cessation''.
 If ``aerobic exercise'' mentioned as ``exercise intervention'' was not marked, this also constitutes a generic reference error.
 For instance, in an RCT, if the ``breast cancer risk counselling'' intervention was referred to as ``risk counselling'', the former was marked, and the latter was missed.
 This error was pronounced specially for the non-pharmaceutical interventions and outcomes.
+
+
+
 
 An \textit{inconsistency} error arises when an entity is fully marked in some abstracts vs when in the other abstracts the same entity is partially marked. 
 For example, if an exercise intervention involved aerobic exercise involving stretching and running, this information (``stretching'', ``running'') was marked in some studies while not in all the other studies.
@@ -638,7 +647,6 @@ In the future, we will work on extending the data programming approach to the SR
 The code will be made public on Github upon publication.
 EBM-PICO error analysis for validation set is available on Zenodo (DOI: 10.5281/zenodo.7138641). 
 The error rectified EBM-PICO gold test set is available on Zenodo (DOI: 10.5281/zenodo.7139326).
-
 %
 %
 %
@@ -715,8 +723,6 @@ We do not foresee any direct social consequences or ethical issues.
 \printbibliography
 %
 %\bibliography{literature}
-
-
 %==============================
 %
 %
