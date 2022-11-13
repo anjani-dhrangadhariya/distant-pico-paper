@@ -216,24 +216,27 @@ Word count: 3981
 %The largest currently available PICO corpus is manually annotated, which is an approach that is often too expensive for the scientific community to apply.
 %Depending on the specific SR question, PICO criteria are extended to PICOC (C-Context),  PICOT (T-timeframe), and PIBOSO (B-Background, S-Study design, O-Other), meaning the static hand-labelled corpora need to undergo costly re-annotation as per the downstream requirements.
 %We aim to test the feasibility of designing a weak supervision system to extract these entities without hand-labelled data.
-To test the feasibility of PICO (Participants, Interventions, Comparators, Outcomes) entity extraction using weak supervision (WS) and natural language processing.
+To test the feasibility of PICO (Participants, Interventions, Comparators, Outcomes) entity extraction using weak supervision and natural language processing.
 \textbf{Methodology:}
 %We decompose PICO spans into its constituent entities and re-purpose multiple medical and non-medical ontologies and expert-generated rules to obtain multiple noisy labels for these entities.
 %These labels generated using several sources are then aggregated using simple majority voting and generative modelling approaches.
 %The resulting programmatic labels are used as weak signals to train a weakly-supervised discriminative model and observe performance changes.
 %We explore mistakes in the currently available PICO corpus that could have led to inaccurate evaluation of several automation methods.
-We re-purpose multiple medical and non-medical ontologies and expert-generated rules to obtain multiple noisy labels for PICO entities. These noisy labels are aggregated using simple majority voting and generative modelling approaches to get consensus labels. The resulting probabilistic labels are used as weak signals to train a weakly-supervised discriminative model to observe performance changes. We explore mistakes in an available PICO corpus that could have led to inaccurate evaluation of several automation methods.
+We re-purpose several medical and non-medical ontologies and expert-generated rules to obtain multiple noisy labels for PICO entities in the EBM-PICO corpus.
+These noisy labels are aggregated using simple majority voting and generative modelling to get consensus labels.
+The resulting probabilistic labels are used as weak signals to train a weakly-supervised discriminative model and observe performance changes.
+We explore mistakes in the EBM-PICO that could have led to inaccurate evaluation of previous automation methods.
 \textbf{Results:}
 %We present Weak-PICO, a weakly-supervised PICO entity recognition approach using medical and non-medical ontologies, dictionaries and expert-generated rules.
 %Our approach does not use hand-labelled data.
-A total of 4,081 randomized clinical trials (RCT) were annotated using the methodology and used to train the WS models and compared against full supervision.
-The models were separately trained for each PICO entity and evaluated on expert derived PICO test set.
-WS approach combining both ontologies and expert-generated rules outperformed full supervision for the participant entity by 1.71\% macro-F1.
-Error analysis on a PICO corpus subset revealed 18-23\% erroneous token classifications.
+In total, 4,081 randomized clinical trials (RCT) were weakly labelled to train the weakly supervised models and compared against full supervision.
+The models were separately trained for each PICO entity and evaluated on the EBM-PICO test set.
+A weakly-supervised approach combining ontologies and expert-generated rules outperformed full supervision for the participant entity by 1.71\% macro-F1.
+Error analysis on the EBM-PICO subset revealed 18-23\% erroneous token classifications.
 \textbf{Discussion:}
-Automatic PICO entity extraction accelerates the writing of clinical systematic reviews that typically use PICO information to filter health evidence.
-However, PICO extends to - PICOS (S-Study type and design), PICOC (C-Context), and PICOT (T-timeframe) for which labelled datasets are unavailable.
-In such cases, the ability to use WS overcomes the expensive annotation bottleneck.
+Automatic PICO entity extraction accelerates the writing of clinical systematic reviews that commonly use PICO information to filter health evidence.
+However, PICO extends to more entities - PICOS (S-Study type and design), PICOC (C-Context), and PICOT (T-timeframe) for which labelled datasets are unavailable.
+In such cases, the ability to use weak supervision overcomes the expensive annotation bottleneck.
 \textbf{Conclusion:}
 %Weak supervision using weak-PICO for PICO entity recognition has encouraging results, and the approach can potentially extend to more clinical entities readily.
 We show the feasibility of weakly-supervised PICO entity extraction using freely-available ontologies and heuristics without manually annotated data. Weak supervision has encouraging performance compared to full supervision but requires careful design to outperform it. 
