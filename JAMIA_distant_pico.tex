@@ -256,20 +256,20 @@ We show the feasibility of weakly-supervised PICO entity extraction using freely
 Systematic reviews (SR) are an evidence-based practice of answering clinical questions using a transparent and quantitative approach.
 The reviewers must collect as many candidate publications as possible, identify the relevant publications, and integrate their results via statistical meta-analysis.
 A clinical SR question is typically formulated using the PICO framework (Participants, Interventions, Comparators, Outcomes), for instance, ``Will aerobic exercise (\textbf{Intervention}) improve cancer-related fatigue (\textbf{Outcome}) in elderly cancer patients (\textbf{Participant}) in comparison to usual care (\textbf{Comparator})?''.
-A clinical publication is only relevant for answering a question if it studies the question-relevant participants, interventions (their comparators) and outcomes.\cite{uman2011systematic} 
-Manually analyzing PICO information from thousands of publications to gauge its relevance often takes 2-8 months of two medical experts' time for a single SR.\cite{borah2017analysis}
+A clinical publication is only relevant for answering a question if it studies the question-relevant participants, interventions (their comparators) and outcomes.~\cite{uman2011systematic} 
+Manually analyzing PICO information from thousands of publications to gauge its relevance often takes 2-8 months of two medical experts' time for a single SR.~\cite{borah2017analysis}
 The process can be automated using machine learning (ML) by directly pointing the human reviewers to the correct text chunks describing PICO, facilitating quick decision-making for the study's relevance.
 
 
 
 Supervised ML requires hand-labelled data, but hand-labelling PICO information requires experts with combined medical and informatics skills, which is expensive and time-consuming in terms of intensive annotator training and the actual annotation.
-Labelling PICO is tricky because of the high disagreement between human annotators on the exact spans constituting PICO, leading to human errors in hand-labelled corpora.\cite{brockmeier2019improving}
-More importantly, depending upon the clinical SR question, PICO criteria are extended to PICOS (S-Study design), PICOC (C-Context), and PICOT (T-timeframe).\cite{riva2012your,methley2014pico,uman2011systematic}
+Labelling PICO is tricky because of the high disagreement between human annotators on the exact spans constituting PICO, leading to human errors in hand-labelled corpora.~\cite{brockmeier2019improving}
+More importantly, depending upon the clinical SR question, PICO criteria are extended to PICOS (S-Study design), PICOC (C-Context), and PICOT (T-timeframe).~\cite{riva2012your,methley2014pico,uman2011systematic}
 Hand-labelled datasets are static and prohibit quick manual re-labelling in case of human errors or when a downstream task requires new entities.
 This annotation bottleneck has pivoted attention towards weakly supervised (WS) learning that relies on programmatic labelling sources to obtain training data.
 Programmatic labelling is quick and allows efficient modifications to the training data labels per the downstream application changes.
 
-Weakly-supervised learning has demonstrated strengths for clinical document classification and relation extraction, but clinical entity extraction tasks have heavily relied on fully supervised (FS) approaches.\cite{meng2018weakly,wang2019clinical,mintz2009distant,elangovan2020assigning,weber2020pedl,mallory2020extracting}
+Weakly-supervised learning has demonstrated strengths for clinical document classification and relation extraction, but clinical entity extraction tasks have heavily relied on fully supervised (FS) approaches.~\cite{meng2018weakly,wang2019clinical,mintz2009distant,elangovan2020assigning,weber2020pedl,mallory2020extracting}
 Despite the availability of UMLS (Unified Medical Language System), a large compendium of medical ontologies, which can be re-purposed for weak entity labelling, it has not been extensively applied to clinical entity labelling.~\cite{humphreys1998unified}
 Several legacy clinical applications are also supported by rule-based \textit{if-else} systems relying on keyword cues that aid weak labelling.~\cite{friedlin2008software,kim2017extracting,yang2015automatic}
 With so many weak labelling sources available, the challenge for weak supervision is efficiently aggregating these sources of varying accuracy.
@@ -277,17 +277,17 @@ With so many weak labelling sources available, the challenge for weak supervisio
 
 
 Data programming is a domain-agnostic generative modelling approach combining multiple weak labelling sources and estimating their accuracies.
-The effectiveness of data programming for biomedical entity recognition has been explored by Fries \textit{et al.} in their Trove system.
-However, Trove only explores well-defined entities like chemical, disease, disorder and drug classes.\cite{fries2021ontology}
+The effectiveness of data programming for biomedical entity recognition has been explored by Fries \textit{et al.} in their Trove system.~\cite{fries2021ontology}
+However, Trove only explores well-defined entities like chemical, disease, disorder and drug classes.
 PICO categories are highly compositional spans by definition, fuzzier in comparison and much more intricate in that they can be divided into subclasses.
 A shortcoming of span extraction is that even after a machine points a human reviewer to the correct PICO span, the reviewer requires to manually read and understand its finer aspects to screen the study for relevance.
 Span extraction hence leads to semi-automation but hinders full-automation.
 The entity recognition approach to PICO is more challenging than the entity recognition approach to disease or chemical names which are more or less standardized.
-PICO terms are not standard, and even the experts disagree on the exact tokens constituting them.\cite{brockmeier2019improving}
+PICO terms are not standard, and even the experts disagree on the exact tokens constituting them.~\cite{brockmeier2019improving}
 Weakly-supervised PICO entity recognition has not garnered as much attention as supervised span recognition.
 As far as our knowledge goes, only two studies exist for weakly-supervised PICO recognition.
-One of these approaches only explores distant supervision for intervention extraction using a single labelling source.\cite{dhrangadhariya2022distant}
-The other approach studies weak supervision for PICO span extraction but still utilizes some supervised annotation signals about whether a sentence includes PICO information.\cite{liu2021sent2span}
+One of these approaches only explores distant supervision for intervention extraction using a single labelling source.~\cite{dhrangadhariya2022distant}
+The other approach studies weak supervision for PICO span extraction but still utilizes some supervised annotation signals about whether a sentence includes PICO information.~\cite{liu2021sent2span}
 %The other relies on a single source of programmatic labelling and focuses on PICO spans and sentences rather than entities.\cite{liu2021sent2span}
 
 
@@ -304,12 +304,12 @@ We show how using only ontology-dependent classifiers vs combining them with exp
 \section{METHODOLOGY}\label{methods}
 %==============================
 %
-The birds-eye view of our approach is shown in the Figure~\ref{fig:approach}.
+The birds-eye view of our approach is shown in Figure~\ref{fig:approach}.
 %
 \begin{figure}[ht]
 \centering
 \includegraphics[width=0.98\textwidth]{figures/approach.pdf}
-\caption{Weak PICO entity extraction approach: I) Multi-class labels in the EBM-PICO benchmark are binarized. II) Low-cost UMLS vocabularies are repurposed as labelling sources, and experts design rules as high-cost labelling sources. III) Labelling functions map the training sequences to class labels using labelling sources resulting in an $m \times n$ label matrix. IV-V) The label matrix is used to train a generative model that outputs probabilistic labels that a downstream transformer model can use for entity recognition.}
+\caption{Weak PICO entity extraction approach: I) Multi-class labels in the EBM-PICO benchmark are binarized. II) Low-cost UMLS vocabularies are re-purposed as labelling sources, and experts design rules as high-cost labelling sources. III) Labelling functions map the training sequences to class labels using labelling sources resulting in an $m \times n$ label matrix. IV-V) The label matrix is used to train a generative model that outputs probabilistic labels that a downstream transformer model can use for entity recognition.}
 \label{fig:approach}
 \end{figure}
 %
@@ -323,12 +323,12 @@ Entity-level annotations cover the more fine-grained information at the entity l
 The dataset comes pre-divided into a training set (n=4,933) annotated through crowd-sourcing and an expert annotated gold test set (n=191) for evaluation.~\cite{nye2018corpus}
 
 The EBM-PICO annotation guidelines caution about variable annotation quality~\footnote{\url{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6174533/bin/NIHMS988059-supplement-Appendix.pdf}}.
-Abaho \textit{et al.} developed a framework to post-hoc correct EBM-PICO outcomes annotation inconsistencies\cite{abaho2019correcting}.
-Lee \textit{et al.} studied annotation span disagreements suggesting variability across the annotators.\cite{lee2019study}
+Abaho \textit{et al.} developed a framework to post-hoc correct EBM-PICO outcomes annotation inconsistencies.~\cite{abaho2019correcting}
+Lee \textit{et al.} studied annotation span disagreements suggesting variability across the annotators.~\cite{lee2019study}
 Low annotation quality in the training dataset is excusable, but the errors in the test set can lead to faulty evaluation of the downstream ML methods.
 We evaluate \textasciitilde1\% of the EBM-PICO training set tokens to gauge the possible reasons for the fine-grained labelling errors and use this exercise to conduct an error-focused PICO re-annotation for the EBM-PICO gold test set.
 This re-annotation was done by the paper's first author, who has a master's in Life Science Informatics and previous experience in manual curation projects in life sciences.
-We were constrained with obtaining multiple annotators to calculate inter-annotator agreement (IAA); however, we calculated Cohen's $\kappa_{new}$ between the expert annotated EBM-PICO gold test set and our re-annotation over 200 documents and compared it to Cohen's $\kappa$ provided by the authors of the original corpus~\cite{nye2018corpus}.
+We were constrained with obtaining multiple annotators to calculate inter-annotator agreement (IAA). However, we calculated Cohen's $\kappa_{new}$ between the expert annotated EBM-PICO gold test set and our re-annotation over 200 documents and compared it to Cohen's $\kappa$ provided by the authors of the original corpus.~\cite{nye2018corpus}
 %
 \begin{table}[h!]
 \begin{center}
@@ -382,7 +382,7 @@ The estimates $\bm{\hat{Y}}$ of $\bm{Y}$ are assigned as probabilistic token lab
 %==============================
 %
 We used the 2021AB-full release of the UMLS Metathesaurus English subset with 223 vocabularies.
-After removing non-English and zoonotic vocabularies and the vocabularies containing fewer than 500 terms, we remained with 127 vocabularies.~\cite{humphreys1998unified}
+After removing non-English and zoonotic vocabulary and the vocabularies containing fewer than 500 terms, we remained with 127 vocabularies.~\cite{humphreys1998unified}
 Terms in the selected vocabularies were preprocessed by removing stopwords, numbers, and punctuation.
 Additional vocabularies included Disease Ontology (DO), Human Phenotype Ontology (HPO), Ontology of Adverse Events (OAE), Chemical entities of biological interest (ChEBI),  Comparative Toxicogenomics Database (CTD) Chemical and Disease subclasses, Clinical Trials Ontology (NDD-CTO), Gender, Sex, and Sexual Orientation Ontology (GSSO), Chemotherapy Toxicities Ontology (ONTOTOX), Cancer Care: Treatment Outcomes Ontology (CCTOO), Symptoms Ontology (SYMP), Non-pharmacological Interventions ontology (NPI), Nursing Care Coordination Ontology (NCCO).~\cite{schriml2012disease,robinson2008human,he2014oae,de2010chemical,lin2020cto,kronk2020development,geifman2011towards,rogier2021using,lin2018cancer,mohammed2012building,ninot2018definition}
 Regular expressions (ReGeX) and heuristics like POS tag cues were used to capture recurring class-specific patterns otherwise not captured by standardized terminologies.
@@ -414,7 +414,7 @@ Stopwords from Natural Language Tookit (NLTK)~\footnote{\url{https://www.nltk.or
 \subsection{Sources to targets}\label{s2t}
 %==============================
 %
-UMLS concepts are organized under semantic type categories (e.g. disease, sign and symptoms, age group, etc.)~\footnote{\url{https://www.nlm.nih.gov/research/umls/META3_current_semantic_types.html}}, so mapping these semantic categories to PICO targets invariably maps the concepts from the vocabularies to target classes.
+UMLS concepts are organized under semantic type categories (e.g. disease, signs and symptoms, age group, etc.)~\footnote{\url{https://www.nlm.nih.gov/research/umls/META3_current_semantic_types.html}}, so mapping these semantic categories to PICO targets invariably maps the concepts from the vocabularies to target classes.
 It is a challenging expert-led activity, though decomposing PICO into subclasses greatly helps map sources to target.
 A semantic category was either marked $\{1, 0\}$ depending upon its relevance to the target class (refer to Supplementary material section on UMLS sources to PICO targets).
 Non-UMLS vocabularies were obtained from NCBO bioportal~\footnote{\url{https://bioportal.bioontology.org/}} and were chosen to be PICO target specific and assigned to a single label.
@@ -440,10 +440,10 @@ Ties and abstains lead to the selection of the majority label.
 %
 However, MV considers each labelling function as conditionally independent and does not consider the variable accuracies of different labelling sources weighing them equally.
 Snorkel implements data programming paradigm into the label model (LM) that re-weights and aggregates labelling functions into probabilistic labels $\hat{y_{i}}$.
-To do this, label model trains a generative model $ \bm{P} ( \Lambda , Y )$ to estimate LF accuracies $\theta_{j}$ using stochastic gradient descent to minimize log loss in absence of labelled data.~\cite{ratner2017snorkel,dunnmon2020cross}
+To do this, the label model trains a generative model $ \bm{P} ( \Lambda , Y )$ to estimate LF accuracies $\theta_{j}$ using stochastic gradient descent to minimize log loss in the absence of labelled data.~\cite{ratner2017snorkel,dunnmon2020cross}
 Even though the ground truth is not observable to estimate accuracies, they can be estimated using observed agreement and disagreement rates between labelling function pairs $ \lambda_{i}, \lambda_{j}$ in $\Lambda$.
 Generative modeling ultimately results into token label probablities $\bm{\hat{Y}}$ for label classes $ \{ 0, 1\} $.
-GridSearch was used to fine-tune the parameters of the label model using the hand-labelled validation set from the EBM-PICO.
+GridSearch was used to fine-tune the label model paramters using the hand-labelled validation set from the EBM-PICO.
 The parameters are listed in the Experimental details section of the supplementary material.
 Once we have the pseudo-labels generated by majority voting or the label model, these could be used to train a discriminative model.
 %
@@ -460,8 +460,8 @@ Once we have the pseudo-labels generated by majority voting or the label model, 
 Ontologies are readily-available sources of weak supervision and do not require expert knowledge, while rules require expert investment for development.
 We tested whether adding expert-engineered rule-based labelling sources brought performance gains to ontology-based labelling sources.
 We report results on three tiers to gauge the performance changes: 1) UMLS labelling sources, 2) UMLS and non-UMLS labelling sources, 3) UMLS, non-UMLS and expert generated rules. 
-UMLS ontologies were ranked based on the total number of n-gram overlaps between the respective terminology and the EBM-PICO validation set.
-The ontologies were partitioned into $s = ( 1, 2, \dotso , 127 )$ partitions with partition one aggregating all the ontologies into a single LF and partition 127 with all the ontologies as separate LFs.
+UMLS ontologies were ranked based on the number of n-gram overlaps between the respective terminology and the EBM-PICO validation set.
+The ontologies were partitioned into $s = ( 1, 2, \dotso , 127 )$ partitions, with partition one aggregating all the ontologies into a single LF and partition 127 with all the ontologies as separate LFs.
 
 
 The labelling functions $\lambda_{m}$ were used to label the EBM-PICO training set and obtain $\lambda$. 
@@ -492,9 +492,9 @@ We used students t-test with an alpha $\alpha$ threshold of 0.05 to measure the 
 %
 We extended the EBM-PICO subclasses (refer to Table~\ref{tab:coarsefineconcept}) to better query the labelling sources and design labelling functions (see Figure~\ref{fig:target_subgroups}).
 For a more comprehensive subgrouping, we propose developing a PICO ontology.~\cite{sanchez2022annotated}
-It is more straightforward to search for ontologies representing adverse events or diseases rather than fending for an ontology describing the entire participant or outcome spans.
+It is more straightforward to search for ontologies representing adverse events or diseases rather than fending for an ontology describing the entire participant or outcome span.
 It is easier to grasp cues separately for outcome terms and instruments of outcome measurement to develop heuristics.
-The intervention span can include intervention name, role (primary intervention or comparator), dosage, frequency, mode of administration and administrator.
+The intervention span can include the intervention name, role (primary intervention or comparator), dosage, frequency, mode of administration and administrator.
 The outcome span can include the outcome names, the scales, techniques or instruments used to measure them and the absolute outcome measurement values.
 The EBM-NLP guidelines restrict annotating the outcome name, how it was measured, and the intervention's name and role (control, placebo), leaving out the other subclasses.
 %We designed $m$ labelling functions $\lambda^{m}$ corresponding to these guidelines, aggregated them to get probabilistic token labels, and used the weakly-labelled dataset for downstream PICO recognition tasks.
@@ -502,7 +502,7 @@ The EBM-NLP guidelines restrict annotating the outcome name, how it was measured
 \begin{figure}[ht]
 \centering
 \includegraphics[width=0.95\textwidth]{figures/target_subgroups_.pdf}
-\caption{\label{fig:target_subgroups} Hierarchical representation of PICO subclasses. The categories marked in bold-italic are the same as the fine-grained categories in EBM-PICO corpus.}
+\caption{\label{fig:target_subgroups} Hierarchical representation of PICO subclasses. The categories marked in bold italic are the same as the fine-grained categories in the EBM-PICO corpus.}
 \end{figure}
 %
 We rectified the errors in the EBM-PICO validation set and categorized them for each PIO class, as shown in Table~\ref{tab:errordist}.
@@ -570,7 +570,7 @@ The majority voting had higher recall across experiments compared to precision, 
 %
 \paragraph{\textit{LF tiers}}
 Adding non-UMLS LFs to the UMLS tier increases performance for the intervention target by an average of 4.48\%, but leads to performance drops for the participants and outcomes targets by 0.36\% and 0.64\%, respectively.
-Adding task-specific LF's increased the overall F1 by a negligible 0.98\%.
+Adding task-specific LFs increased the overall F1 by a negligible 0.98\%.
 Heuristics improved performance for the interventions LM by 11.1\%.
 %
 \paragraph{\textit{UMLS partitions}}
@@ -610,8 +610,8 @@ It is empirically confirmed by the performance boost that PubMedBERT brings this
 %==============================
 %
 We expound on the error categories and provide examples here.
-Some of our error categories are as identified by Abaho \textit{et al.}, but we add more classes on top of them.
-While they limit their error exploration to outcomes class, we extend it to the rest.
+Some of our error categories are as identified by Abaho \textit{et al.}, but we add more classes on top of them.~\cite{abaho2019correcting}
+While they limit their error exploration to the outcomes class, we extend it to the rest.
 An error falls under \textit{repeated mention} if one instance of an entity is marked, but another identical instance of the same entity in the same context is not marked within the abstract. 
 The reason can be the EBM-PICO guidelines flaw where the annotators of fine-grained entity annotation were confined to only annotate within the longer span-level annotation.
 Hence, any annotation error missed by the coarse-grained annotators was continued by the fine-grained annotators.
@@ -621,7 +621,7 @@ Hence, any annotation error missed by the coarse-grained annotators was continue
 An error falls under \textit{remains unannotated} if a token should have been annotated as an entity but was not.
 In the intervention class, a large portion of this category was constituted by the generic mentions of controls (placebo, saline), which were not annotated.
 In the participant class, patient ethnicity and other information like smoking status and pregnancy (marked in the coarse-grained span) were not marked in the fine-grained entity.
-The reason can be that there was no fine-grained class to categorize this information. 
+The reason could be that there was no fine-grained class to categorize this information. 
 The annotators missed multiple important outcomes and repeated mentions in the outcome class.
 
 
@@ -651,8 +651,8 @@ This error was pronounced specially for the non-pharmaceutical interventions and
 
 An \textit{inconsistency} error arises when an entity is fully marked in some abstracts vs when in the other abstracts the same entity is partially marked. 
 For example, if an exercise intervention involved aerobic exercise involving stretching and running, this information (``stretching'', ``running'') was marked in some studies while not in all the other studies.
-In the case of the participant class, the sample size sub-grouping information was inconsistently marked.
-In another example, participant sample size information was either partially or completely marked (``59'' vs ``59 subjects'', ``200'' vs ``200 controls'').
+In the case of the participant class the sample size sub-grouping information needed to be more consistently marked.
+In another example, participant sample size information was either partially or entirely marked (``59'' vs ``59 subjects'', ``200'' vs ``200 controls'').
 We consider a phrase as a sample size only when the absolute value quantifying sample size follows an appropriate unit (subject, controls, patients, participants, women, men). 
 Only in some cases, when the unit was unavailable, did we consider a standalone number as a sample size participant span.
 In the outcome class, the annotation guidelines marked ``what was measured and how it was measured''. 
@@ -668,7 +668,7 @@ For example, in the outcomes evaluation, the phrase ``evaluate and compare'' fro
 These errors and inconsistencies in the EBM-PICO gold test (and training) set can cause faulty evaluation of the machine learning approaches defying the purpose of the corpus.
 A possible reason behind these inconsistencies in the corpus could be that the annotators had clinical background but lacked an informatics background.
 This situation could undermine the importance of semantic consistency required for annotating such corpora.
-Hiring annotators with combined knowledge of clinical and informatics domains might improve the manual annotation quality.
+Hiring annotators with a combined knowledge of clinical and informatics domains might improve the manual annotation quality.
 Aggregation of crowd annotations for spans with fuzzy span boundaries might lead to many boundary errors, for example, when two disparate entities are linked by a \textit{conjunction connector}.
 %
 %==============================
@@ -678,11 +678,11 @@ Aggregation of crowd annotations for spans with fuzzy span boundaries might lead
 We adapted weak supervision for PICO spans and developed models for predicting PICO entities without a hand-labelled corpus.
 We also identified errors pertinent to the current PICO benchmark, rectified them and used both datasets to evaluate the recognition models.
 The approach achieves promising performance compared to full supervision and warrants further research into weak supervision for compositional entities like PICO.
-We firmly believe the approach can be extended to more clinical SR entities in the absence of a manually labelled corpus, thereby being a starting point to overcome the annotation bottleneck for SR entities.
+The approach can be extended to more clinical SR entities in the absence of a manually labelled corpus, thereby being a starting point to overcome the annotation bottleneck for SR entities.
 In the future, we will work on extending the data programming approach to the SR entities that do not have a manually labelled corpus like EBM-PICO and inspect strategies for mapping ontologies to PICO subclasses.
-The code will be made public on Github upon publication.
-EBM-PICO error analysis for validation set is available on Zenodo (DOI: 10.5281/zenodo.7138641). 
-The error rectified EBM-PICO gold test set is available on Zenodo (DOI: 10.5281/zenodo.7139326).
+The code will be made public on GitHub upon publication.
+EBM-PICO error analysis for the validation set is available on Zenodo (DOI: 10.5281/zenodo.7138641). 
+The error-rectified EBM-PICO gold test set is available on Zenodo (DOI: 10.5281/zenodo.7139326).
 %
 %
 %
