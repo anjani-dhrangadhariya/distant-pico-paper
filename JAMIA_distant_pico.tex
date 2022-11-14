@@ -332,8 +332,6 @@ Lee \textit{et al.} studied annotation span disagreements suggesting variability
 Low annotation quality in the training dataset is excusable, but the errors in the test set can lead to faulty evaluation of the downstream ML methods.
 We evaluate \textasciitilde1\% of the EBM-PICO training set tokens to gauge the possible reasons for the fine-grained labelling errors and use this exercise to conduct an error-focused PICO re-annotation for the EBM-PICO gold set.
 The paper's first author, who has a master's in life science informatics and relevant experience in manual curation projects, carried out the re-annotation.
-We were constrained with obtaining multiple annotators to calculate inter-annotator agreement (IAA).
-Therefore, we calculated Cohen's $\kappa_{new}$ between the expert annotated EBM-PICO gold set and our re-annotation over 200 documents and compared it to Cohen's $\kappa$ provided by the authors of the original corpus.\cite{nye2018corpus}
 
 
 The dataset is pre-tokenized and did not require additional preprocessing except the addition of POS tags and token lemma using spaCy\footnote{\url{https://spacy.io/}}.
@@ -363,24 +361,9 @@ Multi-class fine-grained PICO annotations were binarized, i.e. a token label was
 \subsection{Binary token labelling}\label{seq_lab}
 %==============================
 %
-We consider automatic PICO entity labelling as a classical binary token labelling problem whereby a function maps an input sequence of $n$ text tokens, $ \bm{X} = (x_{1}, x_{2}, \dotso , x_{n} )$ to output sequence $\bm{Y} = (y_{1}, y_{2}, \dotso , y_{n} )$, where $y_{i} \subset y; y = \{1,0\} $ is the label for token $x_{i}$.
+We consider automatic PICO entity labelling as a classical binary token labelling problem whereby a labeller maps an input sequence of $n$ text tokens, $ \bm{X} = (x_{1}, x_{2}, \dotso , x_{n} )$ to output sequence $\bm{Y} = (y_{1}, y_{2}, \dotso , y_{n} )$, where $y_{i} \subset y; y = \{1,0\} $ is the label for token $x_{i}$.
 In weak supervision, $\bm{Y}$ is latent and should be estimated by aggregating several weak labellers of variable accuracy.
 The estimates $\bm{\hat{Y}}$ of $\bm{Y}$ are assigned as probabilistic token labels of $\bm{X}$ leading to a weakly labelled dataset that can be used to train discriminative models.
-%
-%==============================
-\subsection{Labelling sources}\label{lss}
-%==============================
-%
-We used the 2021AB-full release of the UMLS Metathesaurus English subset with 223 vocabularies.
-After removing non-English and zoonotic vocabulary and the vocabularies containing fewer than 500 terms, we remained with 127 vocabularies.\cite{humphreys1998unified}
-Terms in the selected vocabularies were preprocessed by removing stopwords, numbers, and punctuation.
-We use the following vocabularies not covered by UMLS: Disease Ontology (DO), Human Phenotype Ontology (HPO), Ontology of Adverse Events (OAE), Chemical entities of biological interest (ChEBI),  Comparative Toxicogenomics Database (CTD) Chemical and Disease subclasses, Gender, Sex, and Sexual Orientation Ontology (GSSO), Chemotherapy Toxicities Ontology (ONTOTOX), Cancer Care: Treatment Outcomes Ontology (CCTOO), Symptoms Ontology (SYMP), Non-pharmacological Interventions Ontology (NPI), Nursing Care Coordination Ontology (NCCO).\cite{schriml2012disease,robinson2008human,he2014oae,de2010chemical,kronk2020development,geifman2011towards,rogier2021using,lin2018cancer,mohammed2012building,ninot2018definition}
-These vocabularies were re-purposed for automatic binary token labelling.
-Regular expressions (ReGeX) and heuristics like POS tag cues were used to capture recurring class-specific PICO patterns otherwise not captured by standardized terminologies.
-The hand-coded dictionaries were designed using the official websites listing patient-reported outcome (PROM) questionnaires\footnote{\url{https://www.thoracic.org/members/assemblies/assemblies/bshsr/patient-outcome/}} and PROMs\footnote{\url{https://www.safetyandquality.gov.au/our-work/indicators-measurement-and-reporting/patient-reported-outcomes/proms-lists}}.
-Vocabularies are structured, standardized data sources that do not capture writing variations from clinical literature and custom-built ReGeX are restricted by either task or entity type.\cite{ratner2017snorkel,safranchik2020weakly}
-We used distant supervision dictionaries created from the structured fields of clinicaltrials.gov (CTO) as described by Dhrangadhariya \textit{et al.}\cite{dhrangadhariya2022distant}
-Principal investigators of the clinical study manually enter data in CTO, thereby incorporating large-scale writing variations.\cite{califf2012characteristics}
 %
 %
 %
@@ -388,35 +371,51 @@ Principal investigators of the clinical study manually enter data in CTO, thereb
 \subsection{Labeling functions}\label{lfs}
 %==============================
 %
-In a binary token labelling task, a labelling function is a weak classifier $\lambda$ that uses domain-specific labelling sources $\bm{S}$ and a logic to emit token labels $ \widetilde{\bm{Y_{i}}}$ with labels $ \widetilde{y} \in \{-1, 0, +1\}$ for a subset of input $\bm{X_{i}}$ tokens.
-A labelling function designed for a particular target class $t \in \bm{T}$ (here; $\bm{T} \subset \{ Participant, Intervention, Outcome \} $) should output  $1$ for the positive token label, $0$ for the negative token label, and abstain ($-1$) on the tokens where it is uncertain $\lambda \mapsto \{-1, 0, +1\}$.
+In a binary token labelling task, a labeller also called as a labelling function (LF) is a weak classifier $\lambda$ that uses domain-specific labelling sources $\bm{S}$ and some logic to emit binary token labels $ \widetilde{\bm{Y_{i}}}$ where $ \widetilde{y} \in \{-1, 0, +1\}$ for a subset of input $\bm{X_{i}}$ tokens.
+An LF designed for a particular target class $t \in \bm{T}$ (here; $\bm{T} \subset \{ Participant, Intervention, Outcome \} $) should output  $1$ for the positive token class label, $0$ for the negative token class label, and abstain ($-1$) on the tokens where it is uncertain $\lambda \mapsto \{-1, 0, +1\}$.
 We designed three LF types depending on the types of labelling sources.
-1) The ontology or dictionary labelling functions for a target class take a dictionary of terminologies mapped to one of $y \subset \{0, +1\} $ token labels.
-Any labelling function using ontologies or dictionaries used string matching as the labelling heuristic.
+1) The ontology LFs for a target class take a dictionary of terminologies with each terminology mapped to one of $y \subset \{0, +1\} $ token target labels.
+Any labelling function using terminologies used string matching as the labelling heuristic.
 Relevant bigram word co-occurrences were used to account for fuzzy span matching from the terminologies.
 A bigram was considered as relevant for a vocabulary if it occurred $\geq25$ times in that vocabulary.
-2) A ReGeX labelling function for a target class takes regex patterns for $\{0, +1\}$ labels and abstains from the rest.
+2) A ReGeX (regular expression) labelling function for a target class takes regular expression patterns for both negative and positive token class $\{0, +1\}$ labels and abstains from the rest.
 3) A heuristic labelling function is personalized for each target class and takes a generic regex pattern and specific POS (part-of-speech) tag signals.
 Abbreviations in clinical studies are considered using a heuristics abbreviation identifier, and the identified abbreviations were mapped to their respective target classes.
 Stopwords from Natural Language Tookit (NLTK)\footnote{\url{https://www.nltk.org}}, spaCy, Gensim\footnote{\url{https://radimrehurek.com/gensim/}}, and scikit learn\footnote{\url{https://scikit-learn.org}} were used to initialize negative token label templates.
 %
+%==============================
+\subsection{Labelling sources}\label{lss}
+%==============================
+%
+This section describes the labelling sources $\bm{S}$ used and their mapping to the PICO targets $\bm{T}$.
+We used the 2021AB-full release of the UMLS Metathesaurus English subset with 223 vocabularies.
+After removing non-English and zoonotic vocabulary and the vocabularies containing fewer than 500 terms, we remained with 127 vocabularies.\cite{humphreys1998unified}
+Terms in the selected vocabularies were preprocessed by removing stopwords, numbers, and punctuation.
+We use the following non-UMLS vocabularies: Disease Ontology (DO), Human Phenotype Ontology (HPO), Ontology of Adverse Events (OAE), Chemical entities of biological interest (ChEBI),  Comparative Toxicogenomics Database (CTD) Chemical and Disease subclasses, Gender, Sex, and Sexual Orientation Ontology (GSSO), Chemotherapy Toxicities Ontology (ONTOTOX), Cancer Care: Treatment Outcomes Ontology (CCTOO), Symptoms Ontology (SYMP), Non-pharmacological Interventions Ontology (NPI), Nursing Care Coordination Ontology (NCCO).\cite{schriml2012disease,robinson2008human,he2014oae,de2010chemical,kronk2020development,geifman2011towards,rogier2021using,lin2018cancer,mohammed2012building,ninot2018definition}
+ReGeX and heuristics like POS tag cues were used to capture recurring class-specific PICO patterns otherwise not captured by standardized terminologies.
+Vocabularies are structured, standardized data sources that do not capture writing variations from clinical literature and custom-built ReGeX are restricted by either task or entity type.\cite{ratner2017snorkel,safranchik2020weakly}
+We used distant supervision dictionaries created from the structured fields of clinicaltrials.gov (CTO) as described by Dhrangadhariya \textit{et al.}\cite{dhrangadhariya2022distant}
+Principal investigators of the clinical study manually enter data in CTO, thereby incorporating large-scale writing variations.\cite{califf2012characteristics}
+Hand-crafted dictionaries were generated using various web sources.
+%
 %
 %
 %==============================
-\subsection{Sources to targets}\label{s2t}
+\subsubsection{Sources to targets}\label{s2t}
 %==============================
 %
-Along with the source $S$ and some logic to map $S_{i}$ to token labels, an LF needs information about which target $T_{i}$ label to map the source.
+Along with the source $\bm{S}$ and the logic to map $S_{i}$ to token labels, an LF needs information about which target $T_{i}$ label to map the source.
 This section reports how the sources mentioned above were mapped to the PICO targets.
-UMLS 2021AB-full release contains 16,543,671 concept names, making direct concept to PICO target mapping impracticable.
+UMLS 2021AB-full release contains 16,543,671 concept names, making direct concept to PICO target mapping impractical.
 These concepts are organized under semantic type categories (e.g. disease, signs and symptoms, age group, etc.)\footnote{\url{https://www.nlm.nih.gov/research/umls/META3_current_semantic_types.html}}, which allows mapping these semantic categories to PICO targets invariably mapping the concepts from the vocabularies to target classes.\cite{mccray2001aggregating}
 It is a challenging expert-led activity, though decomposing PICO into subclasses greatly helps map sources to a target.
-A semantic category was marked $1$ to represent a positive token label for that target class or $0$ to represent a negative token label for that target class (refer to Supplementary material section on UMLS sources to PICO targets).
-Non-UMLS vocabularies were obtained from NCBO bioportal\footnote{\url{https://bioportal.bioontology.org/}} and were chosen to be PICO target specific and assigned to a single label (refer to Supplementary material section on Non-UMLS sources for details).
-Structured fields from clinicaltrials.gov (CTO) were used to create Target-specific distant supervision dictionaries.
+A semantic category was marked $1$ to represent a positive token label for that target class or $0$ to represent a negative token label for that target class.
+Non-UMLS vocabularies were obtained from NCBO bioportal\footnote{\url{https://bioportal.bioontology.org/}} and were chosen to be PICO target specific and assigned to a single label (refer to Supplementary material section on UMLS sources to PICO targets and Non-UMLS sources  for details).
+Structured fields from clinicaltrials.gov (CTO) were used to create target-specific distant supervision dictionaries.
 The structured CTO field ``Condition or Disease'' was mapped to the participant target, and the ``Intervention/Treatment'' field was mapped to the intervention target.
 The semi-structured ``Primary Outcome Measures'' and ``Secondary Outcome Measures'' fields were mapped to the outcome target.
-Hand-crafted dictionaries were separately designed for participant gender, intervention comparator terms and outcomes.
+The hand-crafteddictionaries for outcomes were designed using the official websites listing patient-reported outcome (PROM) questionnaires\footnote{\url{https://www.thoracic.org/members/assemblies/assemblies/bshsr/patient-outcome/}} and PROMs\footnote{\url{https://www.safetyandquality.gov.au/our-work/indicators-measurement-and-reporting/patient-reported-outcomes/proms-lists}}.
+Other hand-crafted dictionaries were separately designed for participant gender and sexuality and intervention comparator terms.
 %
 %
 %
@@ -424,7 +423,8 @@ Hand-crafted dictionaries were separately designed for participant gender, inter
 \subsection{LF aggregation}\label{lms}
 %==============================
 %
-Each labelling function $ \lambda_{i} \in \bm{\Lambda^{m}}; \bm{\Lambda} = \{\lambda_{1}, \lambda_{2}, \dotso, \lambda_{m} \} $ maps a subset of inputs $\bm{X^{n}}$ to output sequence $ \widetilde{\bm{Y^{n}}}$ with labels $\widetilde{y} \in \{-1, 0, +1\}$ yielding a label matrix $ \lambda \subset \{-1, 0, +1\}^{m \times n}$.
+Depending upon the number of sources $\bm{S}$ for each $\bm{T}$, we had several LFs. 
+Each LF $ \lambda_{i} \in \bm{\Lambda^{m}}; \bm{\Lambda} = \{\lambda_{1}, \lambda_{2}, \dotso, \lambda_{m} \} $ maps a subset of inputs $\bm{X^{n}}$ to output sequence $ \widetilde{\bm{Y^{n}}}$ with labels $\widetilde{y} \in \{-1, 0, +1\}$ yielding a label matrix $ \lambda \subset \{-1, 0, +1\}^{m \times n}$.
 The weakly-generated labels might have conflicts and overlaps and are generally noisy.
 These LFs can be ensembled using the majority vote (MV) rule, where a token label is elected only when a majority of $\lambda_{i}$ vote for it.
 Ties and abstains lead to the selection of the majority label.
@@ -501,8 +501,10 @@ The EBM-NLP guidelines restrict annotating the outcome name, how it was measured
 \end{figure}
 %
 We rectified the errors in the EBM-PICO validation set and categorized them for each PIO class, as shown in Table~\ref{tab:errordist}.
-Of 12,960 (\textasciitilde1\% of 1303169) training tokens evaluated to gauge the errors, 18.30\% of the intervention class tokens, 23.39\% of the participant class tokens and 20.21\% of the outcome class tokens were errors.
+Of 12,960 (\textasciitilde1\% of 1,303,169) training tokens evaluated to gauge the errors, 18.30\% of the intervention class tokens, 23.39\% of the participant class tokens and 20.21\% of the outcome class tokens were errors.
 The error analysis was used to correct fine-grained annotation errors in the EBM-PICO test set, and both the EBM-PICO and its updated version were used for evaluation.
+We were constrained with obtaining multiple annotators for the re-annotation to calculate inter-annotator agreement (IAA).
+Therefore, we calculated Cohen's $\kappa_{new}$ between the original EBM-PICO gold set and our re-annotation over 200 documents and compared it to Cohen's $\kappa$ (refer Table\ref{tab:agreement}) provided by the authors of the original corpus.\cite{nye2018corpus}
 Table~\ref{tab:res} reports macro-averaged F1 for the experiments detailed in the experiments section compared to the fully-supervised approach.
 %
 \begin{table}[!ht]
