@@ -646,28 +646,45 @@ Distant study type extraction which extends to more entities without the need of
 %
 %
 \subsection{Error analysis}\label{error_an}
-% Anjani:  compare the existing methods (full supervision) to the results of the weak supervision. 
-Finally, we conducted an error analysis to gauge where weak supervision falters compared to full supervision.
+%
+Finally, we conducted an error analysis on 18 (n = 5,291 tokens) out of 200 EBM-PICO gold test set documents to gauge where weak supervision falters compared to full supervision (refer Table\ref{tab:error_ner}).
+Each token level error was divided into either of the four classes: 1) false negative (FN) - if the entire entity that the token as part of was missed out by the NER model prediction, 2) false positive (FP) - if the entire entity that the token was part of was falsely recognized as ``Intervention'', 3) boundary error (BE) - if the boundary tokens were missed out but otherwise the entity was identified by the NER model prediction, and 4) overlapping error (OE) - if the NER model made an error in the non-peripheral tokens of an otherwise identified entity mention.
+Non-peripheral tokens are all the tokens except the first and the last token of the multi-token entity/span.
+
+Majority of participant class FPs were the spurious tokens identified due to idiosyncratic patterns covered by the rule-based LFs, e.g., the terms ``patients'', ``disease'', $<$ numbers $>$.
+Outcome symptoms were identified as participant symptoms, e.g., anxiety measured in patients as a result of treatment, leukopenia, vomiting, nausea, dysrhythmia.
+Some FP were the anatomy information identified as disease e.g. basilar artery, lung.
+Many abbreviations were missed out by the model including the abbreviations encompassed by brackets, e.g., MetS, TC (testicular cancer), LVH (left ventricular hypertrophy), \textit{etc}.
+Sample size subgrouping information was missed out as well, e.g. n=161.
 Participants: does not identify either the terms encompassed in round brackets or the brackets around abb. This could be because weak supervision models were not trained on it.
-Many random false positives with terms like ``patients'', ``disease'', <numbers> which could be because of the regex.
-FP - numbers following the term ``year''.
-Some abb not identified like MetS., TS (testicular cancer), LVH (left ventricular hypertrophy).
-Sub group information not identified. 
-Outcome symptom identified as participant symptom: eg anxiety measured in patients as a result of treatment, leukopenia, vomitting, nausea, dysrhythmia.
-Staging information of disease can be missed for example ``advanced carcinoma'' where advanced is missed out, e.g. 61 ASA physical status I-III patients, primary ureteropelvic junction obstruction.
-While some things can be improved upon by incorporating more rules and more dictionaries.
-Boundary error brackets and missing extra staging information and numbers following years.
+%FP - numbers following the term ``year''.
+BEs were the extra information that described more about the participants.
+The boundary errors were mainly the disease stage information was missed too, for e.g., in ``advanced carcinoma'' where the word ``advanced'' was missed out, e.g. 61 ASA physical status I-III patients, primary ureteropelvic junction obstruction.
+Sometimes the abbreviation was identified but the surround brackets were not identified, e.g., for the disease abbreviation ``(COPD)'', the brackets were missed out on.
+
 ``patients with carcinoma'', ``patient with hypothyroidism'' the term ``with'' missed as overlapping error.
 The term ``blind'' identified from ``blind placebo'', ``randomized controlled blind trial''.
-Large number of disease abbreviations missed out on.
-Anatomy identified as disease e.g. basiler artery, lung.
 Sample size information when mentioned without the regex pattern coverage.
+Some of these errors could be mitigated by addition of more rules and more dictionaries.
+%
+\begin{table}[h!]
+\begin{center}
+\begin{tabular}{| c | c | c | c | c |} 
+\hline
+ & FP & FN & BE & OE \\ 
+\hline
+Participants & 160 & 76 & 80 & 10 \\ 
+Interventions & - & - & - & - \\ 
+Outcomes & - & - & - & - \\ 
+\hline
+\end{tabular}
+\caption{\label{tab:error_ner} Distribution of the token-level errors made by the best label models on EBM-PICO gold.}
+\end{center}
+\end{table}
+%
 
 
-
-
-
-%Anjani: We are at a table limit and if we want to add more tables, we need to remove one of the existing ones.
+Error analysis for ``intervention'' and ``outcome''.
 %
 %
 %
