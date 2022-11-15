@@ -674,8 +674,8 @@ Some of these errors could be mitigated by addition of more rules and more dicti
  & FP & FN & BE & OE \\ 
 \hline
 Participants & 160 & 76 & 80 & 10 \\ 
-Interventions & - & - & - & - \\ 
-Outcomes & - & - & - & - \\ 
+Interventions & 308 & 119 & 60 & 0 \\ 
+Outcomes & 233 & 306 & 139 & 7 \\ 
 \hline
 \end{tabular}
 \caption{\label{tab:error_ner} Distribution of the token-level errors made by the best label models on EBM-PICO gold.}
@@ -683,8 +683,28 @@ Outcomes & - & - & - & - \\
 \end{table}
 %
 
-
 Error analysis for ``intervention'' and ``outcome''.
+FP - 
+FP - disproportionately high with spurious tokens.
+Treatments not subject to randomization were also identified, e.g. epidural analgesia.
+Names of hormones not used as treatments identified as well, e.g. melatonin. 
+Many spurious tokens non-noun tokens identified as intervention class including the common term ``treatment'', ``group'', ``injection''.
+Many unusual abbreviations were misidentified, e.g. RA (Rheumatoid Arthritis), TG (Triglycerides), cholesterol.
+Random lab procedures identified as therapies e.g. fractionation, gel electrophoresis, CT scanner, CT angiography.
+Instruments not used for treatment but for outcomes analysis were also identified as intervention terms
+FN - 
+Essential drug names missed: fenofibrate. 
+Names of essential bio-molecules identified as well: lipoprotein, lipid cholesterol.
+Many unusual/not standard abbreviations were missed, e.g. RF group, RT (Radiotherapy).
+Unusual/unseen intervention names were missed: TC+TSE, especially the ones that did not have the following successor tokens (intervention, treatment, therapy, etc.)
+Boundary errors - 
+for the non-standard and composite therapy names peripheral information was not identified, e.g., ``TC + TSE information''.
+``concurrent chemoradiotherapy'' where ``concurrent'' was not identified (sometimes identified, sometimes missed).
+The question here is of seen vs. unseen entities. Low performance on unseen entities.
+For e.g. the term epigastric impedence is not present in the UMLS.
+``internal stenting'' but internal not present in the UMLS only stenting.
+in the term ``endopyelotomy stent placement'' only stent was identified because it was present in the UMLS. - Order-free matching. More dictionaries.
+
 %
 %
 %
