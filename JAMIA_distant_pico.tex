@@ -647,25 +647,31 @@ Distant study type extraction which extends to more entities without the need of
 %
 \subsection{Error analysis}\label{error_an}
 %
-Finally, we conducted an error analysis on 18 (n = 5,291 tokens) out of 200 EBM-PICO gold test set documents to gauge where weak supervision falters compared to full supervision (refer Table\ref{tab:error_ner}).
-Each token level error was divided into either of the four classes: 1) false negative (FN) - if the entire entity that the token as part of was missed out by the NER model prediction, 2) false positive (FP) - if the entire entity that the token was part of was falsely recognized as ``Intervention'', 3) boundary error (BE) - if the boundary tokens were missed out but otherwise the entity was identified by the NER model prediction, and 4) overlapping error (OE) - if the NER model made an error in the non-peripheral tokens of an otherwise identified entity mention.
-Non-peripheral tokens are all the tokens except the first and the last token of the multi-token entity/span.
+We aim to improve recall for the weakly supervised PICO and therefore dig deeper into the FNs.
+Besides participant disease, many a time, tokens representing participant sample size, age group, gender, and symptoms also went unrecognized.
+LM labelled these FNs with low confidence, meaning it picked up the signals from the LFs, but the signals were not strong enough for correct classification. 
+Such FNs could be mitigated by weighting these participant subclass LFs.
+Considerable standard and unusual abbreviation terms were missed out by LM, especially the ones encompassed by brackets, e.g., MetS (Metabolic Syndrome), TC+TSE (testicular cancer + testicular self-examination), LVH (left ventricular hypertrophy), \textit{etc.}.
+The model did not pick some of the standard abbreviations, e.g. LVH and MetS, due to a faulty mapping of these abbreviations to the incorrect PICO target.
+A similar pattern was observed for the intervention (e.g., IBA (Inference-based Approach), RT (Radiotherapy)) and outcomes class abbreviations too.
+The mismapping is now amended.
+Other abbreviations enclosed in a bracket (e.g., ``(COPD)'') were also missed.
+The reason was that we did not have LFs to tag the brackets around abbreviations.
+BEs were usually the extra information that described more about the participant's disease, e.g., the information about disease staging went unrecognized in the participant's disease entity (in ``advanced carcinoma'' where the word ``advanced'' was missed out).
 
-Majority of participant class FPs were the spurious tokens identified due to idiosyncratic patterns covered by the rule-based LFs, e.g., the terms ``patients'', ``disease'', $<$ numbers $>$.
-Outcome symptoms were identified as participant symptoms, e.g., anxiety measured in patients as a result of treatment, leukopenia, vomiting, nausea, dysrhythmia.
-Some FP were the anatomy information identified as disease e.g. basilar artery, lung.
-Many abbreviations were missed out by the model including the abbreviations encompassed by brackets, e.g., MetS, TC (testicular cancer), LVH (left ventricular hypertrophy), \textit{etc}.
-Sample size subgrouping information was missed out as well, e.g. n=161.
-Participants: does not identify either the terms encompassed in round brackets or the brackets around abb. This could be because weak supervision models were not trained on it.
-%FP - numbers following the term ``year''.
-BEs were the extra information that described more about the participants.
-The boundary errors were mainly the disease stage information was missed too, for e.g., in ``advanced carcinoma'' where the word ``advanced'' was missed out, e.g. 61 ASA physical status I-III patients, primary ureteropelvic junction obstruction.
-Sometimes the abbreviation was identified but the surround brackets were not identified, e.g., for the disease abbreviation ``(COPD)'', the brackets were missed out on.
+Intervention LMs did not recognize common drug names, e.g. Fenofibrate and CP-529,414.
+In addition, many non-standardized treatment names went unrecognized, e.g. substance abuse prevention program, inference-based approach, high-concentration contrast agents, epigastric impedance, etc.
+Such terms are absent from both UMLS and non-UMLS vocabularies leading to FNs.
+Similarly, BEs were the non-idiosyncratic tokens partially misrecognized because the vocabulary did not encode this partial information.
+E.g., the term ``internal stenting'' is partially recognized because ``stenting'' is a UMLS concept but not ``internal''.
+Similarly, in the term ``endopyelotomy stent placement,'' only the UMLS concept token ``stent'' was identified.
+The question here is of seen vs unseen entities.
+FNs due to unseen entities could be mitigated by adding relevant vocabulary and rules.
 
-``patients with carcinoma'', ``patient with hypothyroidism'' the term ``with'' missed as overlapping error.
-The term ``blind'' identified from ``blind placebo'', ``randomized controlled blind trial''.
-Sample size information when mentioned without the regex pattern coverage.
-Some of these errors could be mitigated by addition of more rules and more dictionaries.
+The study intervention ``cholesteryl ester transfer protein'' was possibly missed because this UMLS concept fell under the ``Amino Acid, Peptide, or Protein'' semantic group, which was marked abstain for intervention.
+It is straightforward to add vocabulary but challenging to map a semantic group to a disease or drug category because they carry a defined semantic.
+It is challenging to map the UMLS semantic groups to the highly compositional PICO categories, especially the outcomes class.
+It was also challenging for us to identify semantic categories and UMLS vocabularies corresponding to the study outcomes pointing towards the gap of developing one.
 %
 \begin{table}[h!]
 \begin{center}
@@ -681,30 +687,6 @@ Outcomes & 233 & 306 & 139 & 7 \\
 \caption{\label{tab:error_ner} Distribution of the token-level errors made by the best label models on EBM-PICO gold.}
 \end{center}
 \end{table}
-%
-
-Error analysis for ``intervention'' and ``outcome''.
-FP - 
-FP - disproportionately high with spurious tokens.
-Treatments not subject to randomization were also identified, e.g. epidural analgesia.
-Names of hormones not used as treatments identified as well, e.g. melatonin. 
-Many spurious tokens non-noun tokens identified as intervention class including the common term ``treatment'', ``group'', ``injection''.
-Many unusual abbreviations were misidentified, e.g. RA (Rheumatoid Arthritis), TG (Triglycerides), cholesterol.
-Random lab procedures identified as therapies e.g. fractionation, gel electrophoresis, CT scanner, CT angiography.
-Instruments not used for treatment but for outcomes analysis were also identified as intervention terms
-FN - 
-Essential drug names missed: fenofibrate. 
-Names of essential bio-molecules identified as well: lipoprotein, lipid cholesterol.
-Many unusual/not standard abbreviations were missed, e.g. RF group, RT (Radiotherapy).
-Unusual/unseen intervention names were missed: TC+TSE, especially the ones that did not have the following successor tokens (intervention, treatment, therapy, etc.)
-Boundary errors - 
-for the non-standard and composite therapy names peripheral information was not identified, e.g., ``TC + TSE information''.
-``concurrent chemoradiotherapy'' where ``concurrent'' was not identified (sometimes identified, sometimes missed).
-The question here is of seen vs. unseen entities. Low performance on unseen entities.
-For e.g. the term epigastric impedence is not present in the UMLS.
-``internal stenting'' but internal not present in the UMLS only stenting.
-in the term ``endopyelotomy stent placement'' only stent was identified because it was present in the UMLS. - Order-free matching. More dictionaries.
-
 %
 %
 %
