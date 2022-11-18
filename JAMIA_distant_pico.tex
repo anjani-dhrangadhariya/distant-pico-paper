@@ -475,7 +475,8 @@ For all the experiments, 80\% of the EBM-PICO dataset was used for training and 
 
 
 UMLS ontologies were ranked and sorted based on the number of n-gram overlaps between the respective terminology and the EBM-PICO validation set.
-These were then partitioned into 127 partitions, where the first partition combined all the UMLS into a single LF, and the last partition kept all the terminologies as separate LFs.
+These were then partitioned into 127 partitions, where the first partition combined the entire UMLS into a single LF and was used as the baseline. 
+The last partition kept all the terminologies as separate LFs.
 Partition-wise performance over the validation set was tracked.
 %The ontologies were partitioned into $s = ( 1, 2, \dotso , 127 )$ partitions, with partition one aggregating all the ontologies into a single LF and partition 127 with all the ontologies as separate LFs.
 %
