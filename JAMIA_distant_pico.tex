@@ -239,7 +239,7 @@ However, PICO extends to more entities - PICOS (S-Study type and design), PICOC 
 In such cases, the ability to use weak supervision overcomes the expensive annotation bottleneck.
 \textbf{Conclusion:}
 %Weak supervision using weak-PICO for PICO entity recognition has encouraging results, and the approach can potentially extend to more clinical entities readily.
-We show the feasibility of weakly-supervised PICO entity extraction using freely-available ontologies and heuristics without manually annotated data. Weak supervision has encouraging performance compared to full supervision but requires careful design to outperform it. 
+We show the feasibility of weakly-supervised PICO entity extraction using freely-available ontologies and heuristics without any manually annotated data. Weak supervision has encouraging performance compared to full supervision but requires careful design to outperform it. 
 
 
 \keywords{Weak supervision, Machine learning, Information extraction, Evidence-based Medicine}
@@ -321,14 +321,14 @@ The birds-eye view of our approach is shown in Figure~\ref{fig:approach}.
 \subsection{Datasets}\label{data}
 %==============================
 %
-EBM-PICO is a widely used dataset with PICO annotations at two levels: span-level or coarse-grained and entity-level or fine-grained (see Table~\ref{tab:coarsefineconcept}).
+EBM-PICO is a widely used dataset with multi-level PICO annotations: span-level or coarse-grained and entity-level or fine-grained (see Table~\ref{tab:coarsefineconcept}).
 Span-level annotations encompass the maximum information about each class.
 Entity-level annotations cover the more fine-grained information at the entity level, with PICO classes further divided into more semantic subclasses.
 The dataset comes pre-divided into a training set (n=4,933) annotated through crowd-sourcing and an expert annotated gold test set (n=191) for evaluation.\cite{nye2018corpus}
 
-The EBM-PICO annotation guidelines caution about variable annotation quality\footnote{\url{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6174533/bin/NIHMS988059-supplement-Appendix.pdf}}.
+The EBM-PICO original paper and annotation guidelines caution about variable annotation quality\footnote{\url{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6174533/bin/NIHMS988059-supplement-Appendix.pdf}}.
 Abaho \textit{et al.} developed a framework to post-hoc correct EBM-PICO outcomes annotation inconsistencies.\cite{abaho2019correcting}
-Lee \textit{et al.} studied annotation span disagreements suggesting variability across the annotators.\cite{lee2019study}
+Lee \textit{et al.} studied annotation disagreements suggesting variability across the annotators.\cite{lee2019study}
 Low annotation quality in the training dataset is excusable, but the errors in the test set can lead to faulty evaluation of the downstream ML methods.
 We evaluate \textasciitilde1\% of the EBM-PICO training set tokens to gauge the possible reasons for the fine-grained labelling errors and use this exercise to conduct an error-focused PICO re-annotation for the EBM-PICO gold set.
 The paper's first author, who has a master's in life science informatics and relevant experience in manual curation projects, carried out the re-annotation.
@@ -371,13 +371,13 @@ The estimates $\bm{\hat{Y}}$ of $\bm{Y}$ are assigned as probabilistic token lab
 \subsection{Labeling functions}\label{lfs}
 %==============================
 %
-In a binary token labelling task, a labeller also called as a labelling function (LF) is a weak classifier $\lambda$ that uses domain-specific labelling sources $\bm{S}$ and some logic to emit binary token labels $ \widetilde{\bm{Y_{i}}}$ where $ \widetilde{y} \in \{-1, 0, +1\}$ for a subset of input $\bm{X_{i}}$ tokens.
+In a binary token labelling task, a labeller, also called a labelling function (LF) is a weak classifier $\lambda$ that uses domain-specific labelling sources $\bm{S}$ and some logic to emit binary token labels $ \widetilde{\bm{Y_{i}}}$ where $ \widetilde{y} \in \{-1, 0, +1\}$ for a subset of input $\bm{X_{i}}$ tokens.
 An LF designed for a particular target class $t \in \bm{T}$ (here; $\bm{T} \subset \{ Participant, Intervention, Outcome \} $) should output  $1$ for the positive token class label, $0$ for the negative token class label, and abstain ($-1$) on the tokens where it is uncertain $\lambda \mapsto \{-1, 0, +1\}$.
 We designed three LF types depending on the types of labelling sources.
 1) The ontology LFs for a target class take a dictionary of terminologies with each terminology mapped to one of $y \subset \{0, +1\} $ token target labels.
 Any labelling function using terminologies used string matching as the labelling heuristic.
 Relevant bigram word co-occurrences were used to account for fuzzy span matching from the terminologies.
-A bigram was considered as relevant for a vocabulary if it occurred $\geq25$ times in that vocabulary.
+A bigram was considered relevant for a vocabulary if it occurred $\geq25$ times in that vocabulary.
 2) A ReGeX (regular expression) labelling function for a target class takes regular expression patterns for both negative and positive token class $\{0, +1\}$ labels and abstains from the rest.
 3) A heuristic labelling function is personalized for each target class and takes a generic regex pattern and specific POS (part-of-speech) tag signals.
 Abbreviations in clinical studies are considered using a heuristics abbreviation identifier, and the identified abbreviations were mapped to their respective target classes.
@@ -520,7 +520,7 @@ We rectified the errors in the EBM-PICO validation subset and categorized them f
 Of 12,960 (\textasciitilde1\% of 1,303,169) validation tokens evaluated to gauge the errors, 18.30\% of the intervention class tokens, 23.39\% of the participant class tokens and 20.21\% of the outcome class tokens were errors.
 The error analysis was used to correct fine-grained annotation errors in the EBM-PICO test set, and both the EBM-PICO and its updated version were used for evaluation.
 We were constrained with obtaining multiple annotators for the re-annotation to calculate inter-annotator agreement (IAA).
-Therefore, we calculated Cohen's $\kappa_{new}$ between the original EBM-PICO gold set and our re-annotation over 200 documents and compared it to Cohen's $\kappa$ (see Table\ref{tab:agreement}) provided by the authors of the original corpus.\cite{nye2018corpus}
+Therefore, we calculated Cohen's $\kappa_{new}$ between the original EBM-PICO gold set and our re-annotation over 200 documents and compared it to Cohen's $\kappa$ (see Table~\ref{tab:agreement}) provided by the authors of the original corpus.\cite{nye2018corpus}
 
 %\paragraph{\textit{error rectification: impact}}
 Table~\ref{tab:res} reports macro-averaged F1 for the experiments detailed in the experiments section compared to the fully-supervised approach.
@@ -605,7 +605,7 @@ Partitions with more than 100 LFs performed better.
 This situation contrasts with Trove, where an increase in partitions leads to a drop in performance across targets (see Figure~\ref{fig:partitions}).
 For the outcomes target, an increase in the number of partitions leads to an increased performance initially but a drop with a further increase in the partition numbers.
 LM outperforms MV on training performance across the two targets and experiments except for the intervention target, where the MV model combining UMLS and additional ontologies outperforms LM.
-The simple baseline collapsing UMLS into a single LF usually did not perform better than the others in UMLS partitions. 
+The simple baseline collapsing UMLS into a single LF usually did not perform better than the others in UMLS partitions for any of the three experiment tiers (refer to the \#LF columns in Table~\ref{tab:res}).
 %
 \begin{figure}[!h]
     \centering
