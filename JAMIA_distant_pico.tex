@@ -378,7 +378,7 @@ We designed three LF types depending on the types of labelling sources.
 Any labelling function using terminologies used string matching as the labelling heuristic.
 Relevant bigram word co-occurrences were used to account for fuzzy span matching from the terminologies.
 A bigram was considered relevant for a vocabulary if it occurred $\geq25$ times in that vocabulary.
-2) A ReGeX (regular expression) labelling function for a target class takes regular expression patterns for both negative and positive token class $\{0, +1\}$ labels and abstains from the rest.
+2) A ReGeX (regular expression) labelling function for a target class uses regular expression sources for both negative and positive token class $\{0, +1\}$ labels and abstains from the rest.
 3) A heuristic labelling function is personalized for each target class and takes a generic regex pattern and specific POS (part-of-speech) tag signals.
 Abbreviations in clinical studies are considered using a heuristics abbreviation identifier, and the identified abbreviations were mapped to their respective target classes.
 Stopwords from Natural Language Tookit (NLTK)\footnote{\url{https://www.nltk.org}}, spaCy, Gensim\footnote{\url{https://radimrehurek.com/gensim/}}, and scikit learn\footnote{\url{https://scikit-learn.org}} were used to initialize negative token label templates.
@@ -391,7 +391,7 @@ This section describes the labelling sources $\bm{S}$ used and their mapping to 
 We used the 2021AB-full release of the UMLS Metathesaurus English subset with 223 vocabularies.
 After removing non-English and zoonotic vocabulary and the vocabularies containing fewer than 500 terms, we remained with 127 vocabularies.\cite{humphreys1998unified}
 Terms in the selected vocabularies were preprocessed by removing stopwords, numbers, and punctuation.
-We use the following non-UMLS vocabularies: Disease Ontology (DO), Human Phenotype Ontology (HPO), Ontology of Adverse Events (OAE), Chemical entities of biological interest (ChEBI),  Comparative Toxicogenomics Database (CTD) Chemical and Disease subclasses, Gender, Sex, and Sexual Orientation Ontology (GSSO), Chemotherapy Toxicities Ontology (ONTOTOX), Cancer Care: Treatment Outcomes Ontology (CCTOO), Symptoms Ontology (SYMP), Non-pharmacological Interventions Ontology (NPI), Nursing Care Coordination Ontology (NCCO).\cite{schriml2012disease,robinson2008human,he2014oae,de2010chemical,kronk2020development,geifman2011towards,rogier2021using,lin2018cancer,mohammed2012building,ninot2018definition}
+We use the following non-UMLS vocabularies: Disease Ontology (DO), Human Phenotype Ontology (HPO), Ontology of Adverse Events (OAE), Chemical entities of biological interest (ChEBI),  Comparative Toxicogenomics Database (CTD) - Chemical and Disease subclasses, Gender, Sex, and Sexual Orientation Ontology (GSSO), Chemotherapy Toxicities Ontology (ONTOTOX), Cancer Care: Treatment Outcomes Ontology (CCTOO), Symptoms Ontology (SYMP), Non-pharmacological Interventions Ontology (NPI), Nursing Care Coordination Ontology (NCCO).\cite{schriml2012disease,robinson2008human,he2014oae,de2010chemical,kronk2020development,geifman2011towards,rogier2021using,lin2018cancer,mohammed2012building,ninot2018definition}
 ReGeX and heuristics like POS tag cues were used to capture recurring class-specific PICO patterns otherwise not captured by standardized terminologies.
 Vocabularies are structured, standardized data sources that do not capture writing variations from clinical literature and custom-built ReGeX are restricted by either task or entity type.\cite{ratner2017snorkel,safranchik2020weakly}
 We used distant supervision dictionaries created from the structured fields of clinicaltrials.gov (CTO) as described by Dhrangadhariya \textit{et al.}\cite{dhrangadhariya2022distant}
@@ -404,13 +404,13 @@ Hand-crafted dictionaries were generated using various web sources.
 \subsubsection{Sources to targets}\label{s2t}
 %==============================
 %
-Along with the source $\bm{S}$ and the logic to map $S_{i}$ to token labels, an LF needs information about which target $T_{i}$ label to map the source.
-This section reports how the sources mentioned above were mapped to the PICO targets.
+Along with the source $\bm{S}$ and the logic to map $S_{i}$ to token labels, an LF needs information about which target $T_{i}$ label and binary token class to map the source.
+We report how the LF sources were mapped to PICO targets in this section.
 UMLS 2021AB-full release contains 16,543,671 concept names, making direct concept to PICO target mapping impractical.
 These concepts are organized under semantic type categories (e.g. disease, signs and symptoms, age group, etc.)\footnote{\url{https://www.nlm.nih.gov/research/umls/META3_current_semantic_types.html}}, which allows mapping these semantic categories to PICO targets invariably mapping the concepts from the vocabularies to target classes.\cite{mccray2001aggregating}
 It is a challenging expert-led activity, though decomposing PICO into subclasses greatly helps map sources to a target.
 A semantic category was marked $1$ to represent a positive token label for that target class or $0$ to represent a negative token label for that target class.
-Non-UMLS vocabularies were obtained from NCBO bioportal\footnote{\url{https://bioportal.bioontology.org/}} and were chosen to be PICO target specific and assigned to a single label (refer to Supplementary material section on UMLS sources to PICO targets and Non-UMLS sources  for details).
+Non-UMLS vocabularies were obtained from NCBO bioportal\footnote{\url{https://bioportal.bioontology.org/}} and were chosen to be PICO target specific and assigned to a single label.
 Structured fields from clinicaltrials.gov (CTO) were used to create target-specific distant supervision dictionaries.
 The structured CTO field ``Condition or Disease'' was mapped to the participant target, and the ``Intervention/Treatment'' field was mapped to the intervention target.
 The semi-structured ``Primary Outcome Measures'' and ``Secondary Outcome Measures'' fields were mapped to the outcome target.
