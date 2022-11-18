@@ -621,21 +621,22 @@ The simple baseline collapsing UMLS into a single LF usually did not perform bet
 \section{DISCUSSION}\label{discussion}
 %==============================
 %
-Our study demonstrates the feasibility and prowess of using weak supervision for PICO entity extraction.
-The experimental results show promising performance of weak supervision compared to full supervision and surpassing it for participant extraction.
-In another study, we use weak supervision to successfully extend PICO to PICOS extraction (S = Study type) without needing additional annotated ``Study type'' data to quickly power applications.\cite{dhrangadhariya2023picos}
-Although, it is not straightforward to design labelling functions corresponding to the PICO targets, given their fuzzy nature and documented errors in the EBM-PICO gold test set.
-The work also shows how easy it is to re-purpose the low-cost UMLS and non-UMLS vocabularies but challenging to map them to the correct PICO targets.
-A decreased or stagnant F1 shows this after adding non-UMLS LFs to the UMLS tier.
-Task-specific ReGeX and heuristics were developed upon inspection of the most frequent terms in the EBM-PICO validation set.
-We followed the same procedure across the targets, but the performance boost using these LFs was only observed in the participants and interventions and was detrimental to the outcomes.
+Our study results show promising performance of weak supervision compared to full supervision and surpassing it for participant extraction.
+It has to be noticed that weak supervision requires careful LF design consideration to surpass full supervision, primarily due to the compositional nature of PICO classes.
+In another study, we use this weak supervision approach to successfully extend PICO to PICOS extraction (S = Study type) without needing additional annotated ``Study type'' data to quickly power applications.\cite{dhrangadhariya2023picos}
 
-Even though LM improves performance compared to MV, MV has a higher recall across experiments indicating a good corpus coverage of the LFs.
+
+Although it is to re-purpose the vocabularies for pseudo-labelling, it is challenging to map them to the correct PICO targets.
+A decreased or stagnant F1 after adding non-UMLS LFs to the UMLS tier indicates this.
+We used the EBM-PICO validation set to design task-specific LF for all the PICO targets.
+Still, the performance boost using these LFs was only observed in the participants and interventions and was detrimental to the outcomes.
+
+Even though LM improves performance compared to MV, MV has a higher recall across experiments indicating a good corpus coverage of the LFs (refer to Figure~\ref{fig:precRecall}).
 While some studies press on PICO extraction being a recall-oriented task, this is debated in practice.
-In practice, high recall might lead to an accompanying high false positive (FP) rate, leading to the reviewers spending more time to manually weed out FP noise than reading and annotating the abstract with the entities\cite{liu2021sent2span}.
+In practice, high recall might lead to a high false positive (FP) rate, leading to the reviewers spending more time weeding out FP noise than reading and annotating the abstract with the entities.\cite{liu2021sent2span}
 
 
-LM only considers the information encoded in the weak sources to label phrases from the training text but does not consider the contextual information around the phrases.
+LM only considers the information encoded in the weak sources to label phrases from the training text but does not consider the contextual information.
 Transformers consider the contextual information and should generalize beyond the label models in theory.
 It is empirically confirmed by the performance boost that PubMedBERT brings this on top of the label model for some instances, but the weakly-supervised outcomes extraction results refute it.
 %
