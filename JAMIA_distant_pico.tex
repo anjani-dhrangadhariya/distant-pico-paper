@@ -651,31 +651,34 @@ It is empirically confirmed by the performance boost that PubMedBERT brings this
 %
 \subsection{Error analysis}\label{error_an}
 %
-We aim to improve recall for the weakly supervised PICO and therefore dig deeper into the FNs.
-Besides participant disease, many a time, tokens representing participant sample size, age group, gender, and symptoms also went unrecognized.
-LM labelled these FNs with low confidence, meaning it picked up the signals from the LFs, but the signals were not strong enough for correct classification. 
-Such FNs could be mitigated by weighting these participant subclass LFs.
-Considerable standard and unusual abbreviation terms were missed out by LM, especially the ones encompassed by brackets, e.g., MetS (Metabolic Syndrome), TC+TSE (testicular cancer + testicular self-examination), LVH (left ventricular hypertrophy), \textit{etc.}.
+Finally, we conducted an error analysis on 18 (n = 5,291 tokens) out of 200 EBM-PICO gold test set documents to gauge where weak supervision falters compared to full supervision.
+Table\ref{tab:error_ner} shows token level errors divided into either of the four classes: 1) false negative (FN) - if the entire entity that the token was part of was missed out by the LM, 2) false positive (FP) - if the entire entity that the token was part of was falsely recognized as an entity, 3) boundary error (BE) - if the boundary tokens were missed out but otherwise the entity was identified by LM prediction, and 4) overlapping error (OE) - if LM made an error in the non-peripheral tokens of an otherwise identified entity mention.
+Non-peripheral tokens are all tokens except the first and last of the multi-token entity.
+
+We aim to improve recall for the weakly supervised PICO and thus dig deeper into the FNs.
+Besides participant disease, many a time, tokens representing participant sample size, age group, gender, and symptoms subclasses went unrecognized.
+The LM labelled these FNs with low confidence, meaning it picked up the signals from the LFs, although the signals were not strong enough for correct classification. 
+Such FNs could be mitigated by weighting LFs for these subclasses.
+Considerable standard and unusual abbreviation terms were missed out, especially the ones encompassed by brackets, e.g., MetS (Metabolic Syndrome), TC+TSE (testicular cancer + testicular self-examination), LVH (left ventricular hypertrophy), \textit{etc.}.
 The model did not pick some of the standard abbreviations, e.g. LVH and MetS, due to a faulty mapping of these abbreviations to the incorrect PICO target.
 A similar pattern was observed for the intervention (e.g., IBA (Inference-based Approach), RT (Radiotherapy)) and outcomes class abbreviations too.
 The mismapping is now amended.
-Other abbreviations enclosed in a bracket (e.g., ``(COPD)'') were also missed.
-The reason was that we did not have LFs to tag the brackets around abbreviations.
-BEs were usually the extra information that described more about the participant's disease, e.g., the information about disease staging went unrecognized in the participant's disease entity (in ``advanced carcinoma'' where the word ``advanced'' was missed out).
+LM did not capture the abbreviations enclosed in a bracket (e.g., ``(COPD)'') as the LFs were not designed to tag these brackets.
+BE FNs were usually the extra information that described more about the participant's disease, e.g., the information about disease staging went unrecognized in the participant's disease entity (in ``advanced carcinoma'', the word ``advanced'' was a BE FN).
 
 Intervention LMs did not recognize common drug names, e.g. Fenofibrate and CP-529,414.
 In addition, many non-standardized treatment names went unrecognized, e.g. substance abuse prevention program, inference-based approach, high-concentration contrast agents, epigastric impedance, etc.
-Such terms are absent from both UMLS and non-UMLS vocabularies leading to FNs.
+Such terms are absent from both UMLS and non-UMLS vocabularies leading to FNs, so the LFs do not encode them.
 Similarly, BEs were the non-idiosyncratic tokens partially misrecognized because the vocabulary did not encode this partial information.
 E.g., the term ``internal stenting'' is partially recognized because ``stenting'' is a UMLS concept but not ``internal''.
 Similarly, in the term ``endopyelotomy stent placement,'' only the UMLS concept token ``stent'' was identified.
-The question here is of seen vs unseen entities.
-FNs due to unseen entities could be mitigated by adding relevant vocabulary and rules.
+Such entities not encoded by the LFs contribute to the FNs and could be mitigated by adding relevant vocabulary and rules.\cite{augenstein2017generalisation}
 
-The study intervention ``cholesteryl ester transfer protein'' was possibly missed because this UMLS concept fell under the ``Amino Acid, Peptide, or Protein'' semantic group, which was marked abstain for intervention.
-It is straightforward to add vocabulary but challenging to map a semantic group to a disease or drug category because they carry a defined semantic.
-It is challenging to map the UMLS semantic groups to the highly compositional PICO categories, especially the outcomes class.
-It was also challenging for us to identify semantic categories and UMLS vocabularies corresponding to the study outcomes pointing towards the gap of developing one.
+%The study intervention ``cholesteryl ester transfer protein'' was possibly missed because this UMLS concept fell under the ``Amino Acid, Peptide, or Protein'' semantic group, which was marked abstain for intervention.
+It is straightforward to add vocabulary but challenging to map a semantic group to PICO categories, especially in the outcomes class.
+Our current source-to-target mapping approach is manual and based on subjective expert judgment and could be improved by an objective algorithm.
+This could have led to several FPs, especially for the outcomes and to a less extent for the intervention class.
+It also took time to identify semantic categories and UMLS vocabularies corresponding to the study outcomes pointing towards the gap in developing one.
 %
 \begin{table}[h!]
 \begin{center}
@@ -700,9 +703,9 @@ Outcomes & 233 & 306 & 139 & 7 \\
 %
 We adapted weak supervision for PICO spans and developed models for predicting PICO entities without a hand-labelled corpus.
 We also identified errors pertinent to the current PICO benchmark, rectified them and used both datasets to evaluate the recognition models.
-The approach achieves promising performance compared to full supervision and warrants further research into weak supervision for compositional entities like PICO.
-The approach can be extended to more clinical SR entities in the absence of a manually labelled corpus, thereby being a starting point to overcome the annotation bottleneck for SR entities.
-In the future, we will work on extending the data programming approach to the SR entities that do not have a manually labelled corpus like EBM-PICO and inspect strategies for mapping ontologies to PICO subclasses.
+The approach achieves promising performance compared to full supervision and warrants further research into weak supervision for challenging PICO extraction.
+The approach can be extended to more clinical SR entities without a manually labelled corpus, thereby being a starting point to overcome the annotation bottleneck.
+In the future, we will work on extending the data programming approach to inspect strategies for objectively mapping ontologies to PICO subclasses and using external models like MetaMap as LFs.
 %
 %
 %
