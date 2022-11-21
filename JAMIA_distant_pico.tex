@@ -521,7 +521,8 @@ We rectified the errors in the EBM-PICO validation subset and categorized them f
 Of 12,960 (\textasciitilde1\% of 1,303,169) validation tokens evaluated to gauge the errors, 18.30\% of the intervention class tokens, 23.39\% of the participant class tokens and 20.21\% of the outcome class tokens were errors.
 The error analysis was used to correct fine-grained annotation errors in the EBM-PICO test set, and both the EBM-PICO and its updated version were used for evaluation.
 We were constrained with obtaining multiple annotators for the re-annotation to calculate inter-annotator agreement (IAA).
-Therefore, we calculated Cohen's $\kappa_{new}$ between the original EBM-PICO gold set and our re-annotation over 200 documents and compared it to Cohen's $\kappa$ (see Table~\ref{tab:agreement}) provided by the authors of the original corpus.\cite{nye2018corpus}
+Therefore, we calculated Cohen's $\kappa_{new}$ between the original EBM-PICO gold set and our re-annotation over 200 documents and compared it to Cohen's $\kappa$ (see Figure~\ref{fig:agreement}) provided by the authors of the original corpus.\cite{nye2018corpus}
+The 
 
 %\paragraph{\textit{error rectification: impact}}
 Table~\ref{tab:res} reports macro-averaged F1 for the experiments detailed in the experiments section compared to the fully-supervised approach.
@@ -548,20 +549,11 @@ It has to be noticed that weak supervision outperforms full supervision on the r
 \end{table}
 %
 %
-\begin{table}[h!]
-\begin{center}
-\begin{tabular}{| c | c | c |} 
-\hline
- & $\kappa$ & $\kappa_{new}$ \\ 
-\hline
-Participants & 0.50 & 0.53  \\ 
-Interventions & 0.59 & 0.67 \\ 
-Outcomes & 0.51 & 0.69  \\
-\hline
-\end{tabular}
-\caption{\label{tab:agreement} Cohen's $\kappa_{new}$ between the expert annotated EBM-PICO gold test set and EBM-PICO compared to the Cohen's $\kappa$ for EBM-PICO gold test set annotations.}
-\end{center}
-\end{table}
+\begin{figure}[!h]
+\centering
+\includegraphics[width=0.65\textwidth]{figures/cohens_kappa.pdf}
+\caption{\label{fig:agreement} Cohen's $\kappa_{new}$ between the expert annotated EBM-PICO gold test set and EBM-PICO compared to the Cohen's $\kappa$ for EBM-PICO gold test set annotations.}
+\end{figure}
 %
 %
 \begin{table}[!ht]
