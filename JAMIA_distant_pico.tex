@@ -202,7 +202,7 @@ minbibnames=3,
 \doublespacing
 %==============================
 
-Word count: 3981
+Word count: 4004
 
 \clearpage
 \section{\textbf{ABSTRACT}}
@@ -613,15 +613,15 @@ The simple baseline collapsing UMLS into a single LF usually did not perform bet
 \section{DISCUSSION}\label{discussion}
 %==============================
 %
-Our study results show promising performance of weak supervision compared to full supervision and surpassing it for participant extraction.
+Our study results show the promising performance of weak supervision compared to full supervision, surpassing it for participant extraction.
 It has to be noticed that weak supervision requires careful LF design consideration to surpass full supervision, primarily due to the compositional nature of PICO classes.
 In another study, we use this weak supervision approach to successfully extend PICO to PICOS extraction (S-Study type) without needing additional annotated ``Study type'' data to quickly power applications.\cite{dhrangadhariya2023picos}
 
 
-Although it is easy to re-purpose the vocabularies for pseudo-labelling, it is challenging to map them to the correct PICO targets.
+Although it is easy to re-purpose the vocabulary for labelling, it is challenging to map them to the correct PICO targets.
 A decreased or stagnant F1 after adding non-UMLS LFs to the UMLS tier indicates this.
-We used the EBM-PICO validation set to design task-specific LF for all the PICO targets.
-Still, the performance boost using these LFs was only observed in the participants and interventions and was detrimental to the outcomes.
+The performance boost using rule-based LFs was only observed in the participants and interventions and was detrimental to the outcomes.
+
 
 Even though LM improves performance compared to MV, MV has a higher recall across experiments indicating a good corpus coverage of the LFs (refer to Figure~\ref{fig:precRecall}).
 While some studies press on PICO extraction being a recall-oriented task, this is debated in practice.
@@ -644,10 +644,10 @@ It is empirically confirmed by the performance boost that PubMedBERT brings this
 \subsection{Error analysis}\label{error_an}
 %
 Finally, we conducted an error analysis on 18 (n = 5,291 tokens) out of 200 EBM-PICO gold test set documents to gauge where weak supervision falters compared to full supervision.
-Table\ref{tab:error_ner} shows token level errors divided into either of the four classes: 1) false negative (FN) - if the entire entity that the token was part of was missed out by the LM, 2) false positive (FP) - if the entire entity that the token was part of was falsely recognized as an entity, 3) boundary error (BE) - if the boundary tokens were missed out but otherwise the entity was identified by LM prediction, and 4) overlapping error (OE) - if LM made an error in the non-peripheral tokens of an otherwise identified entity mention.
+Table\ref{tab:error_ner} shows token level errors divided into either of the four classes: 1) false negative (FN) - if the entire entity that the token was part of was missed out by the LM, 2) false positive (FP) - if the entire entity that the token was part of was falsely recognized as an entity, 3) boundary error (BE) - if the boundary tokens were missed out, but otherwise the entity was identified by LM, and 4) overlapping error (OE) - if LM made an error in the non-peripheral tokens of an otherwise identified entity mention.
 Non-peripheral tokens are all tokens except the first and last of the multi-token entity.
 
-We aim to improve recall for the weakly supervised PICO and thus dig deeper into the FNs.
+In future, we aim to improve recall for the WS models and thus dig deeper into the FNs.
 Besides participant disease, many a time, tokens representing participant sample size, age group, gender, and symptoms subclasses went unrecognized.
 The LM labelled these FNs with low confidence, meaning it picked up the signals from the LFs, although the signals were not strong enough for correct classification. 
 Such FNs could be mitigated by weighting LFs for these subclasses.
@@ -659,18 +659,17 @@ LM did not capture the abbreviations enclosed in a bracket (e.g., ``(COPD)'') as
 BE FNs were usually the extra information that described more about the participant's disease, e.g., the information about disease staging went unrecognized in the participant's disease entity (in ``advanced carcinoma'', the word ``advanced'' was a BE FN).
 
 Intervention LMs did not recognize common drug names, e.g. Fenofibrate and CP-529,414.
-In addition, many non-standardized treatment names went unrecognized, e.g. substance abuse prevention program, inference-based approach, high-concentration contrast agents, epigastric impedance, etc.
-Such terms are absent from both UMLS and non-UMLS vocabularies leading to FNs, so the LFs do not encode them.
-Similarly, BEs were the non-idiosyncratic tokens partially misrecognized because the vocabulary did not encode this partial information.
+In addition, many non-standardized treatment names went unrecognized, e.g. substance abuse prevention program, inference-based approach, high-concentration contrast agents, epigastric impedance, \textit{etc}.
+Such terms are absent from UMLS and non-UMLS vocabularies leading to FNs, so the LFs do not encode them.
+Similarly, intervention BEs were the non-idiosyncratic tokens partially misrecognized because the vocabulary did not encode this partial information.
 E.g., the term ``internal stenting'' is partially recognized because ``stenting'' is a UMLS concept but not ``internal''.
 Similarly, in the term ``endopyelotomy stent placement,'' only the UMLS concept token ``stent'' was identified.
 Such entities not encoded by the LFs contribute to the FNs and could be mitigated by adding relevant vocabulary and rules.\cite{augenstein2017generalisation}
-
-%The study intervention ``cholesteryl ester transfer protein'' was possibly missed because this UMLS concept fell under the ``Amino Acid, Peptide, or Protein'' semantic group, which was marked abstain for intervention.
+%The study intervention ``cholesteryl ester transfer protein'' was possibly missed because this UMLS concept fell under the ``Amino Acid, Peptide, or Protein'' semantic group, marked abstain for intervention.
 It is straightforward to add vocabulary but challenging to map a semantic group to PICO categories, especially in the outcomes class.
-Our current source-to-target mapping approach is manual and based on subjective expert judgment and could be improved by an objective algorithm.
-This could have led to several spurious FPs, especially for the outcomes and to a less extent for the intervention class.
-It also took time to identify semantic categories and UMLS vocabularies corresponding to the study outcomes pointing towards the gap in developing one.
+Our current source-to-target mapping approach is manual and based on subjective expert judgment, which an objective algorithm can improve.
+This mapping could have led to several unexplainable errors, especially for the outcomes and, to a less extent, for the intervention class.
+Additionally, it took time to identify semantic categories and UMLS vocabularies corresponding to the study outcomes pointing towards the gap in developing one.
 %
 \begin{table}[h!]
 \begin{center}
