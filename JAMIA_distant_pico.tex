@@ -643,20 +643,21 @@ It is empirically confirmed by the performance boost that PubMedBERT brings this
 %
 \subsection{Error analysis}\label{error_an}
 %
-Finally, we conducted an error analysis on 18 (n = 5,291 tokens) out of 200 EBM-PICO gold test set documents to gauge where weak supervision falters compared to full supervision.
-Table\ref{tab:error_ner} shows token level errors divided into either of the four classes: 1) false negative (FN) - if the entire entity that the token was part of was missed out by the LM, 2) false positive (FP) - if the entire entity that the token was part of was falsely recognized as an entity, 3) boundary error (BE) - if the boundary tokens were missed out, but otherwise the entity was identified by LM, and 4) overlapping error (OE) - if LM made an error in the non-peripheral tokens of an otherwise identified entity mention.
+We conducted an error analysis on 18 (n = 5,291 tokens) out of 200 EBM-PICO gold test set documents to contextualize the weak supervision models.
+Table\ref{tab:error_ner} shows token level errors divided into either of the four classes: 1) false negative (FN) - if the entire entity that the token was part of was missed out by the LM, 2) false positive (FP) - if the entire entity that the token was part of was falsely recognized as an entity, 3) boundary error (BE) - if the boundary tokens were missed out, but otherwise the entity was identified, and 4) overlapping error (OE) - if LM made an error in the non-peripheral tokens of an otherwise identified entity mention.
 Non-peripheral tokens are all tokens except the first and last of the multi-token entity.
 
-In future, we aim to improve recall for the WS models and thus dig deeper into the FNs.
-Besides participant disease, many a time, tokens representing participant sample size, age group, gender, and symptoms subclasses went unrecognized.
-The LM labelled these FNs with low confidence, meaning it picked up the signals from the LFs, although the signals were not strong enough for correct classification. 
+In future, we aim to reduce FNs and dig deeper into this category.
+Besides participant disease, tokens representing participant sample size, age group, gender, and symptoms subclasses went unrecognized.
+The LM labelled these FNs with low confidence, meaning the LFs did encode this information, but the signals were not strong enough for correct classification. 
 Such FNs could be mitigated by weighting LFs for these subclasses.
 Considerable standard and unusual abbreviation terms were missed out, especially the ones encompassed by brackets, e.g., MetS (Metabolic Syndrome), TC+TSE (testicular cancer + testicular self-examination), LVH (left ventricular hypertrophy), \textit{etc.}.
 The model did not pick some of the standard abbreviations, e.g. LVH and MetS, due to a faulty mapping of these abbreviations to the incorrect PICO target.
 A similar pattern was observed for the intervention (e.g., IBA (Inference-based Approach), RT (Radiotherapy)) and outcomes class abbreviations too.
 The mismapping is now amended.
 LM did not capture the abbreviations enclosed in a bracket (e.g., ``(COPD)'') as the LFs were not designed to tag these brackets.
-BE FNs were usually the extra information that described more about the participant's disease, e.g., the information about disease staging went unrecognized in the participant's disease entity (in ``advanced carcinoma'', the word ``advanced'' was a BE FN).
+
+
 
 Intervention LMs did not recognize common drug names, e.g. Fenofibrate and CP-529,414.
 In addition, many non-standardized treatment names went unrecognized, e.g. substance abuse prevention program, inference-based approach, high-concentration contrast agents, epigastric impedance, \textit{etc}.
@@ -664,9 +665,9 @@ Such terms are absent from UMLS and non-UMLS vocabularies leading to FNs, so the
 Similarly, intervention BEs were the non-idiosyncratic tokens partially misrecognized because the vocabulary did not encode this partial information.
 E.g., the term ``internal stenting'' is partially recognized because ``stenting'' is a UMLS concept but not ``internal''.
 Similarly, in the term ``endopyelotomy stent placement,'' only the UMLS concept token ``stent'' was identified.
+Participant BE FNs were usually the extra information that described more about the participant's disease, e.g., the information about disease staging went unrecognized in the participant's disease entity (in ``advanced carcinoma'', the word ``advanced'' was a BE FN).
 Such entities not encoded by the LFs contribute to the FNs and could be mitigated by adding relevant vocabulary and rules.\cite{augenstein2017generalisation}
-%The study intervention ``cholesteryl ester transfer protein'' was possibly missed because this UMLS concept fell under the ``Amino Acid, Peptide, or Protein'' semantic group, marked abstain for intervention.
-It is straightforward to add vocabulary but challenging to map a semantic group to PICO categories, especially in the outcomes class.
+It is straightforward to add vocabulary but challenging to map a semantic group or a vocabulary to PICO categories, especially for the outcomes class.
 Our current source-to-target mapping approach is manual and based on subjective expert judgment, which an objective algorithm can improve.
 This mapping could have led to several unexplainable errors, especially for the outcomes and, to a less extent, for the intervention class.
 Additionally, it took time to identify semantic categories and UMLS vocabularies corresponding to the study outcomes pointing towards the gap in developing one.
